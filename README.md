@@ -16,7 +16,8 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
 Audio.Play("wavFileName");
 Audio.Loop("wavFileName");
 Audio.Stop("wavFileName");
-... remaining functions written at top of AudioJ2CK.js 
+
+NOTE: remaining functions written at top of AudioJ2CK.js 
 
 * DO NOT WRITE Audio.P.XXX (The P stands for private).
 
@@ -33,5 +34,5 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
  * npc.getTempData("audio").Play("wavFileName"); from anywhere on the npc/block/player
  * Audio.Play("wavFileName"); from Init event area ONLY
  
-... remaining functions written at top of AudioJ2CK.js 
+NOTE: remaining functions written at top of AudioJ2CK.js 
 
