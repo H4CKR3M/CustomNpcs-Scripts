@@ -4,9 +4,9 @@ Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 **LICENSE**: Permission to modify/redistribute scripts as a part of your map only.  
 If you can, please link this github page in your map credits.
 
-##-------------------------------- DOCUMENTATION --------------------------------
+## -------------------------------- DOCUMENTATION --------------------------------
 
-###==== AudioJ2CK ====
+### ==== AudioJ2CK ====
 Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
 
 1. Load script anywhere (npc, block, or player)
@@ -27,9 +27,9 @@ Audio.Stop("wavFileName");
 
 
 
-##----------------------------- DOCUMENTATION 1.7.10 ----------------------------
+## ----------------------------- DOCUMENTATION 1.7.10 ----------------------------
 
-###==== AudioJ7CK ====
+### ==== AudioJ7CK ====
 Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 
 1. Load script in the Init event area of your object (npc, block, or player)
