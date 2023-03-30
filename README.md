@@ -1,7 +1,7 @@
 # CustomNpcs-Scripts
 Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
-LICENSE: Permission to modify/redistribute scripts as a part of your map only.
+LICENSE: Permission to modify/redistribute scripts as a part of your map only.  
 If you can, please link this github page in your map credits
 
 -------------------------------- DOCUMENTATION --------------------------------
