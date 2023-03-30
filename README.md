@@ -22,7 +22,7 @@ Audio.Stop("wavFileName");
 
 *NOTE: remaining functions written at top of AudioJ2CK.js*
 
-* **DO NOT WRITE** Audio.P.XXX (The P stands for private).
+* **DO NOT WRITE** Audio.P.XXX (The P stands for private)
 
 ## DOCUMENTATION 1.7.10
 
@@ -34,5 +34,6 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 * ```npc.getTempData("audio").Play("wavFileName");``` from anywhere.
 * ```Audio.Play("wavFileName");``` from Init event area ONLY.
  
-*NOTE: remaining functions written at top of AudioJ2CK.js*
+*NOTE: remaining functions written at top of AudioJ7CK.js*
 
+* **DO NOT WRITE** Audio.Private.XXX (cause it is private)
