@@ -11,18 +11,16 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
 
 1. Load script anywhere (npc, block, or player)
 2. Call `Audio.Init(e);` inside the init(e) event of your object
-3. Don't forget to call `Audio.Logout(e);` in your playerscript logout event.  
+3. Call `Audio.Logout(e);` inside your playerscript logout event.  
 4. Call any of the below:  
 
+```js
+Audio.Play("wavFileName");
+Audio.Loop("wavFileName");
+Audio.Stop("wavFileName");
+Audio.StopAll("wavFileName");
+Audio.IsPlaying("wavFileName");
 ```
-Audio.Play("wavFileName");  
-Audio.Loop("wavFileName");  
-Audio.Stop("wavFileName");  
-```
-
-*NOTE: remaining functions written at top of AudioJ2CK.js*
-
-* **DO NOT WRITE** Audio.P.XXX (The P stands for private)
 
 ## DOCUMENTATION 1.7.10
 
@@ -31,9 +29,7 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 
 1. Load script in the Init event area of your object (npc, block, or player)
 2. Use only one of the following commands:  
-* ```npc.getTempData("audio").Play("wavFileName");``` from anywhere.
-* ```Audio.Play("wavFileName");``` from Init event area ONLY.
+* `npc.getTempData("audio").Play("wavFileName");` from anywhere.
+* `Audio.Play("wavFileName");` from Init event area ONLY.
  
 *NOTE: remaining functions written at top of AudioJ7CK.js*
-
-* **DO NOT WRITE** Audio.Private.XXX (cause it is private)
