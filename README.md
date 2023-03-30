@@ -13,9 +13,9 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
 2. Don't forget to call Audio.Logout(e); in your playerscript logout event.
 3. Call any of the below:
 
-Audio.Play("wavFileName");
-Audio.Loop("wavFileName");
-Audio.Stop("wavFileName");
+Audio.Play("wavFileName");  
+Audio.Loop("wavFileName");  
+Audio.Stop("wavFileName");  
 
 NOTE: remaining functions written at top of AudioJ2CK.js 
 
@@ -29,10 +29,10 @@ NOTE: remaining functions written at top of AudioJ2CK.js
 ==== AudioJ7CK ====
 Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 
-1. Load script in the Init event area
-2. Use <1> of the following commands:
- * npc.getTempData("audio").Play("wavFileName"); from anywhere on the npc/block/player
- * Audio.Play("wavFileName"); from Init event area ONLY
+1. Load script in the Init event area  
+2. Use <1> of the following commands:  
+ * npc.getTempData("audio").Play("wavFileName"); from anywhere on the npc/block/player  
+ * Audio.Play("wavFileName"); from Init event area ONLY  
  
 NOTE: remaining functions written at top of AudioJ2CK.js 
 
