@@ -9,9 +9,9 @@ If you can, please link this github page in your map credits
 ==== AudioJ2CK ====
 Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
 
-1. Call Audio.Init(e); in the init(e) of your npc/block/player
-2. Don't forget to call Audio.Logout(e); in your playerscript logout event.
-3. Call any of the below:
+1. Call Audio.Init(e); in the init(e) of your npc/block/player  
+2. Don't forget to call Audio.Logout(e); in your playerscript logout event.  
+3. Call any of the below:  
 
 Audio.Play("wavFileName");  
 Audio.Loop("wavFileName");  
@@ -30,7 +30,7 @@ NOTE: remaining functions written at top of AudioJ2CK.js
 Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 
 1. Load script in the Init event area  
-2. Use <1> of the following commands:  
+2. Use only one of the following commands:  
  * npc.getTempData("audio").Play("wavFileName"); from anywhere on the npc/block/player  
  * Audio.Play("wavFileName"); from Init event area ONLY  
  
