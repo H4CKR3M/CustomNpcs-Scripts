@@ -29,7 +29,9 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 
 1. Load script in the Init event area of your object (npc, block, or player)
 2. Use only one of the following commands:  
-* `js npc.getTempData("audio").Play("wavFileName");` from anywhere.
+* ```js
+npc.getTempData("audio").Play("wavFileName");
+``` from anywhere.
 * `Audio.Play("wavFileName");` from Init event area ONLY.
  
 *NOTE: remaining functions written at top of AudioJ7CK.js*
