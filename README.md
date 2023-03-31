@@ -7,7 +7,7 @@ If you can, please link this github page in your map credits.
 ## DOCUMENTATION
 
 ### AudioJ2CK
-Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
+Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack
 
 1. Load script anywhere (npc, block, or player)
 2. Call `Audio.Init(e);` inside the init(e) event of your object
@@ -27,7 +27,7 @@ Audio.IsPlaying("wavFileName");
 ## DOCUMENTATION 1.7.10
 
 ### AudioJ7CK 
-Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
+Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds
 
 1. Load script in the Init event area of your object (npc, block, or player)
 2. Use only one of the following commands:  
