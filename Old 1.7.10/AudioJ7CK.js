@@ -9,7 +9,7 @@
     *       1. npc.getTempData("audio").Play("wavFileName"); from anywhere.
     *       2. Audio.Play("wavFileName"); from Init event area ONLY.
     * 
-    * To adjust volume, add a second parameter to Play/Loop like so:  Audio.Play("sample.wav", audioGain) */
+    * To adjust volume, add a second parameter to Play/Loop like so: Play("sample", audioGain) */
 
 var Audio = (function(){
     return {  
