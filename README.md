@@ -16,7 +16,9 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
 
 ```js
 Audio.Play("wavFileName");
+Audio.Play("wavFileName", audioGain);
 Audio.Loop("wavFileName");
+Audio.Loop("wavFileName", audioGain);
 Audio.Stop("wavFileName");
 Audio.StopAll();
 Audio.IsPlaying("wavFileName");
