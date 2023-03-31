@@ -1,4 +1,4 @@
-/* v0.1 - AudioJ2CK | Loadable from Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v0.2 - AudioJ2CK | Loadable from Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
  * A better multi-Track audio player to satisfy your creativity!
  * 
@@ -15,8 +15,8 @@ var Audio = (function(){
         Init: function Init(e) {                        Audio.P.world = e.API.getIWorld(0); },
         Logout: function Logout(e) {                    if (e.player.getName() == e.player.world.getAllPlayers()[0].getName()) Audio.StopAll(); },
 
-        Play: function Play(filename){                  Audio.P.StartClip(filename, false); },
-        Loop: function Loop(filename){                  Audio.P.StartClip(filename, true); },
+        Play: function Play(filename){                  Audio.P.StartClip(filename, false, arguments.length > 1 ? arguments[1] : 0); },
+        Loop: function Loop(filename){                  Audio.P.StartClip(filename, true, arguments.length > 1 ? arguments[1] : 0); },
         Stop: function Stop(filename){                  Audio.P.StopClip(filename); },
         StopAll: function StopAll(){                    Audio.P.StopAllClips(); },
         IsPlaying: function IsPlaying(filename) {       return Audio.P.IsPlaying(filename); },
@@ -27,14 +27,14 @@ var Audio = (function(){
             keyPrefix: "J2CK_",
             keyA: "J2CKA",
             path: "/customnpcs/assets/customnpcs/sounds/audiojack/",
-            debugThrowErrors: false,
+            debugThrowErrors: true,
 
             GetClip: function GetClip(filename){ return this.world.getTempdata().get(this.keyPrefix + filename); },
             SetClip: function SetClip(filename, clip){  this.world.getTempdata().put(this.keyPrefix + filename, clip); },
             GetAllFileNames: function GetAllFileNames(){ return this.world.getTempdata().has(this.keyA)?this.world.getTempdata().get(this.keyA):[];},
             SetAllFileNames: function SetAllFileNames(fNames){ this.world.getTempdata().put(this.keyA, fNames); },
 
-            StartClip: function StartClip(filename, loop){
+            StartClip: function StartClip(filename, loop, gain){
                 var AudioSystem = Java.type('javax.sound.sampled.AudioSystem');
                 
                 var clip = this.GetClip(filename);
@@ -57,6 +57,7 @@ var Audio = (function(){
                 var WAV_PATH = new File(System.getProperty("user.dir") + this.path + filename + ".wav");
                 var inputStream = null;
                 
+                var validVolume = false;
                 var foundFile = false;
                 var ex = new IOException();
                 try {
@@ -69,6 +70,16 @@ var Audio = (function(){
                         
                         clip.open(inputStream);
                         clip.setMicrosecondPosition(0);
+
+                        if (gain != 0){
+                            var gainControls = clip.getControls();
+                            for(var i = 0; i < gainControls.length; i++){
+                                if (gainControls[i].getType().toString() == "Master Gain"){
+                                    gainControls[i].setValue(gain);
+                                }
+                            }
+                        }
+                        validVolume = true;
                         clip.start();   
                         if (loop) { clip.loop(999); }
 
@@ -88,7 +99,11 @@ var Audio = (function(){
                     if (this.debugThrowErrors){
                         if (!foundFile) {
                             this.say("Unable to locate file §f" + WAV_PATH);
-                            throw ("[J2CK]: Unable to locate file " + WAV_PATH);
+                            throw ("\n\n[J2CK]: Unable to locate file " + WAV_PATH + "\n\n");
+                        }
+                        if (!validVolume){
+                            this.say("Invalid volume given: §b§l" + gain + "\n§7Try something closer to 0. Like -3.0 to 3.0");
+                            throw("\n\n[J2CK]: Invalid volume given: " + gain + ". Try something closer to 0. Like -3.0 to 3.0\n\n");
                         }
                         ex.printStackTrace();
                     }
