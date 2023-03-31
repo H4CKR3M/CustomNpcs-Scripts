@@ -5,7 +5,9 @@
  * TO USE:
     * WAV files must be placed in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
     * When playing a sound, write the name WITHOUT the extension: "sound" not "sound.wav"
-    * Example Audio.Play("sound")
+    * Example:
+    * Audio.Play("sound")
+    * Audio.Play("sound", audioGain)
     * 
     * !!! YOU MUST CALL Logout(e) ON PLAYER LOGOUT !!!
     */
