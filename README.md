@@ -34,5 +34,5 @@ Place WAV files in .minecraft/customnpcs/assets/customnpcs/sounds
 * `npc.getTempData("audio").Play("wavFileName");` from anywhere.
 * `Audio.Play("wavFileName");` from Init event area ONLY.
 
-*NOTE: Adjust Volume: Play("wavFileName", audioGain)*  
+*NOTE: Adjust Volume:* `Play("wavFileName", audioGain)`  
 *NOTE: remaining functions written at top of AudioJ7CK.js*
