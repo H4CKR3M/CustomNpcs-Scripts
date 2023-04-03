@@ -1,11 +1,11 @@
-/* v0.2 - AudioJ2CK | Loadable from Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v0.2.1 - AudioJ2CK | Loadable from Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
  * A better multi-Track audio player to satisfy your creativity!
  * 
  * TO USE:
     * WAV files must be placed in .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
     * When playing a sound, write the name WITHOUT the extension: "sound" not "sound.wav"
-    * Example:
+    * 
     * Audio.Play("sound")
     * Audio.Play("sound", audioGain)
     * 
@@ -14,8 +14,7 @@
 
 var Audio = (function(){
     return {  
-        Init: function Init(e) {                        Audio.P.world = e.API.getIWorld(0); },
-        Logout: function Logout(e) {                    if (e.player.getName() == e.player.world.getAllPlayers()[0].getName()) Audio.StopAll(); },
+        Logout: function Logout(e) {                    if (e.player.world.getAllPlayers().length <= 1) Audio.StopAll(); },
 
         Play: function Play(filename){                  Audio.P.StartClip(filename, false, arguments.length > 1 ? arguments[1] : 0); },
         Loop: function Loop(filename){                  Audio.P.StartClip(filename, true, arguments.length > 1 ? arguments[1] : 0); },
@@ -30,6 +29,10 @@ var Audio = (function(){
             keyA: "J2CKA",
             path: "/customnpcs/assets/customnpcs/sounds/audiojack/",
             debugThrowErrors: true,
+
+            AutoExec: function AutoExec(){
+                this.world = Java.type("noppes.npcs.api.NpcAPI").Instance().getIWorld(0);
+            },
 
             GetClip: function GetClip(filename){ return this.world.getTempdata().get(this.keyPrefix + filename); },
             SetClip: function SetClip(filename, clip){  this.world.getTempdata().put(this.keyPrefix + filename, clip); },
@@ -157,4 +160,4 @@ var Audio = (function(){
             }
         }
     }
-}());
+}()); Audio.P.AutoExec();
