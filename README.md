@@ -10,9 +10,8 @@ If you can, please link this github page in your map credits.
 Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack
 
 1. Load script anywhere (npc, block, or player)
-2. Call `Audio.Init(e);` inside the init(e) event of your object
-3. Call `Audio.Logout(e);` inside your playerscript logout event.  
-4. Call any of the below:  
+2. Call `Audio.Logout(e);` inside your playerscript logout event.  
+3. Call any of the below:  
 
 ```js
 Audio.Play("wavFileName");
