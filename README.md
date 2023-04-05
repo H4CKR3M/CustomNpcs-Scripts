@@ -25,6 +25,11 @@ Audio.IsPlaying("wavFileName");
 
 ### FUtil
 ```js
+// Copy current world to .minecraft and name it New world Name
+var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+FUtil.CopyDirectory(API.getWorldDir().getParent(), API.getGlobalDir().getParent()+"/New World Name");
+```
+```js
 FUtil.CopyDirectory(sourcePath, destPath);
 FUtil.CopyFile(sourcePath, destPath);
 FUtil.DeleteDirectory(folder);
@@ -40,7 +45,6 @@ FUtil.IsDedicatedServer();
 **Resource Methods**  »  Images, mp4 files, etc... must be placed in `<world_name>/customnpcs/`
 ```js
 FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
-
 ```
 ```js
 FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
