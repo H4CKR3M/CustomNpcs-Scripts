@@ -40,7 +40,10 @@ FUtil.IsDedicatedServer();
 Resource Methods:
 Images, mp4 files, etc... must be placed in `<world_name>/customnpcs/`
 ```js
-//    OpenImageFullscreen("test.png", "Test", 16, 9);
+FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
+
+```
+```js
 FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
 FUtil.OpenImageNewWindow(filename, labelText, width, height);
 FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
