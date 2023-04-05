@@ -4,24 +4,11 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 **LICENSE**: Permission to modify/redistribute scripts as a part of your map only.  
 If you can, please link this github page in your map credits.
 
+## Table of Contents
+FUtil
+AudioJ2CK
+
 ## DOCUMENTATION
-
-### AudioJ2CK
-Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
-
-1. Load script anywhere (npc, block, or player)
-2. Call `Audio.Logout(e);` inside your playerscript logout event.  
-3. Call any of the below:  
-
-```js
-Audio.Play("wavFileName");
-Audio.Play("wavFileName", audioGain);
-Audio.Loop("wavFileName");
-Audio.Loop("wavFileName", audioGain);
-Audio.Stop("wavFileName");
-Audio.StopAll();
-Audio.IsPlaying("wavFileName");
-```
 
 ### FUtil
 ```js
@@ -51,6 +38,23 @@ FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
 FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
 FUtil.OpenImageNewWindow(filename, labelText, width, height);
 FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
+```
+
+### AudioJ2CK
+Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
+
+1. Load script anywhere (npc, block, or player)
+2. Call `Audio.Logout(e);` inside your playerscript logout event.  
+3. Call any of the below:  
+
+```js
+Audio.Play("wavFileName");
+Audio.Play("wavFileName", audioGain);
+Audio.Loop("wavFileName");
+Audio.Loop("wavFileName", audioGain);
+Audio.Stop("wavFileName");
+Audio.StopAll();
+Audio.IsPlaying("wavFileName");
 ```
 
 ## DOCUMENTATION 1.7.10
