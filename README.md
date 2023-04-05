@@ -5,8 +5,8 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 If you can, please link this github page in your map credits.
 
 ## Table of Contents
-FUtil
-AudioJ2CK
+1. FUtil
+2. AudioJ2CK
 
 ## DOCUMENTATION
 
