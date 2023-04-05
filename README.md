@@ -7,7 +7,7 @@ If you can, please link this github page in your map credits.
 ## DOCUMENTATION
 
 ### AudioJ2CK
-Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack
+Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
 1. Load script anywhere (npc, block, or player)
 2. Call `Audio.Logout(e);` inside your playerscript logout event.  
@@ -32,7 +32,8 @@ FUtil.Exists(path);
 FUtil.ExistsInDirectory(directoryPath, filename);
 FUtil.IsExtension(filename, extension);
 ```
-Visual Novel-Related Methods
+Resource Methods
+* Resources (images, mp4 files, etc...) must be placed in `<world_name>/customnpcs/`
 ```js
 FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
 FUtil.OpenImageNewWindow(filename, labelText, width, height);
