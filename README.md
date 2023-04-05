@@ -23,6 +23,26 @@ Audio.StopAll();
 Audio.IsPlaying("wavFileName");
 ```
 
+### FUtil
+```js
+FUtil.CopyDirectory(sourcePath, destPath);
+FUtil.CopyFile(sourcePath, destPath);
+FUtil.DeleteDirectory(folder);
+FUtil.Exists(path);
+FUtil.ExistsInDirectory(directoryPath, filename);
+FUtil.IsExtension(filename, extension);
+
+FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
+FUtil.OpenImageNewWindow(filename, labelText, width, height);
+FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
+
+FUtil.Encrypt(string);
+FUtil.Decrypt(stringBase64);
+FUtil.UnzipDirectory(zipPath, destFolderPath);
+FUtil.Unzip(zipPath);
+FUtil.IsDedicatedServer();
+```
+
 ## DOCUMENTATION 1.7.10
 
 ### AudioJ7CK 
