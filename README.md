@@ -5,7 +5,7 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 If you can, please link this github page in your map credits.
 
 ## Table of Contents
-1. **FUtil**      - File Editing
+1. **FUtil**      - File System Editing
 2. **AudioJ2CK**  - 2D Audio / Zero Input Lag
 
 ## DOCUMENTATION
