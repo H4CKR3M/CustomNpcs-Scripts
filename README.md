@@ -40,7 +40,7 @@ function init(e){
 }
 ```
 ```js
-// Open an image named test.png inside <world_name>/customnpcs/
+// Show image on screen | The image path is <world_name>/customnpcs/image.png
 function init(e){
   FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
 }
