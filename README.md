@@ -7,6 +7,7 @@ If you can, please link this github page in your map credits.
 ## Table of Contents
 1. **FUtil**      - File System Editing
 2. **AudioJ2CK**  - 2D Audio / Zero Input Lag
+3. Legacy 1.7.10 Ports
 
 ## DOCUMENTATION
 
