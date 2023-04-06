@@ -34,10 +34,10 @@ FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
 ```
 **Examples**
 ```js
-// Copy current world to .minecraft and name it New world Name
+// Copy current world to .minecraft and name it "Example World"
 function init(e){
   var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-  FUtil.CopyDirectory(API.getWorldDir().getParent(), API.getGlobalDir().getParent()+"/New World Name");
+  FUtil.CopyDirectory(API.getWorldDir().getParent(), API.getGlobalDir().getParent()+"/Example World");
 }
 ```
 ```js
