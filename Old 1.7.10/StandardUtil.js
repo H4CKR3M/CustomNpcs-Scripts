@@ -1,4 +1,4 @@
-/* v1.7 - StandardUtil | Load Script from INIT, Call from Anywhere | Designed for Minecraft 1.7.10, CustomNPCs_1.7.10d(29oct17) | Written by Rimscar */
+/* v1.7 - StandardUtil | Load Script from INIT, Call from Anywhere | 1.7.10, CustomNPCs_1.7.10d(29oct17) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
