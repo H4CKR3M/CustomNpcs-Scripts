@@ -34,13 +34,17 @@ FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
 ```
 **Examples**
 ```js
-// Example 1: Copy current world to .minecraft and name it New world Name
-var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-FUtil.CopyDirectory(API.getWorldDir().getParent(), API.getGlobalDir().getParent()+"/New World Name");
+// Copy current world to .minecraft and name it New world Name
+function init(e){
+  var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+  FUtil.CopyDirectory(API.getWorldDir().getParent(), API.getGlobalDir().getParent()+"/New World Name");
+}
 ```
 ```js
 // Open an image named test.png inside <world_name>/customnpcs/
-FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
+function init(e){
+  FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
+}
 ```
 
 ### AudioJ2CK
