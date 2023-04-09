@@ -5,13 +5,38 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 If you can, please link this github page in your map credits.
 
 ## Table of Contents
-1. **FUtil**      - File System Editing
-2. **AudioJ2CK**  - 2D Audio / Zero Input Lag
-3. Legacy 1.7.10 Ports
+1. **JTunes**     - Fully Fledged Background music using AudioJ2CK
+2. **AudioJ2CK**  - 2D Audio / No Input Lag
+3. **FUtil**      - File System Editing
+4. Legacy 1.7.10 Ports
 
-## DOCUMENTATION
+## JTunes
+Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
-### FUtil
+
+
+1. Load in PlayerScript
+2. Call `JTunes.Login(e);` and `JTunes.Tick(e);` - in player login/tick respectively
+3. Edit Songs/Triggers in JTunes.js
+
+## AudioJ2CK
+Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
+
+1. Load script anywhere (npc, block, or player)
+2. Call `Audio.Logout(e);` inside your playerscript logout event.  
+3. Call any of the below:  
+
+```js
+Audio.Play("wavFileName");
+Audio.Play("wavFileName", audioGain);
+Audio.Loop("wavFileName");
+Audio.Loop("wavFileName", audioGain);
+Audio.Stop("wavFileName");
+Audio.StopAll();
+Audio.IsPlaying("wavFileName");
+```
+
+## FUtil
 ```js
 FUtil.CopyDirectory(sourcePath, destPath);
 FUtil.CopyFile(sourcePath, destPath);
@@ -44,23 +69,6 @@ function init(e){
 function init(e){
   FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
 }
-```
-
-### AudioJ2CK
-Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
-
-1. Load script anywhere (npc, block, or player)
-2. Call `Audio.Logout(e);` inside your playerscript logout event.  
-3. Call any of the below:  
-
-```js
-Audio.Play("wavFileName");
-Audio.Play("wavFileName", audioGain);
-Audio.Loop("wavFileName");
-Audio.Loop("wavFileName", audioGain);
-Audio.Stop("wavFileName");
-Audio.StopAll();
-Audio.IsPlaying("wavFileName");
 ```
 
 ## DOCUMENTATION 1.7.10
