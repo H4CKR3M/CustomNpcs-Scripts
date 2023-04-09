@@ -1,5 +1,5 @@
-/* v1.6 - Jack's Tunes | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
- * Requires: AudioJ2CK, FUtil, DLoad [OPTIONAL]
+/* v1.7 - Jack's Tunes | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+ * Requires: AudioJ2CK, [OPTIONAL: DLoad, FUtil]
  *
  * Plays WAV files from .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
  * To play NO Music in an area, set the trigger song to "none"
@@ -71,7 +71,6 @@ var JTunes = (function(){
             Login: function Login(e){
 
                 if (typeof Audio === 'undefined') { throw("\n\nJTunes: You forgot to load the script AudioJ2CK\n\n"); }
-                if (typeof FUtil === 'undefined') { throw("\n\nJTunes: You forgot to load the script FUtil\n\n"); }
 
                 // Fixes a bug where multiple players are on server, and both log off, then one rejoins and the boss song continues
                 var numPlayers = e.player.world.getAllPlayers().length;
@@ -87,6 +86,9 @@ var JTunes = (function(){
                 if (this.requiredDLC != "" && typeof DLoad === 'undefined') { 
                     throw("\n\nJTunes Error: requiredDLC is set to \"" + this.requiredDLC + "\" but DLoad was not loaded"
                      + "\nEither Load DLoad Script or set RequiredDLC to \"\"\n\n"); 
+                }
+                if (typeof DLoad !== 'undefined' && typeof FUtil === 'undefined'){
+                    throw("\n\nJTunes: You forgot to load the script FUtil [ Required if using DLoad ]\n\n");
                 }
                 
                 var enabled = this.requiredDLC == "" ? true : DLoad.IsInstalled(e, this.requiredDLC);
