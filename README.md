@@ -15,7 +15,7 @@ A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Pl
 
 ### Setup
 Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
-1. Load in PlayerScript
+1. Load AudioJ2CK and JTunes in playerscript
 2. Call `JTunes.Login(e);` and `JTunes.Tick(e);` - in player login/tick respectively
 3. Edit Songs/Triggers in JTunes.js
 
