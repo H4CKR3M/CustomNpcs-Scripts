@@ -11,7 +11,7 @@ If you can, please link this github page in your map credits.
 4. Legacy 1.7.10 Ports
 
 ## JTunes
-A fully fleshed out audio system utilizing the power of AudioJ2CK! - play seamless background/boss music. Anytime! Anywhere!
+A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
 
 ### Setup
 Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
