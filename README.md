@@ -13,11 +13,20 @@ If you can, please link this github page in your map credits.
 ## JTunes
 Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
-
+Audio player utilizing the power of AudioJ2CK to play seamless background/boss music. Anywhere!
 
 1. Load in PlayerScript
 2. Call `JTunes.Login(e);` and `JTunes.Tick(e);` - in player login/tick respectively
 3. Edit Songs/Triggers in JTunes.js
+
+### Boss Music
+
+Start / Stop Boss music using world Tempdata
+Starting boss music automatically stops the background music and resumed when boss music stops
+```js
+world.getTempdata().put("JBOSS", "my_song_name);
+world.getTempdata().put("JBOSS", null);
+```
 
 ## AudioJ2CK
 Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
