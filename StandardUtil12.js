@@ -1,4 +1,4 @@
-/* v2.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.2 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
  * NOTE: Scripts using StandardUtil12 v1.5 or older may require update
  */
@@ -262,21 +262,24 @@ var Utilities = (function(){
 
         PlayAt: function PlayAt(x, y, z, soundName){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+            var volume = arguments.length >= 5 ? arguments[4] : 64;
             var np = API.getIWorld(0).getNearbyEntities(x, y, z, 32, 1);
             for(var i = 0; i < np.length; i++){
-                API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " ~ ~ ~ 64");
+                API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " " + x + " " + y + " " + z + " " + volume);
             }
         },
 
         Play: function Play(entity, soundName){
             if (entity == null){ throw ("\n\nUtilities: null entity given to Play(entity, soundName)\n"); }
 
+            var volume = arguments.length >= 3 ? arguments[2] : 64;
+
             if (entity.getType() == 2){
-                this.PlayAt(entity.x, entity.y, entity.z, soundName);
+                this.PlayAt(entity.x, entity.y, entity.z, soundName, volume);
             }
             else if (entity.getType() == 1){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-                API.executeCommand(entity.world, "/playsound " + soundName + " voice " + entity.getName() + " ~ ~ ~ 64");
+                API.executeCommand(entity.world, "/playsound " + soundName + " voice " + entity.getName() + " " + entity.x + " " + entity.y + " " + entity.z + " " + volume);
             }
             else
                 throw ("\n\nUtilities: the entity given to Play(entity, soundName) was neither a player, nor an NPC. \nPass in an NPC or player entity.\n");
