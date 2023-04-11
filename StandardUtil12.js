@@ -1,7 +1,7 @@
-/* v2.0 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
- * NOTE: Not compatible with StandardUtil12 v1.5 or older 
- * Scripts will need to be updated */
+ * NOTE: Scripts using StandardUtil12 v1.5 or older may require update
+ */
 
 var Utilities = (function(){
     return {  
@@ -18,12 +18,45 @@ var Utilities = (function(){
 
         // MATH RELATED ----------------------------------------------------------------------
 
-        Normalize: function Normalize(vec, newMagnitude){
+        Add: function Add(v1, v2){
+            return { x: v1.x+v2.x, y: v1.y+v2.y, z: v1.z+v2.z, };
+        },
+        
+        Dot: function Dot(v1, v2){
+            return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
+        },
+
+        Cross: function Cross(v1, v2){
+            return { x: v1.y*v2.z - v1.z*v2.y, y: v1.z*v2.x - v1.x*v2.z, z: v1.x*v2.y - v1.y*v2.x };
+        },
+
+        Angle: function Angle(z,x){
+            var re = Math.floor(Math.atan2(z,x)*180/Math.PI);
+            return re < 0 ? re+360 : re;
+        },
+
+        ToDegrees: function ToDegrees(angle){
+            return angle*(180/Math.PI);
+        },
+    
+        ToRadians: function ToRadians(degrees) {
+            return degrees*(Math.PI/180);
+        },
+
+        IsBetween: function IsBetween(v, v1, v2){
+            return this.Dot(this.Cross(v1, v), this.Cross(v1, v2)) >= 0 && this.Dot(this.Cross(v2, v), this.Cross(v2, v1)) >= 0
+        },
+
+        Normalize: function Normalize(vec, magnitude){
             var sqt = Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-            vec.x = vec.x/sqt*newMagnitude;
-            vec.y = vec.y/sqt*newMagnitude;
-            vec.z = vec.z/sqt*newMagnitude;
+            vec.x = vec.x/sqt*magnitude;
+            vec.y = vec.y/sqt*magnitude;
+            vec.z = vec.z/sqt*magnitude;
             return vec;
+        },
+
+        GetDistance: function GetDistance(origin, destination){
+            return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.y-origin.y,2) + Math.pow(destination.z-origin.z,2));
         },
 
         GetEntityForwardVector: function GetEntityForwardVector(entity){
@@ -37,42 +70,21 @@ var Utilities = (function(){
             return dir;
         },
 
-        Angle: function Angle(z,x){
-            var re = Math.floor(Math.atan2(z,x)*180/Math.PI);
-            return re < 0 ? re+360 : re;
-        },
-
-        GetDirectionTowardsTarget: function GetDirectionTowardsTarget(source, target, newMagnitude) {
+        GetDirectionTowardsTarget: function GetDirectionTowardsTarget(source, target, magnitude) {
             var dir = { x: target.x-source.x, y: target.y-source.y, z: target.z-source.z, };
-            return this.Normalize(dir, newMagnitude);
+            return this.Normalize(dir, magnitude);
         },
 
+        //   [cos    0     sin]
+        //   [ 0     1     0  ] * vec
+        //   [-sin   0     cos]
         RotateAboutY: function RotateAboutY(vec, degrees){
             var radians = this.ToRadians(degrees);
-            //   [cos    0     sin]
-            //   [ 0     1     0  ] * vec
-            //   [-sin   0     cos]
             var tmpX = vec.x;
             var tmpZ = vec.z;
             vec.x = Math.cos(radians) * tmpX + Math.sin(radians) * tmpZ;
             vec.z = -Math.sin(radians) * tmpX + Math.cos(radians) * tmpZ;
             return vec;
-        },
-
-        GetDistance: function GetDistance(origin, destination){
-            return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.y-origin.y,2) + Math.pow(destination.z-origin.z,2));
-        },
-
-        AddVectors: function AddVectors(vec1, vec2){
-            return { x: vec1.x+vec2.x, y: vec1.y+vec2.y, z: vec1.z+vec2.z, };
-        },
-
-        ToDegrees: function ToDegrees(angle){
-            return angle*(180/Math.PI);
-        },
-    
-        ToRadians: function ToRadians(degrees) {
-            return degrees*(Math.PI/180);
         },
 
         CanAnyoneSeeMe: function CanAnyoneSeeMe(npc, range){
@@ -111,13 +123,9 @@ var Utilities = (function(){
             return false;
         },
 
-        // Returns a safe position near the entity to teleport to, returns the entities position if nothing is found. Y height is kept.
+        // Returns a safe position near the entity to teleport to, returns the entities position if nothing is found. Y height is preserved.
         GetSafeLocationNearEntity: function GetSafeLocationNearEntity(entity, rMin, rMax){
-            var loc = {
-                x: 0,
-                y: entity.y,
-                z: 0,
-            };
+            var loc = { x: 0, y: entity.y, z: 0, };
             for(var i = 0; i < 20; i++){
                 var x = Math.random()*rMax*2 - rMax;
                 var z = Math.random()*rMax*2 - rMax;
@@ -145,8 +153,8 @@ var Utilities = (function(){
         },
 
         // Returns whether positions is safe to be teleported to
-        IsTeleportPosSafe: function IsTeleportPosSafe(world, vec){
-            return (world.getBlock(vec.x, vec.y, vec.z).getName() == "minecraft:air" && world.getBlock(vec.x, vec.y + 1, vec.z).getName() == "minecraft:air");
+        IsTeleportPosSafe: function IsTeleportPosSafe(world, v){
+            return (world.getBlock(v.x, v.y, v.z).getName() == "minecraft:air" && world.getBlock(v.x, v.y+1, v.z).getName() == "minecraft:air");
         },
 
         // Returns random positive or negative number between two values
@@ -193,27 +201,25 @@ var Utilities = (function(){
             }
         },
 
-        // Given an item entity, returns a tag object
+        // Given an item entity, returns a tag object - or null
         GetEntityTags: function GetEntityTags(entityItem){
             return this.GetItemTags(entityItem.getItem());
         },
 
-        // Given an iItemStack, returns a tag object
+        // Given an iItemStack, returns a tag object - or null
         GetItemTags: function GetItemTags(itemStack){
-
-            // Cannot read abnormal items (will crash the JSON parser)
-            for(var i = 0; i < Utilities.invalidItems.length; i++){
-                if (itemStack.getName() == Utilities.invalidItems[i])
+            for(var i = 0; i < this._invalidItems.length; i++){
+                if (itemStack.getName() == this._invalidItems[i])
                     return null;
             }
-            return Utilities.GetItemTagsUnsafe(itemStack);
+            return this.GetItemTagsUnsafe(itemStack);
         },
-        invalidItems: [ "customnpcs:scripted_item", "customnpcs:npcsoulstonefilled", "customnpcs:npcscripted", "minecraft:written_book", 
-            "minecraft:chest", "minecraft:white_shulker_box", "variedcommodities:book" ], //"minecraft:filled_map"
+        _invalidItems: [ "customnpcs:scripted_item", "customnpcs:npcsoulstonefilled", "customnpcs:npcscripted", "minecraft:written_book", 
+            "minecraft:chest", "minecraft:white_shulker_box", "variedcommodities:book" ],
         
         // Use with caution (Try catch loop?) - Reading an invalid item will result in a script error
         GetItemTagsUnsafe: function GetItemTagsUnsafe(itemStack){
-            var validJSON = Utilities.GetValidJSON(itemStack.getItemNbt().toJsonString());
+            var validJSON = this.GetValidJSON(itemStack.getItemNbt().toJsonString());
             var obj = JSON.parse(validJSON);
             return obj.tag != null ? obj.tag : null;
         },
@@ -244,8 +250,8 @@ var Utilities = (function(){
         IsWearing: function IsWearing(player, slot, tag){
             var itemToScan = player.getArmor(slot);
             if (itemToScan.getName() != "minecraft:air"){
-                var tagObj = Utilities.GetItemTags(itemToScan);
-                if (tagObj != null && Utilities.HasTag(tagObj, tag)){
+                var tagObj = this.GetItemTags(itemToScan);
+                if (tagObj != null && this.HasTag(tagObj, tag)){
                     return true;
                 }
             }
