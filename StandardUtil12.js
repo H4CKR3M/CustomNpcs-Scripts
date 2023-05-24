@@ -1,6 +1,6 @@
-/* v2.2 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.3 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
- * NOTE: Scripts using StandardUtil12 v1.5 or older may require update
+ * NOTE: Scripts using StandardUtil12 v1.5 or older may require an update
  */
 
 var Utilities = (function(){
@@ -13,13 +13,22 @@ var Utilities = (function(){
 
         Message: function Message(player, msg){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-            API.executeCommand(player.world, "/tellraw " + player.getDisplayName() + " " + "{\"text\":\"" + msg.replaceAll("&", "§") + "\",\"color\":\"white\"}");
+            API.executeCommand(player.world, "/tellraw " + player.getDisplayName() + " " + "{\"text\":\"" 
+                + msg.replaceAll("&", "§") + "\",\"color\":\"white\"}");
         },
 
         // MATH RELATED ----------------------------------------------------------------------
 
         Add: function Add(v1, v2){
             return { x: v1.x+v2.x, y: v1.y+v2.y, z: v1.z+v2.z, };
+        },
+
+        Diff: function Diff(v1, v2){
+            return { x: v1.x-v2.x, y: v1.y-v2.y, z: v1.z-v2.z, };
+        },
+
+        Mult: function Mult(v, integer){
+            return { x: v.x*integer, y: v.y*integer, z: v.z*integer, };
         },
         
         Dot: function Dot(v1, v2){
@@ -30,7 +39,7 @@ var Utilities = (function(){
             return { x: v1.y*v2.z - v1.z*v2.y, y: v1.z*v2.x - v1.x*v2.z, z: v1.x*v2.y - v1.y*v2.x };
         },
 
-        Angle: function Angle(z,x){
+        Angle: function Angle(z, x){
             var re = Math.floor(Math.atan2(z,x)*180/Math.PI);
             return re < 0 ? re+360 : re;
         },
@@ -47,12 +56,15 @@ var Utilities = (function(){
             return this.Dot(this.Cross(v1, v), this.Cross(v1, v2)) >= 0 && this.Dot(this.Cross(v2, v), this.Cross(v2, v1)) >= 0
         },
 
-        Normalize: function Normalize(vec, magnitude){
-            var sqt = Math.sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
-            vec.x = vec.x/sqt*magnitude;
-            vec.y = vec.y/sqt*magnitude;
-            vec.z = vec.z/sqt*magnitude;
+        Normalize: function Normalize(v, OPTIONAL_magnitude){
+            if (OPTIONAL_magnitude == null) { OPTIONAL_magnitude = 1; }
+            var sqt = this.Magnitude(v);
+            var vec = { x: v.x/sqt*OPTIONAL_magnitude, y: v.y/sqt*OPTIONAL_magnitude, z: v.z/sqt*OPTIONAL_magnitude }
             return vec;
+        },
+
+        Magnitude: function Magnitude(v){
+            return Math.sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
         },
 
         GetDistance: function GetDistance(origin, destination){
@@ -60,35 +72,62 @@ var Utilities = (function(){
         },
 
         GetEntityForwardVector: function GetEntityForwardVector(entity){
-            var degrees = entity.getRotation();
+            var deg = entity.getRotation();
             var dir = {
-                x: Math.cos(this.ToRadians(degrees)),
+                x: Math.cos(this.ToRadians(deg)),
                 y: 0,
-                z: Math.sin(this.ToRadians(degrees)),
+                z: Math.sin(this.ToRadians(deg)),
             };
-            dir = this.RotateAboutY(dir, -90);
-            return dir;
+            return this.RotateAboutY(dir, -90);
         },
 
-        GetDirectionTowardsTarget: function GetDirectionTowardsTarget(source, target, magnitude) {
+        GetDirectionTowardsTarget: function GetDirectionTowardsTarget(source, target, OPTIONAL_magnitude) {
             var dir = { x: target.x-source.x, y: target.y-source.y, z: target.z-source.z, };
-            return this.Normalize(dir, magnitude);
+            return this.Normalize(dir, OPTIONAL_magnitude);
         },
 
-        //   [cos    0     sin]
-        //   [ 0     1     0  ] * vec
-        //   [-sin   0     cos]
-        RotateAboutY: function RotateAboutY(vec, degrees){
-            var radians = this.ToRadians(degrees);
-            var tmpX = vec.x;
-            var tmpZ = vec.z;
-            vec.x = Math.cos(radians) * tmpX + Math.sin(radians) * tmpZ;
-            vec.z = -Math.sin(radians) * tmpX + Math.cos(radians) * tmpZ;
+        //  [ 1    0    0 ]   [ x ]
+        //  [ 0   cos -sin] * [ y ]
+        //  [ 0   sin  cos]   [ z ]
+        RotateAboutX: function RotateAboutX(v, degrees){
+            var ang = this.ToRadians(degrees);
+            var vec = {
+                x: v.x,
+                y: Math.cos(ang)*v.y - Math.sin(ang)*v.z,
+                z: Math.sin(ang)*v.y + Math.cos(ang)*v.z
+            }
             return vec;
         },
 
+        //  [cos    0     sin]   [ x ]
+        //  [ 0     1     0  ] * [ y ]
+        //  [-sin   0     cos]   [ z ]
+        RotateAboutY: function RotateAboutY(v, degrees){
+            var ang = this.ToRadians(degrees);
+            var vec = {
+                x: Math.cos(ang)*v.x + Math.sin(ang)*v.z,
+                y: v.y,
+                z: -Math.sin(ang)*v.x + Math.cos(ang)*v.z
+            }
+            return vec;
+        },
+
+        //  [cos  -sin   0]   [ x ]
+        //  [sin   cos   0] * [ y ]
+        //  [ 0     0    1]   [ z ]
+        RotateAboutZ: function RotateAboutZ(v, degrees){
+            var ang = this.ToRadians(degrees);
+            var vec = {
+                x: Math.cos(ang)*v.x - Math.sin(ang)*v.y,
+                y: Math.sin(ang)*v.x + Math.cos(ang)*v.y,
+                z: v.z
+            }
+            return vec;
+        },
+
+        // NOTE: does not work on 1.12
         CanAnyoneSeeMe: function CanAnyoneSeeMe(npc, range){
-            var np = npc.getWorld().getNearbyEntities(npc.getPos(), range, 1);
+            var np = npc.world.getNearbyEntities(npc.pos, range, 1);
             for(var i = 0; i < np.length; i++){
                 if (np[i].canSeeEntity(npc) == true)
                     return true;
@@ -98,17 +137,17 @@ var Utilities = (function(){
     
         IsTargetWatchingMe: function IsTargetWatchingMe(me, target, viewAngle, maxDistance){
             var ra = target.rayTraceBlock(1000,false,false).getBlock();
-            var a1=this.Angle(-ra.getZ()+target.z,-ra.getX()+target.x);
+            var a1=this.Angle(-ra.z+target.z,-ra.x+target.x);
             var max=a1+viewAngle;
             var min=a1-viewAngle;
             
-            var ne = target.getWorld().getNearbyEntities(target.getPos(),maxDistance, 2);
+            var ne = target.world.getNearbyEntities(target.pos,maxDistance, 2);
             if (ne.length == 0)
                 return false;
     
             for(var i = 0; i < ne.length; i++){
                 if(ne[i].getUUID() == me.getUUID()){
-                    var a2=this.Angle(-ne[i].getZ()+target.z,-ne[i].getX()+target.x);
+                    var a2=this.Angle(-ne[i].z+target.z,-ne[i].x+target.x);
                     if(max > 360 && a2 < 180){
                         a2=a2+360;
                     }
@@ -247,6 +286,7 @@ var Utilities = (function(){
             return true;
         },
     
+        // Slot - 0:boots, 1:pants, 2:body, 3:head
         IsWearing: function IsWearing(player, slot, tag){
             var itemToScan = player.getArmor(slot);
             if (itemToScan.getName() != "minecraft:air"){
@@ -265,7 +305,8 @@ var Utilities = (function(){
             var volume = arguments.length >= 5 ? arguments[4] : 64;
             var np = API.getIWorld(0).getNearbyEntities(x, y, z, 32, 1);
             for(var i = 0; i < np.length; i++){
-                API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " " + x + " " + y + " " + z + " " + volume);
+                API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " " 
+                    + x + " " + y + " " + z + " " + volume);
             }
         },
 
@@ -279,17 +320,19 @@ var Utilities = (function(){
             }
             else if (entity.getType() == 1){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-                API.executeCommand(entity.world, "/playsound " + soundName + " voice " + entity.getName() + " " + entity.x + " " + entity.y + " " + entity.z + " " + volume);
+                API.executeCommand(entity.world, "/playsound " + soundName + " voice " + entity.getName() + " " 
+                    + entity.x + " " + entity.y + " " + entity.z + " " + volume);
             }
             else
-                throw ("\n\nUtilities: the entity given to Play(entity, soundName) was neither a player, nor an NPC. \nPass in an NPC or player entity.\n");
+                throw ("\n\nUtilities: the entity given to Play(entity, soundName) was neither a player, nor an NPC."
+                    + "\nPass in an NPC or player entity.\n");
         },
 
         Stop: function Stop(entity, soundName){
             if (entity == null){ throw ("\n\nUtilities: null entity given to Stop(entity, soundName)\n"); }
 
             if (entity.getType() == 2){
-                var np = entity.getWorld().getNearbyEntities(entity.pos, 32, 1);
+                var np = entity.world.getNearbyEntities(entity.pos, 32, 1);
                 for(var i = 0; i < np.length; i++){
                     entity.executeCommand("/stopsound " + np[i].getName() + " voice " + soundName);
                 }
@@ -299,7 +342,8 @@ var Utilities = (function(){
                 API.executeCommand(entity.world, "/stopsound " + entity.getName() + " voice " + soundName);
             }
             else
-                throw ("\n\nUtilities: the entity given to Stop(entity, soundName) was neither a player, nor an NPC. \nPass in an NPC or player entity.\n");
+                throw ("\n\nUtilities: the entity given to Stop(entity, soundName) was neither a player, nor an NPC."
+                 + "\nPass in an NPC or player entity.\n");
         }
     }
 }());
