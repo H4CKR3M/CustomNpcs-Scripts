@@ -5,10 +5,11 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 If you can, please link this github page in your map credits.
 
 ## Table of Contents
-1. **JTunes**     - Fully Fledged Background music using AudioJ2CK
-2. **AudioJ2CK**  - 2D Audio / No Input Lag
-3. **FUtil**      - File System Editing
-4. Legacy 1.7.10 Ports
+1. **JTunes** - Fully Fledged Background music using AudioJ2CK
+2. **AudioJ2CK** - 2D Audio / No Input Lag
+3. **FUtil** - File System Editing
+4. **StandardUtil12** - Vector Math at Your Fingertips
+5. Legacy 1.7.10 Ports
 
 ## JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
@@ -79,6 +80,56 @@ function init(e){
 }
 ```
 
+## StandardUtil12
+A set of useful library functions for use in 1.12/1.16. Many of my scripts require this file to be loaded. To use simply write `Utilities.` from anywhere npc/player/block/etc... List of all functions below:
+### Vector Math
+```js
+Utilities.Add(v1, v2);
+Utilities.Diff(v1, v2);
+Utilities.Dot(v1, v2);
+Utilities.Cross(v1, v2);
+Utilities.Mult(v, integer);
+Utilities.Angle(z, x);
+Utilities.ToDegrees(angle);
+Utilities.ToRadians(degrees);
+Utilities.IsBetween(v, v1, v2);
+Utilities.Zero();
+Utilities.Normalize(v);
+Utilities.Magnitude(v);
+Utilities.GetDistance(source, target); // inputs can be an ENTITY or a VECTOR
+Utilities.GetDistance2D(source, target); // (x/z axis only)
+Utilities.RotateAboutX(v, degrees);
+Utilities.RotateAboutY(v, degrees);
+Utilities.RotateAboutZ(v, degrees);
+Utilities.GetEntityForwardVector(entity);
+Utilities.GetDirectionTowardsTarget(source, target); // inputs can be an ENTITY or a VECTOR
+
+Utilities.FaceRotation(entity, vec);
+Utilities.CanAnyoneSeeMe(npc, range); // [1.16 ONLY]
+Utilities.IsTargetWatchingMe(entity, target, viewAngle, maxDistance);
+Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
+Utilities.IsEnemyNearby(player, range);
+Utilities.IsTeleportPosSafe(world, v); // avoid walls
+Utilities.GetRandomRadius(min, max); // returns random positive/negative number
+Utilities.SortNumeric(ar);
+```
+### Item-Related
+```js
+Utilities.RemoveItems(player, itemID, numToRemove);
+Utilities.GetEntityTags(entityItem); // returns a tagObj for use in HasTag()
+Utilities.GetItemTags(itemStack); // returns a tagObj for use in HasTag()
+Utilities.HasTag(tagObj, tagName);
+Utilities.IsWearingFullSet(player, tag);
+Utilities.IsWearing(player, slot, tag); // Slot - 0:boots, 1:pants, 2:body, 3:head
+```
+### Audio-Related
+Does not use/require AudioJ2CK, but can be used in conjunction with it.
+```js
+Utilities.PlayAt(x, y, z, soundName);
+Utilities.Play(entity, soundName); // can be an NPC (will play nearby) or a player (will only play to them)
+Utilities.Stop(entity, soundName);
+```
+
 ## DOCUMENTATION 1.7.10
 
 ### AudioJ7CK 
@@ -91,3 +142,24 @@ Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds
 
 *NOTE: Adjust Volume:* `Play("wavFileName", audioGain)`  
 *NOTE: remaining functions written at top of AudioJ7CK.js*
+
+### StandardUtil [1.7.10 Version]
+```js
+Utilities.AddVectors(v1, v2);
+Utilities.Angle(z, x);
+Utilities.Normalize(vec, newMagnitude); // just give 1 as newMagnitude
+Utilities.RotateAboutY(v, degrees);
+Utilities.GetDistance(source, target); // inputs can be an ENTITY or a VECTOR
+Utilities.GetDirectionTowardsTarget(source, target); // inputs can be an ENTITY or a VECTOR
+Utilities.GetRandomRadius(min, max); // returns random positive/negative number
+Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
+Utilities.IsTeleportPosSafe(world, v); // avoid walls
+Utilities.PlaySound(soundName, entity); // can be an NPC (will play nearby) or a player (will only play to them)
+
+// Harms the given entity with "fake instant harming"
+// (ALWAYS) Avoids 1.7.10 Crash: "Applying potion effect when entity dies throws a Concurrent Modification Exception"
+Utilities.Harm(entity, potency); 
+
+// HACK: (Usually) Avoids a crash caused by applying a potion effect when an npc dies
+Utilities.Effect(entity, effect, duration, strength);
+```
