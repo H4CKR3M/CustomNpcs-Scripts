@@ -1,7 +1,4 @@
-/* v2.3 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
- *
- * NOTE: Scripts using StandardUtil12 v1.5 or older may require an update
- */
+/* v2.4 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
@@ -56,6 +53,10 @@ var Utilities = (function(){
             return this.Dot(this.Cross(v1, v), this.Cross(v1, v2)) >= 0 && this.Dot(this.Cross(v2, v), this.Cross(v2, v1)) >= 0
         },
 
+        Zero: function Zero(){ 
+            return { x:0, y:0, z:0 } 
+        },
+
         Normalize: function Normalize(v, OPTIONAL_magnitude){
             if (OPTIONAL_magnitude == null) { OPTIONAL_magnitude = 1; }
             var sqt = this.Magnitude(v);
@@ -69,6 +70,10 @@ var Utilities = (function(){
 
         GetDistance: function GetDistance(origin, destination){
             return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.y-origin.y,2) + Math.pow(destination.z-origin.z,2));
+        },
+
+        GetDistance2D: function GetDistance2D(origin, destination){
+            return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.z-origin.z,2));
         },
 
         GetEntityForwardVector: function GetEntityForwardVector(entity){
@@ -85,6 +90,7 @@ var Utilities = (function(){
             var dir = { x: target.x-source.x, y: target.y-source.y, z: target.z-source.z, };
             return this.Normalize(dir, OPTIONAL_magnitude);
         },
+        
 
         //  [ 1    0    0 ]   [ x ]
         //  [ 0   cos -sin] * [ y ]
@@ -123,6 +129,10 @@ var Utilities = (function(){
                 z: v.z
             }
             return vec;
+        },
+
+        FaceRotation: function FaceRotation(entity, vec){
+            entity.getMCEntity().lookAi.rotate(this.Angle(entity.x-vec.x, entity.z-vec.z));
         },
 
         // NOTE: does not work on 1.12
