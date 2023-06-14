@@ -81,7 +81,7 @@ function init(e){
 ```
 
 ## StandardUtil12
-A set of useful library functions for use in 1.12/1.16. Many of my scripts require this file to be loaded. To use simply write `Utilities.` from anywhere npc/player/block/etc... List of all functions below:
+A set of useful library functions for use in 1.12/1.16. Many of my scripts require this file to be loaded. To use simply write `Utilities.` from anywhere npc/player/block/etc. A vector `v` can be anything with the following data structure: `{ x:0, y:0, z:0 }`. That includes custom data structures as well as literally just passing in npc, player, entity, etc.
 ### Vector Math
 ```js
 Utilities.Add(v1, v2);
