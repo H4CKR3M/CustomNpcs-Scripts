@@ -53,6 +53,7 @@ FUtil.DeleteDirectory(folder);
 FUtil.Exists(path);
 FUtil.ExistsInDirectory(directoryPath, filename);
 FUtil.IsExtension(filename, extension);
+FUtil.ReadFile(filepath);
 FUtil.Encrypt(string);
 FUtil.Decrypt(stringBase64);
 FUtil.UnzipDirectory(zipPath, destFolderPath);
@@ -64,6 +65,7 @@ FUtil.IsDedicatedServer();
 FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
 FUtil.OpenImageNewWindow(filename, labelText, width, height);
 FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
+FUtil.RunExecutable(filename);
 ```
 **Examples**
 ```js
