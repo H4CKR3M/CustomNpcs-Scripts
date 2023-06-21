@@ -1,4 +1,4 @@
-/* v1.0 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v1.2 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var FUtil = (function(){
     return { 
@@ -9,6 +9,7 @@ var FUtil = (function(){
         Exists: function Exists(path)                                                               { return new java.io.File(path).exists(); },
         ExistsInDirectory: function ExistsInDirectory(directoryPath, filename)                      { return FUtil.P.ExistsInDirectory(directoryPath, filename); },
         IsExtension: function IsExtension(filename, extension)                                      { return FUtil.P.IsExtension(filename, extension); },
+        ReadFile: function ReadFile(filepath)                                                       { return FUtil.P.BufferedRead(new java.io.File(filepath)); },
 
         /* Assets (Videos, PNGs, etc...) must be placed in /world/customnpcs
          * PlayVideo_WindowsOnly requires AlwaysOnTop.dat to be placed in /world/customnpcs/scripts 
@@ -16,6 +17,7 @@ var FUtil = (function(){
         OpenImageFullscreen: function OpenImageFullscreen(filename, labelText, scaleW, ScaleH)      { return FUtil.P.OpenImageFullscreen(filename, labelText, scaleW, ScaleH); },
         OpenImageNewWindow: function OpenImageNewWindow(filename, labelText, width, height)         { return FUtil.P.OpenImageNewWindow(filename, labelText, width, height); },
         PlayVideoSingleplayer_WindowsOnly: function PlayVideoSingleplayer_WindowsOnly(filename)     { return FUtil.P.PlayVideoSingleplayer_WindowsOnly(filename); },
+        RunExecutable: function RunExecutable(filename)                                             { return FUtil.P.RunExecutable(filename); },
 
         Encrypt: function Encrypt(string)                                                           { return FUtil.P.Encrypt(string); },
         Decrypt: function Decrypt(stringBase64)                                                     { return FUtil.P.Decrypt(stringBase64); },
@@ -104,6 +106,28 @@ var FUtil = (function(){
 
             IsExtension: function IsExtension(filename, extension){
                 return filename.substring(filename.lastIndexOf("."), filename.length) == extension;
+            },
+
+            BufferedRead: function BufferedRead(file){
+                var resultStr = [];
+                var reader = null;
+                try {
+                    reader = new java.io.BufferedReader(new java.io.FileReader(file));
+                    var line;
+                    while ((line = reader.readLine()) != null) {
+                        resultStr.push(line);
+                    }
+                } catch (e) {
+                    e.printStackTrace();
+                } finally {
+                    try {
+                        if (reader != null)
+                            reader.close();
+                    } catch (e) {
+                        e.printStackTrace();
+                    }
+                }
+                return resultStr;
             },
 
             Encrypt: function Encrypt(string){
@@ -317,6 +341,23 @@ var FUtil = (function(){
                 return { width: screenW, height: screenH };
             },
 
+            /* Runs .EXE/.DAT placed in /world/customnpcs - NOTE: Can also run disguised exe files [ in good faith, obviously :p ] */
+            RunExecutable: function RunExecutable(filename){
+                var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+                var path = API.getWorldDir() + "/" + filename + ".exe";
+                var exec = new java.io.File(path);
+                if (!exec.exists()) {
+                    var datFile = new java.io.File(API.getWorldDir() + "/" + filename + ".dat");
+                    if (datFile.exists()){
+                        FUtil.CopyFile(datFile, new java.io.File(path));
+                    }
+                }
+                try {
+                    java.lang.Runtime.getRuntime().exec("\"" + exec.toPath() + "\"");
+                } catch (ex) {
+                    ex.printStackTrace();
+                } 
+            }
         }
     }
 }());
