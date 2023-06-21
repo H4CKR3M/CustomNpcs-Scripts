@@ -1,4 +1,4 @@
-/* v2.4 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.5 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
@@ -60,6 +60,7 @@ var Utilities = (function(){
         Normalize: function Normalize(v, OPTIONAL_magnitude){
             if (OPTIONAL_magnitude == null) { OPTIONAL_magnitude = 1; }
             var sqt = this.Magnitude(v);
+            if (sqt == 0) { return Utilities.Zero(); }
             var vec = { x: v.x/sqt*OPTIONAL_magnitude, y: v.y/sqt*OPTIONAL_magnitude, z: v.z/sqt*OPTIONAL_magnitude }
             return vec;
         },
@@ -227,6 +228,10 @@ var Utilities = (function(){
                 }
                 i++;
             }
+        },
+
+        Clamp: function Clamp(num, min, max){
+            return Math.min(max, Math.max(min, num));
         },
 
         // ITEM RELATED ----------------------------------------------------------------------
