@@ -7,9 +7,10 @@ If you can, please link this github page in your map credits.
 ## Table of Contents
 1. **JTunes** - Fully Fledged Background music using AudioJ2CK
 2. **AudioJ2CK** - 2D Audio / No Input Lag
-3. **FUtil** - File System Editing
-4. **StandardUtil12** - Vector Math at Your Fingertips
-5. Legacy 1.7.10 Ports
+3. **ACInstaller** - Adventure Map automatically installs map content/resources/skins/sounds
+4. **FUtil** - File System Editing
+5. **StandardUtil12** - Vector Math at Your Fingertips
+6. Legacy 1.7.10 Ports
 
 ## JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
@@ -43,6 +44,56 @@ Audio.Loop("wavFileName", audioGain);
 Audio.Stop("wavFileName");
 Audio.StopAll();
 Audio.IsPlaying("wavFileName");
+```
+
+## ACInstaller
+All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically copied to the global folder <.minecraft>/customnpcs/
+
+Example:
+1. Add skins/sounds/etc... to your <.minecraft>/customnpcs/etc... folder
+2. Copy <.minecraft>/customnpcs to your <world>/customnpcs/CONTENT folder
+3. Run ACI.Install() when a player joins your world
+
+```js
+ACI.Install();
+ACI.IsInstalled();
+ACI.Say(msg);
+```
+
+Example: Locks out players until they fully restarted Minecraft [required for sounds])
+```js
+// Requires: FUtil, ACInstaller
+// Place this in a ScriptedBlock at spawn
+
+var counter = 0;
+var needsRestart = false;
+var waitTime = 5;
+
+function tick(e){
+    if (needsRestart){
+        if (counter % 5 == 0)
+            ACI.Say("§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
+        counter++;
+        return;
+    }
+    else if (ACI.IsInstalled()){
+        
+        // The player restarted Minecraft -AND- they have the content installed!
+        // Write your own "teleport outside of spawn" code here!!!
+        // TODO - do someting!
+
+        return;
+    }
+
+    if (counter >= waitTime){
+        if (counter == waitTime){
+            ACI.Install();
+            if (!FUtil.IsDedicatedServer())
+                needsRestart = true;
+        }
+    }
+    counter++;
+}
 ```
 
 ## FUtil
