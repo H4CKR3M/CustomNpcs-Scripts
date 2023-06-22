@@ -52,7 +52,7 @@ All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically 
 Example:
 1. Add skins/sounds/etc... to your <.minecraft>/customnpcs/etc... folder
 2. Copy <.minecraft>/customnpcs to your <world>/customnpcs/CONTENT folder (make the CONTENT folder if it does not exist)
-3. Run ACI.Install() when a player joins your world
+3. Run `ACI.Install()` when a player joins your world
 
 ```js
 ACI.Install();
