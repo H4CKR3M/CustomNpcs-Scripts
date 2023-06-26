@@ -154,7 +154,8 @@ Utilities.GetDistance2D(source, target); // (x/z axis only)
 Utilities.RotateAboutX(v, degrees);
 Utilities.RotateAboutY(v, degrees);
 Utilities.RotateAboutZ(v, degrees);
-Utilities.GetEntityForwardVector(entity);
+Utilities.GetForward(entity); // 3D
+Utilities.GetEntityForwardVector(entity); // 2D
 Utilities.GetDirectionTowardsTarget(source, target); // inputs can be an ENTITY or a VECTOR
 
 Utilities.FaceRotation(entity, vec);
