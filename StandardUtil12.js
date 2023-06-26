@@ -1,4 +1,4 @@
-/* v2.5 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.6 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
@@ -60,7 +60,7 @@ var Utilities = (function(){
         Normalize: function Normalize(v, OPTIONAL_magnitude){
             if (OPTIONAL_magnitude == null) { OPTIONAL_magnitude = 1; }
             var sqt = this.Magnitude(v);
-            if (sqt == 0) { return Utilities.Zero(); }
+            if (sqt == 0) { return this.Zero(); }
             var vec = { x: v.x/sqt*OPTIONAL_magnitude, y: v.y/sqt*OPTIONAL_magnitude, z: v.z/sqt*OPTIONAL_magnitude }
             return vec;
         },
@@ -77,6 +77,7 @@ var Utilities = (function(){
             return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.z-origin.z,2));
         },
 
+        // Get Forward Vector (2D plane)
         GetEntityForwardVector: function GetEntityForwardVector(entity){
             var deg = entity.getRotation();
             var dir = {
@@ -85,6 +86,13 @@ var Utilities = (function(){
                 z: Math.sin(this.ToRadians(deg)),
             };
             return this.RotateAboutY(dir, -90);
+        },
+
+        // Get Forward Vector (3D)
+        GetForward: function GetForward(entity){
+            var dir = this.GetEntityForwardVector(entity);
+            dir.y = Math.sin(this.ToRadians(-1*entity.getPitch()));
+            return dir;
         },
 
         GetDirectionTowardsTarget: function GetDirectionTowardsTarget(source, target, OPTIONAL_magnitude) {
