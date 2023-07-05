@@ -166,6 +166,8 @@ Utilities.IsEnemyNearby(player, range);
 Utilities.IsTeleportPosSafe(world, v); // avoid walls
 Utilities.GetRandomRadius(min, max); // returns random positive/negative number
 Utilities.SortNumeric(ar);
+Utilities.Clamp(num, min, max);
+Utilities.IndexOfNth(str, char, index)
 ```
 ### Item-Related
 ```js
