@@ -117,6 +117,7 @@ FUtil.OpenImageFullscreen(filename, labelText, scaleW, ScaleH);
 FUtil.OpenImageNewWindow(filename, labelText, width, height);
 FUtil.PlayVideoSingleplayer_WindowsOnly(filename);
 FUtil.RunExecutable(filename);
+FUtil.CopyToDesktop(filename);
 ```
 **Examples**
 ```js
@@ -130,6 +131,12 @@ function init(e){
 // Show image on screen | The image path is <world_name>/customnpcs/image.png
 function init(e){
   FUtil.OpenImageFullscreen("test.png", "Test", 16, 9);
+}
+```
+```js
+// Copy image from <world_name>/customnpcs/wow_this_map_so_meta.png to desktop
+function init(e){
+  FUtil.CopyToDesktop("wow_this_map_so_meta.png");
 }
 ```
 
