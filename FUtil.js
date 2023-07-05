@@ -1,10 +1,10 @@
-/* v1.2 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v1.3 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var FUtil = (function(){
     return { 
 
         CopyDirectory: function CopyDirectory(sourcePath, destPath)                                 { return FUtil.P.CopyDir_Helper(sourcePath, destPath); },
-        CopyFile: function CopyFile(sourcePath, destPath)                                           { FUtil.P.CopyFile(new java.io.File(sourcePath), destPath); },
+        CopyFile: function CopyFile(sourcePath, destPath)                                           { return FUtil.P.CopyFile(new java.io.File(sourcePath), destPath); },
         DeleteDirectory: function DeleteDirectory(folder)                                           { FUtil.P.DeleteDirectory(folder); },
         Exists: function Exists(path)                                                               { return new java.io.File(path).exists(); },
         ExistsInDirectory: function ExistsInDirectory(directoryPath, filename)                      { return FUtil.P.ExistsInDirectory(directoryPath, filename); },
@@ -18,6 +18,7 @@ var FUtil = (function(){
         OpenImageNewWindow: function OpenImageNewWindow(filename, labelText, width, height)         { return FUtil.P.OpenImageNewWindow(filename, labelText, width, height); },
         PlayVideoSingleplayer_WindowsOnly: function PlayVideoSingleplayer_WindowsOnly(filename)     { return FUtil.P.PlayVideoSingleplayer_WindowsOnly(filename); },
         RunExecutable: function RunExecutable(filename)                                             { return FUtil.P.RunExecutable(filename); },
+        CopyToDesktop: function CopyToDesktop(filename)                                             { return FUtil.P.CopyToDesktop(filename); },
 
         Encrypt: function Encrypt(string)                                                           { return FUtil.P.Encrypt(string); },
         Decrypt: function Decrypt(stringBase64)                                                     { return FUtil.P.Decrypt(stringBase64); },
@@ -56,22 +57,26 @@ var FUtil = (function(){
                     }
                     return true;
                 }
+                return false;
             },
         
             CopyFile: function CopyFile(inputFile, outputFile){
                 var inputStream = new java.io.FileInputStream(inputFile);
                 var outputStream = new java.io.FileOutputStream(outputFile);
         
+                var success = false;
                 var Exception = Java.type('java.io.IOException');
                 var ex = new Exception();
                 try {
                     java.nio.file.Files.copy(inputFile.toPath(), outputStream);
+                    success = true;
                 } catch (ex) {
                     ex.printStackTrace(java.lang.System.out);
                 } finally {
                     outputStream.close();
                     inputStream.close();
                 }
+                return success;
             },
 
             /* May take some time... really just "schedules" for deletion and the files are cleaned up later */
@@ -357,7 +362,37 @@ var FUtil = (function(){
                 } catch (ex) {
                     ex.printStackTrace();
                 } 
-            }
+            },
+
+            CopyToDesktop: function CopyToDesktop(filename){
+                var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+                var sourcePath = API.getWorldDir()+"/"+filename;
+                var System = Java.type('java.lang.System');
+                var userPath = System.getProperty("user.dir");
+                var index = this.IndexOfNth(userPath.toString(), '\\', 3);
+                if (index > -1){
+                    var destPath = userPath.substring(0, index)+"\\desktop\\"+filename;
+                    return FUtil.CopyFile(sourcePath, destPath);
+                }
+                return false;
+            },
+
+            IndexOfNth: function IndexOfNth(str, char, index) {
+                if (index <= 0){
+                    throw("\n\mERROR: IndexOfNth(str, char, index) was given an nth number less than 1.\nEX: If you want the 2nd index, give 2\n\n");
+                }
+            
+                var remaining = index;
+                for (var i = 0; i < str.length; i++) {
+                    if (str[i] == char) {
+                        remaining--;
+                        if (remaining == 0) {
+                            return i;
+                        }
+                    }
+                }
+                return -1;
+            },
         }
     }
 }());
