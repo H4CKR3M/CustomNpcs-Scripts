@@ -1,4 +1,4 @@
-/* v2.6 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.7 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
@@ -240,6 +240,23 @@ var Utilities = (function(){
 
         Clamp: function Clamp(num, min, max){
             return Math.min(max, Math.max(min, num));
+        },
+
+        IndexOfNth: function IndexOfNth(str, char, index) {
+            if (index <= 0){
+                throw("\n\mERROR: IndexOfNth(str, char, index) was given an nth number less than 1.\nEX: If you want the 2nd index, give 2\n\n");
+            }
+
+            var remaining = index;
+            for (var i = 0; i < str.length; i++) {
+                if (str[i] == char) {
+                    remaining--;
+                    if (remaining == 0) {
+                        return i;
+                    }
+                }
+            }
+            return -1;
         },
 
         // ITEM RELATED ----------------------------------------------------------------------
