@@ -1,17 +1,17 @@
-/* v2.7 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.8 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
 
         Broadcast: function Broadcast(msg){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-            API.getIWorld(0).broadcast(msg.replaceAll("&", "§"));
+            API.getIWorld(0).broadcast(msg.toString().replaceAll("&", "§"));
         },
 
         Message: function Message(player, msg){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
             API.executeCommand(player.world, "/tellraw " + player.getDisplayName() + " " + "{\"text\":\"" 
-                + msg.replaceAll("&", "§") + "\",\"color\":\"white\"}");
+                + msg.toString().replaceAll("&", "§") + "\",\"color\":\"white\"}");
         },
 
         // MATH RELATED ----------------------------------------------------------------------
