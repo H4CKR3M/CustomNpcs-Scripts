@@ -1,4 +1,4 @@
-/* v2.8 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.9 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
@@ -55,6 +55,10 @@ var Utilities = (function(){
 
         Zero: function Zero(){ 
             return { x:0, y:0, z:0 } 
+        },
+
+        Up: function Up(){ 
+            return { x:0, y:1, z:0 } 
         },
 
         Normalize: function Normalize(v, OPTIONAL_magnitude){
