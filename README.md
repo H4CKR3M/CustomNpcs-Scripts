@@ -7,7 +7,7 @@ If you can, please link this github page in your map credits.
 * Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
 
 ## Table of Contents
-1. GUIDE: How to Load Scripts?
+1. TUTORIAL: How to Load Scripts?
 2. **JTunes** - Fully Fledged Background music using AudioJ2CK
 3. **AudioJ2CK** - 2D Audio / No Input Lag
 4. **HyperSpawnpoint12** - Better Spawnpoints w/ Optional Spectator Mechanic
@@ -17,7 +17,7 @@ If you can, please link this github page in your map credits.
 8. **StandardUtil12** - Vector Math at Your Fingertips
 9. Legacy 1.7.10 Ports
 
-## Guide: How to Load Scripts?
+## TUTORIAL: How to Load Scripts?
 1. Place all scripts you want to use in the `<world>/customnpcs/scripts/ecmascript/` folder.
 2. In Minecraft, Right-Click NPC/Block with the npcScripter
 3. Select the "Load Scripts" button.
