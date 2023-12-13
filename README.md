@@ -7,14 +7,29 @@ If you can, please link this github page in your map credits.
 * Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
 
 ## Table of Contents
-1. **JTunes** - Fully Fledged Background music using AudioJ2CK
-2. **AudioJ2CK** - 2D Audio / No Input Lag
-3. **HyperSpawnpoint12** - Better Spawnpoints w/ Optional Spectator Mechanic
-4. **HyperMobSpawner12** - Soulslike Enemy Respawning
-5. **ACInstaller** - Adventure Map automatically installs map content/resources/skins/sounds
-6. **FUtil** - File System Editing
-7. **StandardUtil12** - Vector Math at Your Fingertips
-8. Legacy 1.7.10 Ports
+1. GUIDE: How to Load Scripts?
+2. **JTunes** - Fully Fledged Background music using AudioJ2CK
+3. **AudioJ2CK** - 2D Audio / No Input Lag
+4. **HyperSpawnpoint12** - Better Spawnpoints w/ Optional Spectator Mechanic
+5. **HyperMobSpawner12** - Soulslike Enemy Respawning
+6. **ACInstaller** - Adventure Map automatically installs map content/resources/skins/sounds
+7. **FUtil** - File System Editing
+8. **StandardUtil12** - Vector Math at Your Fingertips
+9. Legacy 1.7.10 Ports
+
+## Guide: How to Load Scripts?
+1. Place all scripts you want to use in the `<world>/customnpcs/scripts/ecmascript/` folder.
+2. In Minecraft, Right-Click NPC/Block with the npcScripter
+3. Select the "Load Scripts" button.
+4. Click the Arrow `>` to load the script.
+* Now paste the following code on your npc:
+```js
+// Load StandardUtil12 Example
+
+function init(e){
+  Utilities.Broadcast("&4I loaded my first script!");
+}
+```
 
 ## JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
