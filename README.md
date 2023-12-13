@@ -52,10 +52,10 @@ Audio.IsPlaying("wavFileName");
 ## HyperSpawnpoint12
 Location-Based Spawnpoints with an optional Spectator Mechanic (for Multiplayer)
 
-Download:
-* **HyperSpawnpoint12.js**
-* **HSpawnpointPlayer.js**
-* **HSpawnpointOrigin.js**
+Requires:
+* [**HyperSpawnpoint12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HyperSpawnpoint12.js)
+* [**HSpawnpointPlayer.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HSpawnpointPlayer.js)
+* [**HSpawnpointOrigin.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HSpawnpointOrigin.js)
 
 ### 1. Basic Setup
 
@@ -220,8 +220,8 @@ function tick(e){
 ## HyperMobSpawner12
 An easy to use despawning/respawning system for enemies! Here's how it works, if the player dies, all enemies are despawned/respawned **lag-free**!
 
-Download:
-* **HyperMobSpawner12.js**
+Requires:
+* [**HyperMobSpawner12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HyperMobSpawner12.js)
 * Requires the use of HyperSpawnpoint12 *(See HyperSpawnpoint12, 1. Basic Setup)*
 
 Example:
