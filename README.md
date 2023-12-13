@@ -269,7 +269,7 @@ You can change the clone tab *(default is 1)* in `HyperMobSpawner12.js` under `m
 ### Saving Mob Positions in Bulk
 I know what you're thinking, isn't it a pain in the rear to write down the coordinates for every single mob? **Yes, it is.** Thankfully, we have a tool for that! *Drum roll please* Introducing the `SaveNearbyPositions2` tool. *Not a very catchy name...*
 
-* **SaveNearbyPositions2**
+* **Tools/SaveNearbyPositions2**
 
 Setup:
 1. Load `SaveNearbyPositions2.js` on a scripted item.
