@@ -50,7 +50,7 @@ Audio.StopAll();
 Audio.IsPlaying("wavFileName");
 ```
 ## HyperSpawnpoint12
-Location-Based Spawnpoints with an optional Spectator Mechanic (for Multiplayer)
+Location-Based Spawnpoints with an optional Spectator Mechanic (for Singleplayer or Multiplayer)
 
 Requires:
 * [**HyperSpawnpoint12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HyperSpawnpoint12.js)
