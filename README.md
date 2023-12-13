@@ -4,13 +4,17 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 **LICENSE**: Permission to modify/redistribute scripts as a part of your map only.  
 If you can, please link this github page in your map credits.
 
+* Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
+
 ## Table of Contents
 1. **JTunes** - Fully Fledged Background music using AudioJ2CK
 2. **AudioJ2CK** - 2D Audio / No Input Lag
-3. **ACInstaller** - Adventure Map automatically installs map content/resources/skins/sounds
-4. **FUtil** - File System Editing
-5. **StandardUtil12** - Vector Math at Your Fingertips
-6. Legacy 1.7.10 Ports
+3. **HyperSpawnpoint12** - Better Spawnpoints w/ Optional Spectator Mechanic
+4. **HyperMobSpawner12** - Soulslike Enemy Respawning
+5. **ACInstaller** - Adventure Map automatically installs map content/resources/skins/sounds
+6. **FUtil** - File System Editing
+7. **StandardUtil12** - Vector Math at Your Fingertips
+8. Legacy 1.7.10 Ports
 
 ## JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
@@ -45,6 +49,232 @@ Audio.Stop("wavFileName");
 Audio.StopAll();
 Audio.IsPlaying("wavFileName");
 ```
+## HyperSpawnpoint12
+Location-Based Spawnpoints with an optional Spectator Mechanic (for Multiplayer)
+
+* **HyperSpawnpoint12**
+* **HSpawnpointPlayer**
+* **HSpawnpointOrigin**
+
+### 1. Basic Setup
+
+1. First we'll need to modify the playerscript. Open the playerscript (npc scripted right-click the air).
+2. Load `HyperSpawnpoint12.js` and `HSpawnpointPlayer.js` in the playerscript.
+3. Paste the following:
+```js
+// Requires: HSpawnpointPlayer, HyperSpawnpoint12
+
+function login(e){
+    HSpawnpointPlayer.Login(e);
+}
+
+function logout(e){
+    HSpawnpointPlayer.Logout(e);
+}
+```
+
+4. Next, Place a Scripted Block at the World Origin `/setworldspawn` I like to make this a black box that the player starts in. Don't forget to type `/gamerule spawnRadius 0` in-game.
+5. Load `HyperSpawnpoint12.js` and `HSpawnpointOrigin.js` on the block.
+6. Paste the following:
+```js
+// Requires: HSpawnpointOrigin, HyperSpawnpoint12
+
+function tick(e){
+    HSpawnpointOrigin.Tick(e);
+}
+```
+
+7. Next, let's make our first spawnpoint! First, place down another scripted block far away from the World Origin.
+8. Load `HyperSpawnpoint12.js` on the second block.
+9. Paste the following:
+```js
+/* Basic Spawnpoint | ScriptedBlock | Minecraft 1.12.2 (05Jul20)
+ * Requires: HyperSpawnpoint12
+ */
+
+var spawnpoint;
+
+function init(e){
+    spawnpoint = HyperSpawn.hyperSpawnpoint;
+    spawnpoint.pos = { x:e.block.x+0.5, y:e.block.y+2, z:e.block.z+0.5};
+    spawnpoint.block = e.block;
+    spawnpoint.world = e.block.world;
+}
+
+function tick(e){
+    spawnpoint.SaveNearbyPlayers();
+}
+```
+
+10. The default location the player is sent to if they have **NOT** touched a spawnpoint can be set in `HyperSpawnpoint12.js` at the top of the file. It's labeled: `defaultStart: { x:-79.5, y:90.5, z:93.5 }`
+* You can also tweak the default spawnpoint range in `HyperSpawnpoint12.js`
+
+### 2. Advanced Setup
+
+So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's see what a more advanced version of your spawnpoint code *(See 1. Basic Setup, Step 9.)* might look like:
+```js
+/* Advanced Spawnpoint | ScriptedBlock | Minecraft 1.12.2 (05Jul20)
+ * Requires: HyperSpawnpoint12
+ */
+
+var spawnpoint;
+
+function init(e){
+    spawnpoint = HyperSpawn.hyperSpawnpoint;
+    spawnpoint.pos = { x:e.block.x+0.5, y:e.block.y+2, z:e.block.z+0.5};
+    spawnpoint.yaw = 180;
+    spawnpoint.pitch = 0;
+    spawnpoint.range = 5;
+    spawnpoint.block = e.block;
+    spawnpoint.world = e.block.world;
+    e.block.model = "minecraft:sea_lantern";
+}
+
+function tick(e){
+    spawnpoint.SaveNearbyPlayers();
+}
+```
+
+### 3. Enabling/Disabling Spectator Mode [Advanced]
+
+On multiplayer, if **player1** is killed, they will be switched to spectator mode. Only after **player2** reaches a new spawnpoint, will **player1** be revived. This behavior can be toggled ON/OFF.
+
+* To **ENABLE** the spectator mechanic, open `HyperSpawnpoint12.js` and change `ID:` to anything. For example: `ID: "ID"` would be fine, or `ID: "world1"` etc...
+* To **DISABLE** the spectator mechanic, open `HyperSpawnpoint12.js` and change set ID to none `ID: "none"`
+
+But what does setting the `ID` actually do? Well, setting it to `"none"` completely disables the spectator mechanic. Players will respawn instantly when they are killed. Setting the `ID` to something else will assign that spawnpoint to a group. All players interacting with spawnpoints of the same `ID` will respawn when touching other spawnpoints of the same group. If you're unsure what `ID` to use, and you still want to use the spectator mechanic, just set the `ID` to ID in `HyperSpawnpoint12.js`. Like this: `ID: "ID"`
+
+### 4. ACInstaller Support [Advanced]
+
+You can modify the spawnpoint origin code *(See HyperSpawnpoint12, 1. Basic Setup )* to teleport the player out of the world spawn only after installing skins/textures/sounds to the player's world. The below code can be used to achieve this. Don't forget to load `FUtil`, `ACInstaller`, `HSpawnpointOrigin`, `HyperSpawnpoint12`
+* *Remember! We're pasting this script on the scripted block at the World Origin `/setworldspawn`*
+```js
+// Requires: FUtil, ACInstaller, HSpawnpointOrigin, HyperSpawnpoint12
+
+var counter = 0;
+var needsRestart = false;
+var waitTime = 5;
+
+function tick(e){
+    if (needsRestart){
+        if (counter % 5 == 0)
+            ACI.Say(e, "§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
+        counter++;
+        return;
+    }
+    else if (ACI.IsInstalled(e)){
+        HSpawnpointOrigin.Tick(e);
+        return;
+    }
+
+    if (counter >= waitTime){
+        if (counter == waitTime){
+            ACI.Install(e);
+            if (!FUtil.IsDedicatedServer(e.API))
+                needsRestart = true;
+        }
+    }
+    counter++;
+}
+```
+
+### 5. ACInstaller Support with DLOAD [Very Advanced]
+
+If you're feeling up to it, the origin code can be modified a third time to support DLOAD (a DLC Installer/Loader for Minecraft Maps). I won't go too far into the details here, suffice it to say the code waits for DLOAD to finish installing any DLC the player might need, before warping the player out of the world origin. Don't forget to load `FUtil`, `ACInstaller`, `HSpawnpointOrigin`, `HyperSpawnpoint12`
+
+```js
+// Requires: FUtil, ACInstaller, HSpawnpointOrigin, HyperSpawnpoint12
+
+var counter = 0;
+var needsRestart = false;
+var waitTime = 5;
+var loadCompleteKey = "DLOAD_COMPLETE";
+
+function tick(e){
+    if (needsRestart){
+        if (counter % 5 == 0)
+            ACI.Say(e, "§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
+        counter++;
+        return;
+    }
+    else if (ACI.IsInstalled(e)){
+        HSpawnpointOrigin.Tick(e);
+        return;
+    }
+
+    // WAIT for Dload to finish
+    if (e.block.world.getTempdata().has(loadCompleteKey) && e.block.world.getTempdata().get(loadCompleteKey) == true){
+        if (counter >= waitTime){
+            if (counter == waitTime){
+                ACI.Install(e);
+                if (!FUtil.IsDedicatedServer(e.API))
+                    needsRestart = true;
+            }
+        }
+        counter++;
+    }
+}
+```
+
+## HyperMobSpawner12
+An easy to use despawning/respawning system for enemies! Here's how it works, if the player dies, all enemies are despawned/respawned **lag-free**!
+
+* **HyperMobSpawner12**
+* Requires the use of HyperSpawnpoint12 *(See HyperSpawnpoint12, 1. Basic Setup)*
+
+Example:
+1. Save an npc named **npc1** and an npc named **npc2** to tab 1 in the mob cloner (Server)
+2. Place down a scripted block (this will be our mob spawner)
+3. Load `HyperMobSpawner12` on the block.
+4. Paste the following:
+```js
+/* v1.0 - HMobSpawner | ScriptedBlock | Minecraft 1.12.2 (05Jul20)
+ * Requires: HyperMobSpawner12
+ */
+
+var mobSpawner;
+
+function init(e){
+    mobSpawner = HyperMobSpawner.mobSpawner;
+    mobSpawner.pos = { x:e.block.x, y:e.block.y+2, z:e.block.z};
+    mobSpawner.mobSpawnerID = "UniqueID";
+    mobSpawner.range = 20;
+    mobSpawner.block = e.block;
+    mobSpawner.world = e.block.world;
+    e.block.model = "minecraft:redstone_lamp";
+    
+    mobSpawner.mobLocations = [
+        { x:100.5, y:75, z:100.5, prefab: "clone1" },
+        { x:110.5, y:75, z:100.5, prefab: "clone1" },
+        { x:120.5, y:75, z:100.5, prefab: "clone2" },
+        { x:130.5, y:75, z:100.5, prefab: "clone1" },
+        { x:140.5, y:75, z:100.5, prefab: "clone2" },
+        ];
+        
+}
+
+function tick(e){
+    mobSpawner.CheckDespawnMobs();
+    mobSpawner.CheckNearbyPlayers();
+}
+```
+
+5. See the `mobSpawner.mobSpawnerID` parameter? Every mobSpawner needs a unique ID, don't forget!
+* NOTE: Spawners with the same `mobSpawnerID` will be treated as the same spawner.
+* NOTE: You can place as many spawners as you want in the world, just give each of them a unique `mobSpawnerID`
+* NOTE: Spawners also have a `hyperSpawnpointID`. This should be the same as the ID written in `HyperSpawnpoint12.js`
+
+You can change the clone tab *(default is 1)* in `HyperMobSpawner12.js` under `mobSummonTab`
+
+### Saving Mob Positions in Bulk
+I know what you're thinking, isn't it a pain in the rear to write down the coordinates for every single mob? **Yes, it is.** Thankfully, we have a tool for that! *Drum roll please* Introducing the `SaveNearbyPositions2` tool. *Not a very catchy name...*
+
+* **SaveNearbyPositions2**
+
+Setup:
+1. Load `SaveNearbyPositions2.js` on a scripted item.
+* Mob positions & clone name as saved to your minecraft /world directory. From there you can open the txt file and copy the mob positions to your mob spawner. Magic!
+
 
 ## ACInstaller
 All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically copied to the global folder <.minecraft>/customnpcs/
