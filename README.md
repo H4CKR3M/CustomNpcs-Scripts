@@ -104,7 +104,7 @@ function tick(e){
 8. Load `HyperSpawnpoint12.js` on the second block.
 9. Paste the following:
 ```js
-/* Basic Spawnpoint | ScriptedBlock | Minecraft 1.12.2 (05Jul20)
+/* Basic Spawnpoint | ScriptedBlock
  * Requires: HyperSpawnpoint12
  */
 
@@ -129,7 +129,7 @@ function tick(e){
 
 So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's see what a more advanced version of your spawnpoint code *(See 1. Basic Setup, Step 9.)* might look like:
 ```js
-/* Advanced Spawnpoint | ScriptedBlock | Minecraft 1.12.2 (05Jul20)
+/* Advanced Spawnpoint | ScriptedBlock
  * Requires: HyperSpawnpoint12
  */
 
@@ -239,59 +239,55 @@ Requires:
 * [**HyperMobSpawner12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HyperMobSpawner12.js)
 * Requires the use of HyperSpawnpoint12 *(See HyperSpawnpoint12, 1. Basic Setup)*
 
-Example:
+### Example
 1. Save an npc named **npc1** and an npc named **npc2** to tab 1 in the mob cloner (Server)
 2. Place down a scripted block (this will be our mob spawner)
 3. Load `HyperMobSpawner12` on the block.
 4. Paste the following:
 ```js
-/* v1.0 - HMobSpawner | ScriptedBlock | Minecraft 1.12.2 (05Jul20)
+/* v2.0 - HMobSpawner | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5)
  * Requires: HyperMobSpawner12
  */
 
-var mobSpawner;
-
 function init(e){
-    mobSpawner = HyperMobSpawner.mobSpawner;
-    mobSpawner.pos = { x:e.block.x, y:e.block.y+2, z:e.block.z};
-    mobSpawner.mobSpawnerID = "UniqueID";
-    mobSpawner.range = 20;
-    mobSpawner.block = e.block;
-    mobSpawner.world = e.block.world;
-    e.block.model = "minecraft:redstone_lamp";
+    HyperMobSpawn.pos = { x:e.block.x, y:e.block.y+2, z:e.block.z};
+    HyperMobSpawn.ID = "UniqueID";
+    HyperMobSpawn.range = 10;
     
-    mobSpawner.mobLocations = [
-        { x:100.5, y:75, z:100.5, prefab: "clone1" },
-        { x:110.5, y:75, z:100.5, prefab: "clone1" },
-        { x:120.5, y:75, z:100.5, prefab: "clone2" },
+    HyperMobSpawn.clones = [
         { x:130.5, y:75, z:100.5, prefab: "clone1" },
         { x:140.5, y:75, z:100.5, prefab: "clone2" },
         ];
-        
 }
 
 function tick(e){
-    mobSpawner.CheckDespawnMobs();
-    mobSpawner.CheckNearbyPlayers();
+    HyperMobSpawn.Tick(e);
 }
 ```
 
-5. See the `mobSpawner.mobSpawnerID` parameter? Every mobSpawner needs a unique ID, don't forget!
-* NOTE: Spawners with the same `mobSpawnerID` will be treated as the same spawner.
-* NOTE: You can place as many spawners as you want in the world, just give each of them a unique `mobSpawnerID`
-* NOTE: Spawners also have a `hyperSpawnpointID`. This should be the same as the ID written in `HyperSpawnpoint12.js`
+5. See the `HyperMobSpawn.ID` parameter? Every mobSpawner needs a unique ID, don't forget!
+
+### <span style="color:#BF3427">MobSpawners will only despawn/respawn mobs when the player enters the world spawn - **AKA: <u>Make sure HyperSpawnpoint12 is setup correctly!**</u></span>
+
+* You can place as many spawners as you want in the world, just give each of them a unique `HyperMobSpawn.ID` Otherwise...
+* Spawners with the same `HyperMobSpawn.ID` will be treated as the same spawner.
+* Spawners also have a `HyperMobSpawn.hyperSpawnpointID`. This should be the same as the ID written in `HyperSpawnpoint12.js`
 
 You can change the clone tab *(default is 1)* in `HyperMobSpawner12.js` under `mobSummonTab`
 
 ### Saving Mob Positions in Bulk
-I know what you're thinking, isn't it a pain in the rear to write down the coordinates for every single mob? **Yes, it is.** Thankfully, we have a tool for that! *Drum roll please* Introducing the `SaveNearbyPositions2` tool. *Not a very catchy name...*
+I know what you're thinking, isn't it a pain in the rear to write down the coordinates for every single mob? **Yes, it is.** Thankfully, we have a tool for that! *Drum roll please* Introducing the `PositionSaver` tool. *Not a very catchy name...*
 
-* **Tools/SaveNearbyPositions2**
+* **Tools/PositionSaver.js**
 
 Setup:
-1. Load `SaveNearbyPositions2.js` on a scripted item.
-* Mob positions & clone name as saved to your minecraft /world directory. From there you can open the txt file and copy the mob positions to your mob spawner. Magic!
+1. Load `PositionSaver.js` on a scripted item - <u>*or copy the code to a scripted item.*</u>
+* NPC positions & clone name as saved to your minecraft world directory. From there you can open the txt file and copy the mob positions to your mob spawner. Magic!
 
+<br />
+<div align="left">
+  <img src="img/SNMP.png" alt="Logo" width="920" height="512">
+</div>
 
 ## ACInstaller
 All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically copied to the global folder <.minecraft>/customnpcs/

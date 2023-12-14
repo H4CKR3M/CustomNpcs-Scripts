@@ -1,4 +1,4 @@
-/* v1.8 - HyperSpawnpoint12 | Loadable From Anywhere | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v2.0 - HyperSpawnpoint12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Load This Script on all HScript Objects (HSpawnpointOrigin, HSpawnpointPlayer, actual spawnpoint blocks in the world) */        
 
 var HyperSpawn = (function(){
@@ -7,11 +7,13 @@ var HyperSpawn = (function(){
         databaseName: "playerSpawnpointDatabase",
         illegalTags: [ "illegal" ],
         debug: false,
-        debugPlayer: false,
+        debugPlayer: true,
         defaultGamemode: 2,
-        defaultStart: { x:-79.5, y:90.5, z:93.5 },
+        defaultStart: { x:-484.5, y:65.5, z:-246.5 },
+        //defaultStart: { x:100.5, y:100.5, z:100.5 },
         defaultYaw: 0,
         defaultPitch: 0,
+        worldOriginRange: 2,
 
         // Block to be created and placed around the world.
         hyperSpawnpoint: {
@@ -172,11 +174,11 @@ var HyperSpawn = (function(){
                 for(var i = 0; i < this.playerSpawnpoints.length; i++){
                     if (this.playerSpawnpoints[i].name  == playerSpawnpoint.name){
                         this.playerSpawnpoints[i] = playerSpawnpoint;
-                        HyperSpawn.Broadcast(world, "Player Already in Database. [POSITION SAVED]");
+                        HyperSpawn.Broadcast(world, playerSpawnpoint.name + " Already in Database. §2[§8POSITION SAVED§2]");
                         return;
                     }
                 }
-                HyperSpawn.Broadcast(world, "Player added to Database. [POSITION SAVED]");
+                HyperSpawn.Broadcast(world, playerSpawnpoint.name + " added to Database. §2[§8POSITION SAVED§2]");
                 this.playerSpawnpoints.push(playerSpawnpoint);
             },
 
@@ -202,8 +204,8 @@ var HyperSpawn = (function(){
         },
 
         Broadcast: function Broadcast(world, text){
-            if (HyperSpawn.debug == true)
-                world.broadcast("[HS12]: " + text);
+            if (HyperSpawn.debug)
+                world.broadcast("§8[§7§lHS12§8][§bS§8]§7 " + text);
         },
 
         // HACK: setPitch() is non-functional, so just use MC built-in <TP> command

@@ -1,4 +1,4 @@
-/* v1.7 - HSpawnpointPlayer | Playerscript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v2.0 - HSpawnpointPlayer | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Requires: HyperSpawnpoint12
  */
 
@@ -8,10 +8,7 @@ var HSpawnpointPlayer = (function(){
         Logout: function Logout(e){ HSpawnpointPlayer.P.Logout(e); },
 
         P: {
-            debug: false,
-
             Login: function Login(e){
-
                 if (typeof HyperSpawn === 'undefined') { throw("\n\nHSpawnpointPlayer: You forgot to load the script HyperSpawnpoint12\n\n"); }
                 
                 var world = e.player.world;
@@ -59,7 +56,7 @@ var HSpawnpointPlayer = (function(){
                         HyperSpawn.defaultStart.y = storedString[2];
                         HyperSpawn.defaultStart.z = storedString[3];
             
-                        this.Broadcast(e.player.world, "WARNING! Stored Data found! Loading Stored Data...");
+                        this.Broadcast(e.player.world, "§8[§eWARNING§8]§7 Stored Data found! Loading Stored Data...");
                     }
                     
                     // Create a brand new player spawnpoint
@@ -69,7 +66,7 @@ var HSpawnpointPlayer = (function(){
                     playerSpawnpoint.pos = HyperSpawn.defaultStart;
                     playerSpawnpoint.yaw = HyperSpawn.defaultYaw;
                     playerSpawnpoint.pitch = HyperSpawn.defaultPitch;
-            
+
                     playerSpawnpointDatabase.SavePlayerSpawnpoint(world, playerSpawnpoint);
                     world.getTempdata().put(HyperSpawn.databaseName, playerSpawnpointDatabase);
             
@@ -175,7 +172,11 @@ var HSpawnpointPlayer = (function(){
     
             Broadcast: function Broadcast(world, text){
                 if (HyperSpawn.debugPlayer)
-                    world.broadcast("[HSP]: " + text);
+                    this.Alert(world, text);
+            },
+
+            Alert: function Alert(world, text){
+                world.broadcast("§8[§7§lHS12§8][§cP§8]§7 " + text);
             },
         },
     }

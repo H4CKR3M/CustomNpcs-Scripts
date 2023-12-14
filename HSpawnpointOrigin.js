@@ -1,27 +1,87 @@
-/* v1.8 - HSpawnpointOrigin | ScriptedBlock | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v2.0 - HSpawnpointOrigin | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Requires: HyperSpawnpoint12
  *
  * Add this block to the worldspawn */
 
 var HSpawnpointOrigin = (function(){
-    return {  
-
-        // Look for players that are near the worldspawn (Because they have died and need to be respawned)
+    return {
         Tick: function Tick(e){ HSpawnpointOrigin.P.Tick(e); },
 
         P: {
-            range: 2,
+            hotReloading: true,
 
-            Tick: function Tick(e){
+            /* (OPTIONAL) HOT RELOADING SUPPORT via /noppes script reload */
+            AutoExec: function AutoExec(){
+                if (!this.hotReloading)
+                    return;
 
-                // Only trigger when a player is nearby
-                var np = e.block.world.getNearbyEntities(e.block.pos, this.range, 1);
-                if (np.length == 0)
+                // Preload HyperSpawnpoint12 ourselves
+                if (typeof HyperSpawn === 'undefined')
+                    this.TryLoad("HyperSpawnpoint12.js");
+
+                var world = Java.type("noppes.npcs.api.NpcAPI").Instance().getIWorlds()[0];
+                if (world.getTempdata().has(HyperSpawn.databaseName))
                     return;
                 
-                this.Broadcast(e.block.world, "======== RESTARTING MAP STACK ========");
+                if (HyperSpawn !== 'undefined'){
+                    var ap = world.getAllPlayers();
+                    for(var i = 0; i < ap.length; i++){
+                        var player = ap[i];
 
+                        // Create a new database if one does not exist
+                        if (!world.getTempdata().has(HyperSpawn.databaseName)){
+                            this.Broadcast(world, "HotReload: Creating new database...");
+                            var playerSpawnpointDatabase = Object.create(HyperSpawn.playerSpawnpointDatabase);
+                            world.getTempdata().put(HyperSpawn.databaseName, playerSpawnpointDatabase);
+                            this.Broadcast(world, "HotReload: Created new database");
+                        }
+                        else{
+                            var playerSpawnpointDatabase = world.getTempdata().get(HyperSpawn.databaseName);
+                        }
+
+                        this.Broadcast(world, "HotReload: Player is NOT in the database");
+                        this.Broadcast(world, "HotReload: Adding player to database...");
+                
+                        // If they have no world data, assign them to the default/first world spawnpoint (NOT WORLD ORIGIN)
+                        var ID = "none";
+                
+                        // Get saved world data
+                        if (world.getStoreddata().has(player.getDisplayName())){
+                            var playerWorldData = world.getStoreddata().get(player.getDisplayName());
+                            var storedString = playerWorldData.split(',');
+                
+                            ID = storedString[0];
+                            HyperSpawn.defaultStart.x = storedString[1];
+                            HyperSpawn.defaultStart.y = storedString[2];
+                            HyperSpawn.defaultStart.z = storedString[3];
+                
+                            this.Broadcast(world, "HotReload: WARNING! Stored Data found! Loading Stored Data...");
+                        }
+                        
+                        // Create a brand new player spawnpoint
+                        var playerSpawnpoint = Object.create(HyperSpawn.playerSpawnpoint);
+                        playerSpawnpoint.name = player.getDisplayName();
+                        playerSpawnpoint.ID = ID;
+                        playerSpawnpoint.pos = HyperSpawn.defaultStart;
+                        playerSpawnpoint.yaw = HyperSpawn.defaultYaw;
+                        playerSpawnpoint.pitch = HyperSpawn.defaultPitch;
+
+                        playerSpawnpointDatabase.SavePlayerSpawnpoint(world, playerSpawnpoint);
+                        world.getTempdata().put(HyperSpawn.databaseName, playerSpawnpointDatabase);
+
+                    }
+                }
+            },
+
+            Tick: function Tick(e){
                 if (typeof HyperSpawn === 'undefined') { throw("\n\HSpawnpointOrigin: You forgot to load the script HyperSpawnpoint12\n\n"); }
+
+                // Only trigger when a player is nearby
+                var np = e.block.world.getNearbyEntities(e.block.pos, HyperSpawn.worldOriginRange, 1);
+                if (np.length == 0)
+                    return;
+
+                this.Broadcast(e.block.world, "======== RESTARTING MAP STACK ========");
             
                 // Gets the player spawnpoint database
                 var world = e.block.getWorld();
@@ -42,9 +102,14 @@ var HSpawnpointOrigin = (function(){
                 
                                 // Filter out far away players
                                 var playerEntity = world.getPlayer(playerName);
-                                if (this.IsPlayerNearby(e.block, playerEntity, 5)){
+                                if (this.IsPlayerNearby(e.block, playerEntity, HyperSpawn.worldOriginRange+3)){
                                     var playerSpawnpoint = playerSpawnpointDatabase.GetPlayerSpawnpoint(playerEntity.world, playerEntity);
                                     if (playerSpawnpoint != null){
+
+                                        // User Warning if Default Start is not changed
+                                        if (HyperSpawn.defaultStart.x == 100.5 && HyperSpawn.defaultStart.y == 100.5 && HyperSpawn.defaultStart.y == 100.5){
+                                            this.Alert(world, "§eTeleporting to start at §7§o(100.5, 100.5, 100.5)§e.\nDon't forget to set the §3defaultStart§e in §3HyperSpawnpoint12.js");
+                                        }
                     
                                         // Spawnpoints using Default ID will always respawn their players.
                                         if (playerSpawnpoint.ID == "none"){
@@ -82,7 +147,7 @@ var HSpawnpointOrigin = (function(){
                     
                                             // Player is playing solo, respawn him normally | OR all of his teammates are dead
                                             if (foundTeammateInSameSpawnpoint == false){
-                                                this.Broadcast(world, "No Living players found! Respawn Everyone in the Group!");
+                                                this.Broadcast(world, "No Living players found! Respawn ALL in Group §3" + playerSpawnpoint.ID);
                                                 this.ReviveEveryone(world, playerSpawnpoint);
                                             }
                                         }
@@ -92,8 +157,8 @@ var HSpawnpointOrigin = (function(){
                         }
                     }
                 }
-                else{
-                    e.block.world.broadcast("§c§lHOT RELOADING NOT SUPPORTED! §f- Logout/Login again!")
+                else if (!this.hotReloading){
+                    this.Alert(e.block.world, "§c§lHOT RELOADING DISABLED! §fLogout/Login again!");
                 }
             },
 
@@ -143,14 +208,41 @@ var HSpawnpointOrigin = (function(){
             },
 
             Broadcast: function Broadcast(world, text){
-                if (HyperSpawn.debug)
-                    world.broadcast(text);
+                if (HyperSpawn.debugPlayer)
+                    this.Alert(world, text);
+            },
+
+            Alert: function Alert(world, text){
+                world.broadcast("§8[§7§lHS12§8][§6O§8]§7 " + text);
             },
 
             Message: function Message(block, player, tellraw){
                 block.executeCommand("/tellraw " + player.getDisplayName() + " " + tellraw);
+            },
+
+            TryLoad: function TryLoad(fileName){
+                var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+                var source = new java.io.File(API.getWorldDir() + "/scripts/ecmascript");
+                if (!source.exists()) {
+                    source.mkdir();
+                    return false;
+                }
+                if (source.isDirectory()) {
+                    var listFile = source.listFiles();
+                    for(var i = 0; i < listFile.length; i++){
+                        var f = listFile[i];
+                        if (!f.isDirectory() && f.getName() == fileName){
+                            try {
+                                load(f); 
+                            } catch (ex) {
+                                ex.printStackTrace(java.lang.System.out);
+                                break;
+                            }
+                        }
+                    }
+                }
             }
             
         }
     }
-}());
+}()); HSpawnpointOrigin.P.AutoExec();
