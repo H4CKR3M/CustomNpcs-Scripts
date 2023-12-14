@@ -104,7 +104,7 @@ function tick(e){
 8. Load `HyperSpawnpoint12.js` on the second block.
 9. Paste the following:
 ```js
-/* Basic Spawnpoint | ScriptedBlock
+/* Basic Spawnpoint | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5)
  * Requires: HyperSpawnpoint12
  */
 
@@ -129,7 +129,7 @@ function tick(e){
 
 So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's see what a more advanced version of your spawnpoint code *(See 1. Basic Setup, Step 9.)* might look like:
 ```js
-/* Advanced Spawnpoint | ScriptedBlock
+/* Advanced Spawnpoint | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5)
  * Requires: HyperSpawnpoint12
  */
 
