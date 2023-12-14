@@ -1,20 +1,23 @@
-/* v2.1 - SaveNearbyMobPositions-2 | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v2.2 - PositionSaver Tool | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
  * Right-Click to save a json of nearby mob positions to world data
  * 
  * LOAD AUTOMATICALLY - Requires: FUtil, HyperMobSpawner12
  */
 
 var Config = {
-    bannedTitles: [ "Persist", "copy", "block" ],
+    bannedTitles: [ "persist" ],
     bannedTags: [],
     yConstraints: { min: 0, max: 255 },
     range: 80,
     despawn: true,
-    removeSpaces: true // NOT RECOMMENDED
+
+    // NOT RECOMMENDED
+    removeSpaces: false, 
+    legacyMode: false
 }
 
 function init(e){
-    e.item.setCustomName("§6§lSave Nearby Mob Pos §e[§3§l2§e]");
+    e.item.setCustomName("§6§lSave Nearby Mob Positions §e[§3§l2§e]");
     e.item.setLore(GetLore(e));
     e.item.setTexture(293, "minecraft:diamond_hoe");
     e.item.setItemDamage(293);
@@ -24,15 +27,25 @@ function init(e){
     // Auto-Load Libraries
     if (typeof FUtil === 'undefined')
         TryLoad(e, "FUtil.js");
-    if (typeof HyperMobSpawner === 'undefined')
+    if (Config.legacyMode)
+        if (typeof HyperMobSpawner === 'undefined')
+            TryLoad(e, "HyperMobSpawner12.js");
+    else if (typeof HyperMobSpawn === 'undefined')
         TryLoad(e, "HyperMobSpawner12.js");
 }
 
 function interact(e){
+
+    if (!Config.legacyMode && typeof HyperMobSpawn === 'undefined' && typeof HyperMobSpawner !== 'undefined'){
+        e.API.getIWorlds()[0].broadcast("§4§lERROR §cLEGACY MODE was disabled, but you are clearly using an old version of HyperMobSpawner!!!!");
+        e.API.getIWorlds()[0].broadcast("§7Recommended: Please enable §3Config.legacyMode§7 on this tool");
+        return;
+    }
+
     var ne = e.player.world.getNearbyEntities(e.player.getPos(), Config.range, 2);
     if (ne.length > 0){
 
-        var data = "mobSpawner.mobLocations = [\n";
+        var data = Config.legacyMode ? "mobSpawner.mobLocations = [\n" : "HyperMobSpawn.clones = [\n";
         
         var numSaved = 0;
         for(var i = 0; i < ne.length; i++){
@@ -50,19 +63,19 @@ function interact(e){
         data += "];";
         if (numSaved > 0){
             var fileName = WriteFile(e, e.player, data);
-            e.API.getIWorld(0).broadcast("§2§lSaved positions for §6§l" + numSaved + "§2§l NPCs! §7" + fileName);
+            e.API.getIWorlds()[0].broadcast("§2§lSaved positions for §6§l" + numSaved + "§2§l NPCs! §7" + fileName);
         }
         else{
-            e.API.getIWorld(0).broadcast("§e[§6§l!§e]§e§l Saved §6§l0§e§l Nearby Mobs » Found §6§l0§e§l Valid NPCs");
-            e.API.getIWorld(0).broadcast("§e[§6§l!§e]§8§o THIS IS NOT AN ERROR");
-            e.API.getIWorld(0).broadcast("§7 » Outside yConstrant Range §3[§b§l" + Config.yConstraints.min + " §7- §b§l" + Config.yConstraints.max + "§3]");
-            if (Config.bannedTitles.length > 0) e.API.getIWorld(0).broadcast("§7 » Has banned titles " + Config.bannedTitles);
-            if (Config.bannedTags.length > 0) e.API.getIWorld(0).broadcast("§7 » Has banned tags " + Config.bannedTags);
-            e.API.getIWorld(0).broadcast("§7 » Spawned from HyperMobSpawner");
+            e.API.getIWorlds()[0].broadcast("§e[§6§l!§e]§e§l Saved §6§l0§e§l Nearby Mobs » Found §6§l0§e§l Valid NPCs");
+            e.API.getIWorlds()[0].broadcast("§e[§6§l!§e]§8§o THIS IS NOT AN ERROR");
+            e.API.getIWorlds()[0].broadcast("§7 » Outside yConstrant Range §3[§b§l" + Config.yConstraints.min + " §7- §b§l" + Config.yConstraints.max + "§3]");
+            if (Config.bannedTitles.length > 0) e.API.getIWorlds()[0].broadcast("§7 » Has banned titles " + Config.bannedTitles);
+            if (Config.bannedTags.length > 0) e.API.getIWorlds()[0].broadcast("§7 » Has banned tags " + Config.bannedTags);
+            e.API.getIWorlds()[0].broadcast("§7 » Spawned from HyperMobSpawner");
         }
     }
     else{
-        e.API.getIWorld(0).broadcast("§e[§6§l!§e]§e§l Saved §6§l0§e§l Nearby Mobs » Found No Nearby NPCs");
+        e.API.getIWorlds()[0].broadcast("§e[§6§l!§e]§e§l Saved §6§l0§e§l Nearby Mobs » Found No Nearby NPCs");
     }
 }
 
@@ -87,6 +100,9 @@ function GetLore(e){
     loreString.push("§7 Radius §3[§b§l" + Config.range + "§3]");
     loreString.push("§eY§7Range §3[§b§l" + Config.yConstraints.min + " §7- §b§l" + Config.yConstraints.max + "§3]");
     loreString.push("§7Remove Spaces §3[§b§l" + Config.removeSpaces + "§3]");
+    if (Config.legacyMode){
+        loreString.push("§6[§eLEGACY MODE ENABLED§6]");
+    }
     if (Config.despawn){
         loreString.push("§4[§cDESPAWN MODE ENABLED§4]");
     }
@@ -117,8 +133,8 @@ function TryLoad(e, fileName){
         }
     }
     if (!success){
-        e.API.getIWorld(0).broadcast("§4§lERROR §cCould not initialize §3SNMP-2");
-        e.API.getIWorld(0).broadcast("§7" + fileName + " not found in <world>/customnpcs/scripts/ecmascript/");
+        e.API.getIWorlds()[0].broadcast("§4§lERROR §cCould not initialize §3SNMP-2");
+        e.API.getIWorlds()[0].broadcast("§7" + fileName + " not found in <world>/customnpcs/scripts/ecmascript/");
     }
 }
 
@@ -132,7 +148,7 @@ function HasInvalidTag(npc){
             return true;
         }
     }
-    return npc.hasTag(HyperMobSpawner.mobSpawner.summonID);
+    return npc.hasTag(Config.legacyMode ? HyperMobSpawner.mobSpawner.summonID : HyperMobSpawn.P.summonID);
 }
 
 function HasInvalidTitle(npc){
