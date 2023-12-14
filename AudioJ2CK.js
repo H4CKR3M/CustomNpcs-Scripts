@@ -1,4 +1,4 @@
-/* v0.2.1 - AudioJ2CK | Loadable from Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v0.2.2 - AudioJ2CK | Loadable from Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
  * A better multi-Track audio player to satisfy your creativity!
  * 
@@ -31,7 +31,7 @@ var Audio = (function(){
             debugThrowErrors: true,
 
             AutoExec: function AutoExec(){
-                this.world = Java.type("noppes.npcs.api.NpcAPI").Instance().getIWorld(0);
+                this.world = Java.type("noppes.npcs.api.NpcAPI").Instance().getIWorlds()[0];
             },
 
             GetClip: function GetClip(filename){ return this.world.getTempdata().get(this.keyPrefix + filename); },

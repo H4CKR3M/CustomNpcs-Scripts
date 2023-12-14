@@ -1,4 +1,4 @@
-/* v1.7 - Jack's Tunes | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v1.7.1 - Jack's Tunes | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Requires: AudioJ2CK, [OPTIONAL: DLoad, FUtil]
  *
  * Plays WAV files from .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
@@ -81,7 +81,7 @@ var JTunes = (function(){
 
             /* 'cause DLoad is multithreaded, just keep trying until the soundtrack is installed (if ever) */
             TryStartup: function TryStartup(e){
-                var world = e.API.getIWorld(0);
+                var world = e.API.getIWorlds()[0];
 
                 if (this.requiredDLC != "" && typeof DLoad === 'undefined') { 
                     throw("\n\nJTunes Error: requiredDLC is set to \"" + this.requiredDLC + "\" but DLoad was not loaded"
@@ -105,7 +105,7 @@ var JTunes = (function(){
             },
 
             Tick: function Tick(e) {
-                var world = e.API.getIWorld(0);
+                var world = e.API.getIWorlds()[0];
                 if (!world.getTempdata().has(this.jEnabledKey)){
                     this.TryStartup(e);
                     return;

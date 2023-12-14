@@ -1,11 +1,11 @@
-/* v2.9 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.9.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
     return {  
 
         Broadcast: function Broadcast(msg){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-            API.getIWorld(0).broadcast(msg.toString().replaceAll("&", "§"));
+            API.getIWorlds()[0].broadcast(msg.toString().replaceAll("&", "§"));
         },
 
         Message: function Message(player, msg){
@@ -347,7 +347,7 @@ var Utilities = (function(){
         PlayAt: function PlayAt(x, y, z, soundName){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
             var volume = arguments.length >= 5 ? arguments[4] : 64;
-            var np = API.getIWorld(0).getNearbyEntities(x, y, z, 32, 1);
+            var np = API.getIWorlds()[0].getNearbyEntities(x, y, z, 32, 1);
             for(var i = 0; i < np.length; i++){
                 API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " " 
                     + x + " " + y + " " + z + " " + volume);

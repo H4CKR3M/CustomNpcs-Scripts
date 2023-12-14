@@ -1,4 +1,4 @@
-/* v1.3 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v1.3.1 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var FUtil = (function(){
     return { 
@@ -186,7 +186,7 @@ var FUtil = (function(){
 
             IsDedicatedServer: function IsDedicatedServer(){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-                var world = API.getIWorld(0);
+                var world = API.getIWorlds()[0];
                 if (world.getTempdata().has("DEDICATED_SERVER")){
                     return true;
                 }
@@ -224,8 +224,8 @@ var FUtil = (function(){
                         this.CopyFile(aotDat, new java.io.File(aotfPath));
                     }
                     else{
-                        API.getIWorld(0).broadcast("§cUnable to play video §6" + filename + "§c through §3PlayVideo_WindowsOnly");
-                        API.getIWorld(0).broadcast("§6This is optional, but you can play the video yourself at:\n§7" + API.getWorldDir() + "\\" + filename);
+                        API.getIWorlds()[0].broadcast("§cUnable to play video §6" + filename + "§c through §3PlayVideo_WindowsOnly");
+                        API.getIWorlds()[0].broadcast("§6This is optional, but you can play the video yourself at:\n§7" + API.getWorldDir() + "\\" + filename);
                         return false;
                     }
                 }
@@ -238,17 +238,17 @@ var FUtil = (function(){
                     }
                 }
                 if (!isSupported){
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §4ERROR §2PlayVideo_WindowsOnly(filename)");
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §6" + filename + " §cis not in a supported file format!");
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §7Example of a support format: test.mp4");
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §4ERROR §2PlayVideo_WindowsOnly(filename)");
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §6" + filename + " §cis not in a supported file format!");
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §7Example of a support format: test.mp4");
                     return false;
                 }
                 
                 var path = API.getWorldDir() + "/" + filename;
                 var f = new java.io.File(path);
                 if (!f.exists()) {
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §4ERROR §2PlayVideo_WindowsOnly(filename)");
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §cUnable to Locate file:\n§7" + API.getWorldDir() + "\\" + filename);
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §4ERROR §2PlayVideo_WindowsOnly(filename)");
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §cUnable to Locate file:\n§7" + API.getWorldDir() + "\\" + filename);
                     return false;
                 }
                 var cmds = java.util.Arrays.asList("cmd.exe", "/C", "start", "AlwaysOnTop.bat", path);
@@ -264,9 +264,9 @@ var FUtil = (function(){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
                 var imgFile = new java.io.File(API.getWorldDir() + "/" + filename);
                 if (!imgFile.exists()) {
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §4ERROR §2OpenImageFullscreen("
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §4ERROR §2OpenImageFullscreen("
                     + "\n§8  filename, \n§8  windowText, \n§8  scaleWidth, \n§8  scaleHeight\n§2)");
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §cUnable to Locate file\n§7" + API.getWorldDir() + "\\" + filename);
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §cUnable to Locate file\n§7" + API.getWorldDir() + "\\" + filename);
                     return;
                 }
                 try {
@@ -318,9 +318,9 @@ var FUtil = (function(){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
                 var imgFile = new java.io.File(API.getWorldDir() + "/" + filename);
                 if (!imgFile.exists()) {
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §4ERROR §2OpenImageNewWindow("
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §4ERROR §2OpenImageNewWindow("
                     + "\n§8  filename, \n§8  windowText, \n§8  width, \n§8  height\n§2)");
-                    API.getIWorld(0).broadcast("§a[§2FUtil§a] §cUnable to Locate file\n§7" + API.getWorldDir() + "\\" + filename);
+                    API.getIWorlds()[0].broadcast("§a[§2FUtil§a] §cUnable to Locate file\n§7" + API.getWorldDir() + "\\" + filename);
                     return;
                 }
                 try {

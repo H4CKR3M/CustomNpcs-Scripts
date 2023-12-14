@@ -1,4 +1,4 @@
-/* v1.5 - Automatic Content Installer | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v1.6 - Automatic Content Installer | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Requires: FUtil
  * Extracts skins/sounds, etc... to .minecraft directory IF and ONLY IF the player is missing the content pack
  * NOTE: .Minecraft becomes SERVER_ROOT if playing on a dedicated server
@@ -78,7 +78,7 @@ var ACI = (function(){
 
             Say: function Say(msg){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-                API.getIWorld(0).broadcast("§4§l[ACI] §6" + msg);
+                API.getIWorlds()[0].broadcast("§4§l[ACI] §6" + msg);
             }
         }
     }
