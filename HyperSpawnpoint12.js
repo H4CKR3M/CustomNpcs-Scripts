@@ -7,7 +7,7 @@ var HyperSpawn = (function(){
         databaseName: "playerSpawnpointDatabase",
         illegalTags: [ "illegal" ],
         debug: false,
-        debugPlayer: true,
+        debugPlayer: false,
         defaultGamemode: 2,
         defaultStart: { x:-484.5, y:65.5, z:-246.5 },
         //defaultStart: { x:100.5, y:100.5, z:100.5 },
