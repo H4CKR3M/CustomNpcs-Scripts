@@ -447,6 +447,7 @@ Utilities.Stop(entity, soundName);
 To extend the functionality of StandardUtil12, you can install plugins to either add your own methods or even add support for 1.7.10. 
 1. To install a plugin, open a plugin file *(in this case `StandardUtil12-Plugin_1710.txt`)* and copy all of the code. 
 2. Then paste the code at the bottom of your `StandardUtil12.js` file. 
+3. **Done!** Now just load your modified StandardUtil12 script.
 * *This will allow StandardUtil12 to work on **1.7.10!!** After install, 1.12/1.16 will still work as the plugin only **ADDS** functionality!*
 * NOTE: You can install as many plugins as you want, but they may have their own installation instructions.
 ```js
@@ -481,10 +482,13 @@ Utilities.Broadcast("I am playing on MC " + version);
 
 var hasPlugin = Utilities.IsPluginInstalled("1.7.10-Support");
 Utilities.Broadcast("The 1.7.10 Plugin is installed? " + hasPlugin);
+
+// You can call any 1.12/1.16 Utilities function !!
+// CustomNpcs Vanilla and CustomNpcs+ are both supported~
 ```
 
 
-### StandardUtil [Deprecated 1.7.10-Specific Version]
+### StandardUtil - *[Original Version]*
 ⠀<span style="color:yellow">*WARNING: The original StandardUtil is deprecated, even on 1.7.10. Use StandardUtil12 with the 1.7.10 Plugin instead.*</span>
 ```js
 Utilities.AddVectors(v1, v2);
