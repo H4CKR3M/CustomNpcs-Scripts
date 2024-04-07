@@ -35,7 +35,7 @@ function init(e){
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
 
 ### Setup
-Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
+Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 1. Load AudioJ2CK and JTunes in playerscript
 2. Call `JTunes.Login(e);` and `JTunes.Tick(e);` - in player login/tick respectively
 3. Edit Songs/Triggers in JTunes.js
@@ -49,7 +49,7 @@ world.getTempdata().put("JBOSS", null);
 ```
 
 ## AudioJ2CK
-Place WAV files in `<.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
+Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
 1. Load script anywhere (npc, block, or player)
 2. Call `Audio.Logout(e);` inside your playerscript logout event.  
@@ -267,7 +267,7 @@ function tick(e){
 
 5. See the `HyperMobSpawn.ID` parameter? Every mobSpawner needs a unique ID, don't forget!
 
-### <span style="color:#BF3427">MobSpawners will only despawn/respawn mobs when the player enters the world spawn - **AKA: <u>Make sure HyperSpawnpoint12 is setup correctly!**</u></span>
+### <span style="color:#BF3427">MobSpawners will only despawn/respawn mobs when the player enters the world spawn - **AKA: <u>Make sure to set up HyperSpawnpoint12 correctly!**</u></span>
 
 * You can place as many spawners as you want in the world, just give each of them a unique `HyperMobSpawn.ID` Otherwise...
 * Spawners with the same `HyperMobSpawn.ID` will be treated as the same spawner.
@@ -385,6 +385,14 @@ function init(e){
 
 ## StandardUtil12
 A set of useful library functions for use in 1.12/1.16. Many of my scripts require this file to be loaded. To use simply write `Utilities.` from anywhere npc/player/block/etc. A vector `v` can be anything with the following data structure: `{ x:0, y:0, z:0 }`. That includes custom data structures as well as literally just passing in npc, player, entity, etc.
+### Generic
+```js
+Utilities.Broadcast(msg);
+Utilities.Message(player, msg);
+Utilities.GetMCVersion(); // returns a string -> 1.7.10 / 1.12.2 / 1.16.5
+Utilities.IsPluginInstalled(pluginName);
+```
+
 ### Vector Math
 ```js
 Utilities.Add(v1, v2);
@@ -406,7 +414,7 @@ Utilities.RotateAboutY(v, degrees);
 Utilities.RotateAboutZ(v, degrees);
 Utilities.GetForward(entity); // 3D
 Utilities.GetEntityForwardVector(entity); // 2D
-Utilities.GetDirectionTowardsTarget(source, target); // inputs can be an ENTITY or a VECTOR
+Utilities.GetDirectionTowardsTarget(source, target); // inputs can be either an ENTITY or VECTOR
 
 Utilities.FaceRotation(entity, vec);
 Utilities.CanAnyoneSeeMe(npc, range); // [1.16 ONLY]
@@ -415,7 +423,7 @@ Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
 Utilities.IsEnemyNearby(player, range);
 Utilities.IsTeleportPosSafe(world, v); // avoid walls
 Utilities.GetRandomRadius(min, max); // returns random positive/negative number
-Utilities.SortNumeric(ar);
+Utilities.SortNumeric(array);
 Utilities.Clamp(num, min, max);
 Utilities.IndexOfNth(str, char, index)
 ```
@@ -435,11 +443,24 @@ Utilities.PlayAt(x, y, z, soundName);
 Utilities.Play(entity, soundName); // can be an NPC (will play nearby) or a player (will only play to them)
 Utilities.Stop(entity, soundName);
 ```
+### Plugins
+To extend the functionality of StandardUtil12, you can install plugins to either add your own methods or even add support for 1.7.10. 
+1. To install a plugin, open a plugin file *(in this case `StandardUtil12-Plugin_1710.txt`)* and copy all of the code. 
+2. Then paste the code at the bottom of your `StandardUtil12.js` file. 
+* *This will allow StandardUtil12 to work on **1.7.10!!** After install, 1.12/1.16 will still work as the plugin only **ADDS** functionality!*
+* NOTE: You can install as many plugins as you want, but they may have their own installation instructions.
+```js
+var hasPlugin1710 = Utilities.IsPluginInstalled("1.7.10-Support");
+var hasPluginLegacy = Utilities.IsPluginInstalled("LegacySupport");
+
+Utilities.Broadcast("The 1.7.10 Plugin is installed? " + hasPlugin1710);
+Utilities.Broadcast("The LEGACY Plugin is installed? " + hasPluginLegacy);
+```
 
 ## DOCUMENTATION 1.7.10
 
 ### AudioJ7CK 
-Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds
+Place WAV files in <.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds
 
 1. Load script in the Init event area of your object (npc, block, or player)
 2. Use only one of the following commands:  
@@ -449,7 +470,22 @@ Place WAV files in <.minecraft/SERVER_Root>/customnpcs/assets/customnpcs/sounds
 *NOTE: Adjust Volume:* `Play("wavFileName", audioGain)`  
 *NOTE: remaining functions written at top of AudioJ7CK.js*
 
-### StandardUtil [1.7.10 Version]
+### StandardUtil12
+To use StandardUtil12 on 1.7.10, copy the plugin code from `StandardUtil12-Plugin_1710.txt` and paste it at the bottom of the `StandardUtil12.js` file. This will allow access to all functions on 1.7.10. Call methods exactly as you would on 1.12 or 1.16, *(see [StandardUtil12](#user-content-standardutil12)).*
+
+```js
+// StandardUtil12 on 1.7.10 Example. Put this code on an NPC.
+
+var version = Utilities.GetMCVersion();
+Utilities.Broadcast("I am playing on MC " + version);
+
+var hasPlugin = Utilities.IsPluginInstalled("1.7.10-Support");
+Utilities.Broadcast("The 1.7.10 Plugin is installed? " + hasPlugin);
+```
+
+
+### StandardUtil [Deprecated 1.7.10-Specific Version]
+⠀<span style="color:yellow">*WARNING: The original StandardUtil is deprecated, even on 1.7.10. Use StandardUtil12 with the 1.7.10 Plugin instead.*</span>
 ```js
 Utilities.AddVectors(v1, v2);
 Utilities.Angle(z, x);
