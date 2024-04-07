@@ -472,7 +472,7 @@ Place WAV files in <.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/soun
 *NOTE: remaining functions written at top of AudioJ7CK.js*
 
 ### StandardUtil12
-To use StandardUtil12 on 1.7.10, copy the plugin code from `StandardUtil12-Plugin_1710.txt` and paste it at the bottom of the `StandardUtil12.js` file. This will allow access to all functions on 1.7.10. Call methods exactly as you would on 1.12 or 1.16, *see [StandardUtil12](#user-content-standardutil12).*
+To use StandardUtil12 on 1.7.10, you must copy the plugin code from `StandardUtil12-Plugin_1710.txt` and paste it at the bottom of the `StandardUtil12.js` file. This will allow access to all functions on 1.7.10. Call methods exactly as you would on 1.12 or 1.16. For all available functions, *see [StandardUtil12](#user-content-standardutil12).*
 
 ```js
 // StandardUtil12 on 1.7.10 Example. Put this code on an NPC.
@@ -483,24 +483,17 @@ Utilities.Broadcast("I am playing on MC " + version);
 var hasPlugin = Utilities.IsPluginInstalled("1.7.10-Support");
 Utilities.Broadcast("The 1.7.10 Plugin is installed? " + hasPlugin);
 
-// You can call any 1.12/1.16 Utilities function !!
-// CustomNpcs Vanilla and CustomNpcs+ are both supported~
+// You can call any StandardUtil12 function !!
+// Utilities.Add(v1, v2);
+// Utilities.Diff(v1, v2);
+// Utilities.Dot(v1, v2);
+// Utilities.Cross(v1, v2);
+// Utilities.Mult(v, integer);
+// etc...
 ```
-
-
-### StandardUtil - *[Original Version]*
-⠀<span style="color:yellow">*WARNING: The original StandardUtil is deprecated, even on 1.7.10. Use StandardUtil12 with the 1.7.10 Plugin instead.*</span>
+The following functions are exclusive to the 1.7.10 version and serve as a workaround to bugs already existing in customNpcs 1.7.10.
 ```js
-Utilities.AddVectors(v1, v2);
-Utilities.Angle(z, x);
-Utilities.Normalize(vec, newMagnitude); // just give 1 as newMagnitude
-Utilities.RotateAboutY(v, degrees);
-Utilities.GetDistance(source, target); // inputs can be an ENTITY or a VECTOR
-Utilities.GetDirectionTowardsTarget(source, target); // inputs can be an ENTITY or a VECTOR
-Utilities.GetRandomRadius(min, max); // returns random positive/negative number
-Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
-Utilities.IsTeleportPosSafe(world, v); // avoid walls
-Utilities.PlaySound(soundName, entity); // can be an NPC (will play nearby) or a player (will only play to them)
+Utilities.IsVisible(npc);
 
 // Harms the given entity with "fake instant harming"
 // (ALWAYS) Avoids 1.7.10 Crash: "Applying potion effect when entity dies throws a Concurrent Modification Exception"
@@ -509,3 +502,22 @@ Utilities.Harm(entity, potency);
 // HACK: (Usually) Avoids a crash caused by applying a potion effect when an npc dies
 Utilities.Effect(entity, effect, duration, strength);
 ```
+Both vanilla CustomNpcs and CustomNpcs+ event hooks are supported!
+```js
+// Example using CustomNPCs_1.7.10d(29oct17
+// paste this code inside the init hook
+
+Utilities.Play(npc, "minecraft:fireworks.largeBlast")
+```
+```js
+// Example using CustomNPCs+ Event Hooks
+
+function init(e){
+    Utilities.Play(e.npc, "minecraft:fireworks.largeBlast")
+}
+```
+
+### StandardUtil - (old 1.7.10 version)
+The original StandardUtil from the `old 1.7.10` folder is no longer supported.
+* Please use `StandardUtil12` instead. NPC code written for the original StandardUtil will **STILL** work without modification on StandardUtil12.
+* *Full Backwards Compatibility Guaranteed~~!*
