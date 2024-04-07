@@ -127,7 +127,7 @@ function tick(e){
 
 ### 2. Advanced Setup
 
-So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's see what a more advanced version of your spawnpoint code *(See 1. Basic Setup, Step 9.)* might look like:
+So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's see what a more advanced version of your spawnpoint code *(See [1. Basic Setup, Step 9.](#user-content-1-basic-setup)).* might look like:
 ```js
 /* Advanced Spawnpoint | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5)
  * Requires: HyperSpawnpoint12
@@ -162,7 +162,7 @@ But what does setting the `ID` actually do? Well, setting it to `"none"` complet
 
 ### 4. ACInstaller Support [Advanced]
 
-You can modify the spawnpoint origin code *(See HyperSpawnpoint12, 1. Basic Setup )* to teleport the player out of the world spawn only after installing skins/textures/sounds to the player's world. The below code can be used to achieve this. Don't forget to load `FUtil`, `ACInstaller`, `HSpawnpointOrigin`, `HyperSpawnpoint12`
+You can modify the spawnpoint origin code *(See [HyperSpawnpoint12, 1. Basic Setup](#user-content-1-basic-setup))* to teleport the player out of the world spawn only after installing skins/textures/sounds to the player's world. The below code can be used to achieve this. Don't forget to load `FUtil`, `ACInstaller`, `HSpawnpointOrigin`, `HyperSpawnpoint12`
 * *Remember! We're pasting this script on the scripted block at the World Origin `/setworldspawn`*
 ```js
 // Requires: FUtil, ACInstaller, HSpawnpointOrigin, HyperSpawnpoint12
@@ -237,7 +237,7 @@ An easy to use despawning/respawning system for enemies! Here's how it works, if
 
 Requires:
 * [**HyperMobSpawner12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HyperMobSpawner12.js)
-* Requires the use of HyperSpawnpoint12 *(See HyperSpawnpoint12, 1. Basic Setup)*
+* Requires the use of HyperSpawnpoint12 *(See [HyperSpawnpoint12, 1. Basic Setup](#user-content-1-basic-setup))*
 
 ### Example
 1. Save an npc named **npc1** and an npc named **npc2** to tab 1 in the mob cloner (Server)
@@ -471,7 +471,7 @@ Place WAV files in <.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/soun
 *NOTE: remaining functions written at top of AudioJ7CK.js*
 
 ### StandardUtil12
-To use StandardUtil12 on 1.7.10, copy the plugin code from `StandardUtil12-Plugin_1710.txt` and paste it at the bottom of the `StandardUtil12.js` file. This will allow access to all functions on 1.7.10. Call methods exactly as you would on 1.12 or 1.16, *(see [StandardUtil12](#user-content-standardutil12)).*
+To use StandardUtil12 on 1.7.10, copy the plugin code from `StandardUtil12-Plugin_1710.txt` and paste it at the bottom of the `StandardUtil12.js` file. This will allow access to all functions on 1.7.10. Call methods exactly as you would on 1.12 or 1.16, *see [StandardUtil12](#user-content-standardutil12).*
 
 ```js
 // StandardUtil12 on 1.7.10 Example. Put this code on an NPC.
