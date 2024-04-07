@@ -1,7 +1,7 @@
-/* v2.9.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v3.0 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){
-    return {  
+    return {
 
         Broadcast: function Broadcast(msg){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
@@ -12,6 +12,18 @@ var Utilities = (function(){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
             API.executeCommand(player.world, "/tellraw " + player.getDisplayName() + " " + "{\"text\":\"" 
                 + msg.toString().replaceAll("&", "§") + "\",\"color\":\"white\"}");
+        },
+
+        /* Returns estimated MC version -- No 1.7.10 Support - Use StandardUtil (the OG verion) instead */
+        GetMCVersion: function GetMCVersion(){
+            var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+            var dimZeroID = API.getIWorlds()[0].getDimension().getId()
+        
+            // Alphanumeric ID - Must be 1.13+
+            if(isNaN(dimZeroID)){
+                return "1.16.5";
+            }
+            return "1.12.2";
         },
 
         // MATH RELATED ----------------------------------------------------------------------
@@ -149,10 +161,10 @@ var Utilities = (function(){
         },
 
         // NOTE: does not work on 1.12
-        CanAnyoneSeeMe: function CanAnyoneSeeMe(npc, range){
-            var np = npc.world.getNearbyEntities(npc.pos, range, 1);
+        CanAnyoneSeeMe: function CanAnyoneSeeMe(entity, range){
+            var np = entity.world.getNearbyEntities(entity.pos, range, 1);
             for(var i = 0; i < np.length; i++){
-                if (np[i].canSeeEntity(npc) == true)
+                if (np[i].canSeeEntity(entity) == true)
                     return true;
             }
             return false;
@@ -388,6 +400,20 @@ var Utilities = (function(){
             else
                 throw ("\n\nUtilities: the entity given to Stop(entity, soundName) was neither a player, nor an NPC."
                  + "\nPass in an NPC or player entity.\n");
-        }
+        },
+
+        // EXTRA ------------------------------------------------------------------------------
+
+        IsPluginInstalled: function IsPluginInstalled(pluginName){
+            for(var i = 0; i < this._plugins.length; i++){
+                if (this._plugins[i] == pluginName)
+                    return true;
+            }
+            return false;
+        },
+        _plugins: []
     }
 }());
+
+// Paste Plugin Code below this Line:
+// --------------------------------------------------------------------------------------------
