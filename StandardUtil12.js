@@ -14,7 +14,7 @@ var Utilities = (function(){
                 + msg.toString().replaceAll("&", "§") + "\",\"color\":\"white\"}");
         },
 
-        /* Returns estimated MC version -- No 1.7.10 Support - Use StandardUtil (the OG verion) instead */
+        /* Returns estimated MC version -- (No 1.7.10 Support by default: requires 1.7.10 Plugin) */
         GetMCVersion: function GetMCVersion(){
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
             var dimZeroID = API.getIWorlds()[0].getDimension().getId()
@@ -62,7 +62,8 @@ var Utilities = (function(){
         },
 
         IsBetween: function IsBetween(v, v1, v2){
-            return this.Dot(this.Cross(v1, v), this.Cross(v1, v2)) >= 0 && this.Dot(this.Cross(v2, v), this.Cross(v2, v1)) >= 0
+            return this.Dot(this.Cross(v1, v), this.Cross(v1, v2)) >= 0 
+                && this.Dot(this.Cross(v2, v), this.Cross(v2, v1)) >= 0
         },
 
         Zero: function Zero(){ 
@@ -76,7 +77,8 @@ var Utilities = (function(){
         Normalize: function Normalize(v, OPTIONAL_magnitude){
             if (OPTIONAL_magnitude == null) { OPTIONAL_magnitude = 1; }
             var sqt = this.Magnitude(v);
-            if (sqt == 0) { return this.Zero(); }
+            if (sqt == 0)
+                return this.Zero();
             var vec = { x: v.x/sqt*OPTIONAL_magnitude, y: v.y/sqt*OPTIONAL_magnitude, z: v.z/sqt*OPTIONAL_magnitude }
             return vec;
         },
@@ -86,7 +88,8 @@ var Utilities = (function(){
         },
 
         GetDistance: function GetDistance(origin, destination){
-            return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.y-origin.y,2) + Math.pow(destination.z-origin.z,2));
+            return Math.sqrt(Math.pow(destination.x-origin.x,2) + Math.pow(destination.y-origin.y,2) 
+                + Math.pow(destination.z-origin.z,2));
         },
 
         GetDistance2D: function GetDistance2D(origin, destination){
@@ -197,7 +200,8 @@ var Utilities = (function(){
             return false;
         },
 
-        // Returns a safe position near the entity to teleport to, returns the entities position if nothing is found. Y height is preserved.
+        // Returns a safe position near the entity to teleport to, returns the position of the entity if
+        // nothing is found. Y-height is preserved.
         GetSafeLocationNearEntity: function GetSafeLocationNearEntity(entity, rMin, rMax){
             var loc = { x: 0, y: entity.y, z: 0, };
             for(var i = 0; i < 20; i++){
@@ -228,7 +232,8 @@ var Utilities = (function(){
 
         // Returns whether positions is safe to be teleported to
         IsTeleportPosSafe: function IsTeleportPosSafe(world, v){
-            return (world.getBlock(v.x, v.y, v.z).getName() == "minecraft:air" && world.getBlock(v.x, v.y+1, v.z).getName() == "minecraft:air");
+            return (world.getBlock(v.x, v.y, v.z).getName() == "minecraft:air" 
+                && world.getBlock(v.x, v.y+1, v.z).getName() == "minecraft:air");
         },
 
         // Returns random positive or negative number between two values
@@ -260,7 +265,8 @@ var Utilities = (function(){
 
         IndexOfNth: function IndexOfNth(str, char, index) {
             if (index <= 0){
-                throw("\n\mERROR: IndexOfNth(str, char, index) was given an nth number less than 1.\nEX: If you want the 2nd index, give 2\n\n");
+                throw("\n\mERROR: IndexOfNth(str, char, index) was given an n'th number less than 1."
+                    + "\nExample: If you want the 2nd index, give 2\n\n");
             }
 
             var remaining = index;
@@ -309,8 +315,8 @@ var Utilities = (function(){
             }
             return this.GetItemTagsUnsafe(itemStack);
         },
-        _invalidItems: [ "customnpcs:scripted_item", "customnpcs:npcsoulstonefilled", "customnpcs:npcscripted", "minecraft:written_book", 
-            "minecraft:chest", "minecraft:white_shulker_box", "variedcommodities:book" ],
+        _invalidItems: [ "customnpcs:scripted_item", "customnpcs:npcsoulstonefilled", "customnpcs:npcscripted", 
+            "minecraft:written_book", "minecraft:chest", "minecraft:white_shulker_box", "variedcommodities:book" ],
         
         // Use with caution (Try catch loop?) - Reading an invalid item will result in a script error
         GetItemTagsUnsafe: function GetItemTagsUnsafe(itemStack){
