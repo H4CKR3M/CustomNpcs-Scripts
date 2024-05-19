@@ -174,7 +174,7 @@ var waitTime = 5;
 function tick(e){
     if (needsRestart){
         if (counter % 5 == 0)
-            ACI.Say(e, "§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
+            ACI.Say("§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
         counter++;
         return;
     }
@@ -209,7 +209,7 @@ var loadCompleteKey = "DLOAD_COMPLETE";
 function tick(e){
     if (needsRestart){
         if (counter % 5 == 0)
-            ACI.Say(e, "§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
+            ACI.Say("§6YOU MUST FULLY §f§lRESTART MINECRAFT§6 TO FINISH!");
         counter++;
         return;
     }
