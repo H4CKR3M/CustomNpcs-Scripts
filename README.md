@@ -1,4 +1,4 @@
-# Scripts for the Minecraft [CustomNpcs Mod](https://www.curseforge.com/minecraft/mc-mods/custom-npcs)
+# Scripts for the Minecraft [CustomNpcs](https://www.curseforge.com/minecraft/mc-mods/custom-npcs) Mod
 Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
 **LICENSE**: Permission to modify/redistribute scripts as a part of your map only.  
