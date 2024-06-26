@@ -50,6 +50,7 @@ world.getTempdata().put("JBOSS", null);
 ```
 
 ## AudioJ2CK
+### AudioJ2CK
 Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
 1. Load script anywhere (npc, block, or player)
@@ -66,6 +67,7 @@ Audio.StopAll();
 Audio.IsPlaying("wavFileName");
 ```
 ## HyperSpawnpoint12
+### HyperSpawnpoint12
 Location-Based Spawnpoints with an optional Spectator Mechanic (for Singleplayer or Multiplayer)
 
 Requires:
@@ -234,6 +236,7 @@ function tick(e){
 ```
 
 ## HyperMobSpawner12
+### HyperMobSpawner12
 An easy to use despawning/respawning system for enemies! Here's how it works, if the player dies, all enemies are despawned/respawned **lag-free**!
 
 Requires:
@@ -341,6 +344,7 @@ function tick(e){
 ```
 
 ## FUtil
+### FUtil
 ```js
 FUtil.CopyDirectory(sourcePath, destPath);
 FUtil.CopyFile(sourcePath, destPath);
@@ -385,6 +389,7 @@ function init(e){
 ```
 
 ## StandardUtil12
+### StandardUtil12
 A set of useful library functions for use in 1.12/1.16. Many of my scripts require this file to be loaded. To use simply write `Utilities.` from anywhere npc/player/block/etc. A vector `v` can be anything with the following data structure: `{ x:0, y:0, z:0 }`. That includes custom data structures as well as literally just passing in npc, player, entity, etc.
 ### Generic
 ```js
@@ -460,6 +465,7 @@ Utilities.Broadcast("The LEGACY Plugin is installed? " + hasPluginLegacy);
 ```
 
 ## DOCUMENTATION 1.7.10
+### DOCUMENTATION 1.7.10
 
 ### AudioJ7CK 
 Place WAV files in <.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds
