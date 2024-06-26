@@ -9,13 +9,13 @@ If you can, please link this github page in your map credits.
 ## Table of Contents
 1. TUTORIAL: How to Load Scripts?
 2. [**JTunes**](#user-content-jtunes) - Fully Fledged Background music using AudioJ2CK
-3. **AudioJ2CK** - 2D Audio / No Input Lag
-4. **HyperSpawnpoint12** - Better Spawnpoints w/ Optional Spectator Mechanic
-5. **HyperMobSpawner12** - Soulslike Enemy Respawning
-6. **ACInstaller** - Adventure Map automatically installs map content/resources/skins/sounds
-7. **FUtil** - File System Editing
-8. **StandardUtil12** - Vector Math at Your Fingertips
-9. Legacy 1.7.10 Ports
+3. [**AudioJ2CK**](#user-content-audioj2ck) - 2D Audio / No Input Lag
+4. [**HyperSpawnpoint12**](#user-content-hyperspawnpoint12) - Better Spawnpoints w/ Optional Spectator Mechanic
+5. [**HyperMobSpawner12**](#user-content-hypermobspawner12) - Soulslike Enemy Respawning
+6. [**ACInstaller**](#user-content-acinstaller) - Adventure Map automatically installs map content/resources/skins/sounds
+7. [**FUtil**](#user-content-futil) - File System Editing
+8. [**StandardUtil12**](#user-content-standardutil12) - Vector Math at Your Fingertips
+9. [Legacy 1.7.10 Ports](#user-content-documentation-1710)
 
 ## TUTORIAL: How to Load Scripts?
 1. Place all scripts you want to use in the `<world>/customnpcs/scripts/ecmascript/` folder.
