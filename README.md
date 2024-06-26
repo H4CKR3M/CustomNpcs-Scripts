@@ -8,7 +8,7 @@ If you can, please link this github page in your map credits.
 
 ## Table of Contents
 1. TUTORIAL: How to Load Scripts?
-2. **JTunes** - Fully Fledged Background music using AudioJ2CK
+2. [**JTunes**](#user-content-jtunes) - Fully Fledged Background music using AudioJ2CK
 3. **AudioJ2CK** - 2D Audio / No Input Lag
 4. **HyperSpawnpoint12** - Better Spawnpoints w/ Optional Spectator Mechanic
 5. **HyperMobSpawner12** - Soulslike Enemy Respawning
@@ -127,7 +127,7 @@ function tick(e){
 
 ### 2. Advanced Setup
 
-So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's see what a more advanced version of your spawnpoint code *(See [1. Basic Setup, Step 9.](#user-content-1-basic-setup)).* might look like:
+So you have your spawnpoints working, but you want more control over player rotation, yaw, etc... Well, you're in luck! Each spawnpoint can be tweaked individually. Let's what a more advanced version of your spawnpoint code *(See [1. Basic Setup, Step 9.](#user-content-1-basic-setup)).* might look like:
 ```js
 /* Advanced Spawnpoint | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5)
  * Requires: HyperSpawnpoint12
