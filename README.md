@@ -1,4 +1,4 @@
-# CustomNpcs-Scripts
+# CustomNpcs-Scripts for Minecraft
 Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
 **LICENSE**: Permission to modify/redistribute scripts as a part of your map only.  
