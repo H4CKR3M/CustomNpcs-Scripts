@@ -32,6 +32,7 @@ function init(e){
 ```
 
 ## JTunes
+### JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
 
 ### Setup
