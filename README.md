@@ -7,14 +7,21 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
 ## Table of Contents
 1. [Guide](#user-content-guide-how-to-load-scripts): How to Load Scripts?
+### Audio
 2. [**JTunes**](#user-content-jtunes) - Fully Fledged Background music using AudioJ2CK
 3. [**AudioJ2CK**](#user-content-audioj2ck) - 2D Audio / No Input Lag
+### Spawnpoints
 4. [**HyperSpawnpoint12**](#user-content-hyperspawnpoint12) - Better Spawnpoints w/ Optional Spectator Mechanic
 5. [**HyperMobSpawner12**](#user-content-hypermobspawner12) - Soulslike Enemy Respawning
-6. [**ACInstaller**](#user-content-acinstaller) - Adventure Map automatically installs map content/resources/skins/sounds
-7. [**FUtil**](#user-content-futil) - File System Editing
-8. [**StandardUtil12**](#user-content-standardutil12) - Vector Math at Your Fingertips
-9. [Legacy 1.7.10 Ports](#user-content-documentation-1710)
+### Items
+6. [**DigitalTrinkets12**](#user-content-digitaltrinkets12) - "Digitize" items into copyable strings & vice versa
+7. [**BItemRenamer**](#user-content-bitemrenamer) - Multi-Tool to Copy/Clone/Paste/Rename/Color/Tag any Item
+8. [**BTagLister**](#user-content-btaglister) - Tool for Viewing Item NBT tags
+### Utilities
+9. [**ACInstaller**](#user-content-acinstaller) - Adventure Map automatically installs map content/resources/skins/sounds
+10. [**FUtil**](#user-content-futil) - File System Editing
+11. [**StandardUtil12**](#user-content-standardutil12) - Vector Math at Your Fingertips
+12. [Legacy 1.7.10 Ports](#user-content-documentation-1710)
 
 ## Guide: How to Load Scripts?
 1. Place all scripts you want to use in the `<world>/customnpcs/scripts/ecmascript/` folder.
@@ -291,6 +298,271 @@ Setup:
 <div align="left">
   <img src="img/SNMP.png" alt="Logo" width="920" height="512">
 </div>
+
+## DigitalTrinkets12
+
+Library for converting items to *digital strings* and vice-versa.
+
+Requires: `StandardUtil12`
+
+```js
+/* Converts trinket to string format, saves to tempdata & worlddata */
+DigitalTrinkets12.Digitize(itemStack);
+DigitalTrinkets12.DigitizeDebug(itemStack, key, bDebug);
+
+/* Gives the given digital trinket to given player */
+DigitalTrinkets12.Give(player, digitizedString);
+DigitalTrinkets12.Replace(player, digitizedString, slotID, slotCategory);
+DigitalTrinkets12.GiveShulker(player, digitalShulker);
+DigitalTrinkets12.Summon(x, y, z, world, digitizedString);
+
+/* Returns digitizedString - Modifies an Attribute ('attackDamage') */
+DigitalTrinkets12.SetAttribute(digitizedString, attributeName, num);
+
+/* Returns FLOAT - Gets attribute written in item lore (if it exists). */
+DigitalTrinkets12.GetLoreAttribute(digitizedString, attributeName);
+
+/* Delimiting */
+DigitalTrinkets12.GetDelimiter();
+DigitalTrinkets12.GetDataKey();
+```
+
+### Example: Giving *Digitized-Item* to Player.
+
+```js
+// Paste script on Player. Requires: DigitalTrinkets12, StandardUtil12
+
+function init(e){
+    DigitalTrinkets12.Give(e.player, "Moss Stone@0minecraft:mossy_cobblestone");
+}
+```
+
+### How does the format work?
+
+The digital trinkets format is an intermediary format for storing items in convenient strings, for use spawning them-in later. How the items are stored isn't too important. Suffice it to say, Digital Trinkets uses a list delimited by the `@` symbol and a code character following it *(EX: `@0` is code for MC ID)*. Rather than create or edit items in this format, it is recommended to make an item normally using `/give` commands or using the `BItemRenamer`, then use the `BItemRenamer` to "*Digitize*" the item into the digital trinkets format.
+
+## BItemRenamer
+Advanced Multi-tool for item-editing entirely in-game.
+
+Requires:
+* [**StandardUtil12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/StandardUtil12.js)
+* [**DigitalTrinkets12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/DigitalTrinkets12.js)
+
+### Quickstart Guide
+
+1. Paste the following code on a customnpcs `scripteditem` and load the `Tools/BItemRenamer.js` script.
+2. Left-Click to Change Modes.
+    * **<span style="color:#55FF55">Item Renamer</span>** - Rename Offhand Item
+    * **<span style="color:#AAAAAA">Lore Applicator</span>** - Renames Offhand item from clipboard
+    * **<span style="color:#00AAAA">Digitizer</span>** - Copy item to clipboard
+    * **<span style="color:#AA00AA">Full Inventory Digitizer</span>** - Copy all items from inventory to notepad
+    * **<span style="color:#FFAA00">New Trinket Creator</span>** - Creates a brand new item
+    * **<span style="color:#FF5555">Create Trinket From </span><span style="color:#00AAAA">Digitized</span>** - Creates a brand new item from clipboard
+3. Right-Click to Activate.
+
+```js
+/* Better Item Renamer  -  Right-Click Use, Left-Click Change Mode */
+var config = {
+    version: 4,
+    name: "&3&lCool Sword",
+    lore: [
+        "&7The first lore line in gray",
+        "&6Another lore line in gold!",
+    ],
+    /* Create New */
+    ID: "minecraft:iron_sword", dmgValue: 0, unbreakable: true,
+    skull: "",
+    rarity: '', // C U R L E
+    slot: '',  // O M
+    attributeLore: [],
+    attributesEnabled: true,
+    attributes: [
+        { Slot: "mainhand", Amount: -2.4, Name: "attackSpeed" },
+        { Slot: "mainhand", Amount: 8, Name: "attackDamage" },
+    ],
+    enchantments: { enabled: false, hide: true, list: [
+            { ID: 10, Lvl: 1 }, 
+    ] },
+    hideFlagOverride: -1,
+    tag: "", tagGroupID: "", tagItemType: "", scripted: false, tagsBonus: [], 
+    
+
+    /* Paste Digitized Trinket here to create it using CreateFromDigitized */
+    digitizedTrinketOverride: "",
+}
+```
+
+### The Different Modes (In-More-Detail)
+
+#### (1/6) **<span style="color:#55FF55">Item Renamer</span>**
+
+Renames/relores the offhand item. In this case, only the `name` and `lore` attributes from the config are in use:
+
+```js
+name: "&3&lCool Sword",
+lore: [
+    "&7The first lore line in gray",
+    "&6Another lore line in gold!",
+],
+```
+#### (2/6) **<span style="color:#AAAAAA">Lore Applicator</span>**
+
+The Lore Applicator is used to apply name/lore from items copied to the `clipboard`. In this case, the *clipboard* refers to anything copied using the Item Renamer's **<span style="color:#00AAAA">Digitizer</span>** mode.
+
+#### (3/6) **<span style="color:#00AAAA">Digitizer</span>**
+
+Copies the name/lore of the offhand item to the `clipboard`, allowing easy transfer of name/lore from `Item_A` to `Item_B`.
+
+* In addition, the Digitizer stores a copy of the item's **FULL** Digitized NBT in `<world_name>\customnpcs\scripts\world_data.json`
+
+```json
+{
+    "Rimscar": "ice,102,64,1045",
+    "DIGITIZE": " §b§l§3§lCool Sword@0minecraft:iron_sword@1§7The first lore line in gray@1§6Another lore line in gold!@3-2.4$mainhand$generic.attackSpeed$6306967376447754078L$-7033089619897944626L@38.0$mainhand$generic.attackDamage$9014307011666463470L$-7590962855292505164L@57@71",
+}
+```
+#### (4/6) **<span style="color:#AA00AA">Full Inventory Digitizer</span>**
+
+This mode digitizes all inventory items and saves them to `world_data.json` where they can be copied using external programs.
+
+<details>
+<summary>Click to expand</summary>
+
+```json
+{
+    "DIGITIZE11": "§e[§6§lDLC§e] §4Artifact Box@0minecraft:red_shulker_box@1§2§o* Uncommon §e[Crate]@1§7@1 §cThe strange warmth radiating from@1 §cthis box is only alluded to after@1 §cwitnessing the soot and ashes of@1 §cseveral dozen small hand prints@1 §caround the locking mechanism.@2AOO@2CRATE@2UNCOMMON@2DLC@532@8minecraft:sticky_piston",
+    "DIGITIZE9": "§e[§6§lDLC§e] §b§lARC SUIT@0minecraft:light_blue_shulker_box@1§6§l§o* Legendary §e[Crate]@1§7@1 §3Final model designed by@1 §3ARC Integrated Systems.@1 §3For the few who braved@1 §b§n§lMETAL WEAPON II@2METALWEAPON2@2CRATE@2DLC@2LEGENDARY@532@8minecraft:sticky_piston",
+    "DIGITIZE10": "§e[§6§lDLC§e] §f§lEETC Supply@0minecraft:yellow_shulker_box@1§2§o* Uncommon §e[Crate]@1§7@1 §fShipping crate that must have@1 §ffallen off of a merchant vessel@1 §fand drifted to shore. The EETC @1 §finsignia is carved into the side.@2CRATE@2UNCOMMON@2DLC@2COMPANY@532@8minecraft:sticky_piston",
+    "DIGITIZE32": "Moss Stone@0minecraft:mossy_cobblestone",
+    "DIGITIZE": " §b§l§3§lCool Sword@0minecraft:iron_sword@1§7The first lore line in gray@1§6Another lore line in gold!@3-2.4$mainhand$generic.attackSpeed$6306967376447754078L$-7033089619897944626L@38.0$mainhand$generic.attackDamage$9014307011666463470L$-7590962855292505164L@57@71",
+    "DIGITIZE12": "§e[§6§lDLC§e] §3Dawnguard Supplies@0minecraft:cyan_shulker_box@1§2§o* Uncommon §e[Crate]@1§7@1 §3Dawnguard starting supplies@1 §3given to players of Minerim.@2CRATE@2UNCOMMON@2DLC@2MINERIM@532@8minecraft:sticky_piston",
+    "Rimscar": "ice,102,64,1045",
+    "DIGITIZE40": " §b§l§3§lCool Sword@0minecraft:iron_sword@1§7The first lore line in gray@1§6Another lore line in gold!@3-2.4$mainhand$generic.attackSpeed$6306967376447754078L$-7033089619897944626L@38.0$mainhand$generic.attackDamage$9014307011666463470L$-7590962855292505164L@57@71",
+    "DIGITIZE28": "Iron Leggings@0minecraft:iron_leggings@694",
+    "DIGITIZE27": "§3[§b§lARC§3] §bSuit §lARMOR@0minecraft:iron_chestplate@1@1 §3 Reinforced armor protects@1 §3 against 90% more shrapnel.@1@694",
+}
+```
+
+</details>
+
+
+#### (5/6) **<span style="color:#FFAA00">New Trinket Creator</span>** - Creates a brand new item
+
+Create a brand new item from the values saved in the scripteditem BItemRenamer config.
+
+* These items may very in complexity:
+
+<details>
+<summary>Click to expand</summary>
+
+<br>
+<div align="left">
+  <img src="img/itemrenamer1.jpg" alt="Logo" width="932" height="563"></img>
+</div>
+<br />
+
+```js
+/* v2.2 - Better Item Renamer  -  Right-Click Use, Left-Click Change Mode */
+var config = {
+    name: " &c█  &4&lSUPPLEMENT&4 &l101&c  &c█",
+    lore: [
+" &c███&4╗  &l    &c███&4╗ &c████████&4╗ &c██&4╗      ",
+" &c████&4╗&l  &c████&4║ ╚══&c██&4╔══╝ &c██&4║      ",
+" &c██&4╔&c████&4╔&c██&4║    &l   &c██&4║    &l   &c██&4║      ",
+" &c██&4║╚&c&l██&4╔╝&c██&4║    &l   &c██&4║    &l   &c██&4║      ",
+" &c██&4║&l  &4╚&l═&4╝ &l &c██&4║    &l   &c██&4║    &l   &c███████&4╗",
+" &4╚═╝         &l  &4╚═╝    &l   &4╚═╝    &l   &4╚══════╝ ",
+                            
+" &c██&4╗&c        &l &c██&4╗ &c██████&4╗  &l &c███&4╗     &l  &c██&4╗ ",
+" &c██&4║&c        &l &c██&4║ &c██&4╔══&c██&4╗ &c████&4╗    &l &c██&4║ ",
+" &c██&4║&c&l  &c█&4╗&l  &c██&4║ &c██████&4╔╝ &c██&4╔&c██&4╗   &c██&4║ ",
+" &c██&4║&c&l█&c█&l█&4╗&c██&4║&c ██&4╔═══╝  &l &c██&4║ ╚&c██&4╗&c██&4║ ",
+" &4╚&c███&4╔&c███&4╔╝&c ██&4║           &l &c██&4║&l  &4╚&c&l██&c██&4║ ",
+" &4 &l &4╚══╝╚══╝ &l  &4╚═╝           &l &4╚═╝    &l &4╚═══╝ ",
+
+"&b",
+"&9 [&eRight-Click &9&l•&e Enemy&9]",
+"&c  ➢ Infect",
+"&7  ➢ &8[&7ARC G3/D3 Only&8]",
+"&b"
+    ],
+    /* Create New */
+    ID: "minecraft:skull", dmgValue: 3, unbreakable: false,
+    skull: "/give @p skull 1 3 {display:{Name:\"Poison Gift\"},SkullOwner:{Id:\"1f483ffd-586a-49fd-83fa-6e2da6023519\",Properties:{textures:[{Value:\"eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjQ0MjRiNjQxZGMwMjI2Mjk1YTFjNjczYmY3OWUzM2I4ZWUyNWE3Zjg0YWUxZWZhODVmZjFhODlhZDRhMTc4MSJ9fX0=\"}]}}}",
+    rarity: '', // C U R L E
+    slot: 'M',  // O M
+    attributeLore: [],
+    attributesEnabled: false,
+    attributes: [
+        { Slot: "mainhand", Amount: -2.4, Name: "attackSpeed" },
+        { Slot: "mainhand", Amount: 20, Name: "attackDamage" },
+    ],
+    enchantments: { enabled: false, hide: true, list: [
+            { ID: 10, Lvl: 1 }, 
+    ] },
+    hideFlagOverride: -1,
+    tag: "SUP101", tagGroupID: "MW5", tagItemType: "", scripted: true, tagsBonus: [],
+
+    /* Paste Digitized Trinket here to create it using CreateFromDigitized */
+    digitizedTrinketOverride: "",
+}
+function init(e){ BItemRenamer.Init(e, config); } function interact(e){ BItemRenamer.Interact(e); } function attack(e){ BItemRenamer.Attack(e); }
+```
+
+</details>
+
+#### (6/6) **<span style="color:#FF5555">Create Trinket From </span><span style="color:#00AAAA">Digitized</span>**
+
+This mode creates an identical item from the `clipboard`. Remember: to save items to the clipboard, use the **<span style="color:#00AAAA">Digitizer</span>** mode.
+
+## BTagLister
+The BTagLister is a tool for viewing NBT tags on items, custom or otherwise.
+
+### Getting Started
+1. Paste the following code on a customnpcs `scripteditem` and load the `Tools/BTagLister.js` script _(or paste the BTagLister.js code below this code block)_.
+
+```js
+// requires: BTagLister
+
+function init(e){
+    BTagLister.printAllJson = false;
+    BTagLister.printAttributes = false;
+    BTagLister.Init(e);
+}
+
+function interact(e){
+    BTagLister.Interact(e);
+}
+```
+2. In this example, we are going to give ourselves bread with a custom `GINGERBREAD` tag!
+    * Type: `/give @p bread 1 0 {GINGERBREAD:1b,FOOD:1b}`
+3. Next, take the item *(bread in this case)* and:
+    * Place it in your Offhand **OR**
+    * Throw it on the ground in front of you
+3. Right-Click the TagLister *(clock)* scripted item
+
+<br>
+<div align="left">
+  <img src="img/taglister1.jpg" alt="Logo" width="1271" height="426"></img>
+</div>
+<br/>
+
+1. *NOTE: The Better Tag Lister will automatically highlight important tags and hide irrelevant ones.*
+<br>
+<div align="left">
+  <img src="img/taglister2.jpg" alt="Logo" width="1271" height="426"></img>
+</div>
+<br />
+
+*NOTE: You can also view an item's full NBT structure by setting `printAllJson` to `true`.*
+```js
+BTagLister.printAllJson = true;
+```
+<br>
+<div align="left">
+  <img src="img/taglister3.jpg" alt="Logo" width="1271" height="426"></img>
+</div>
+<br />
 
 ## ACInstaller
 All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically copied to the global folder <.minecraft>/customnpcs/

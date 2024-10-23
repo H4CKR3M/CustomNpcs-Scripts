@@ -1,4 +1,4 @@
-/* v1.3.1 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v1.4 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var FUtil = (function(){
     return { 
@@ -10,6 +10,7 @@ var FUtil = (function(){
         ExistsInDirectory: function ExistsInDirectory(directoryPath, filename)                      { return FUtil.P.ExistsInDirectory(directoryPath, filename); },
         IsExtension: function IsExtension(filename, extension)                                      { return FUtil.P.IsExtension(filename, extension); },
         ReadFile: function ReadFile(filepath)                                                       { return FUtil.P.BufferedRead(new java.io.File(filepath)); },
+        TryLoad: function TryLoad(filename)                                                         { return FUtil.P.TryLoad(filename); },
 
         /* Assets (Videos, PNGs, etc...) must be placed in /world/customnpcs
          * PlayVideo_WindowsOnly requires AlwaysOnTop.dat to be placed in /world/customnpcs/scripts 
@@ -392,6 +393,30 @@ var FUtil = (function(){
                     }
                 }
                 return -1;
+            },
+
+            /* Convenience function for loading any script scripts folder: aka <world_name>/customnpcs/scripts/ecmascript/  */
+            TryLoad: function TryLoad(filename){
+                var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+                var source = new java.io.File(API.getWorldDir() + "/scripts/ecmascript");
+                if (!source.exists()) {
+                    source.mkdir();
+                    return false;
+                }
+                if (source.isDirectory()) {
+                    var listFile = source.listFiles();
+                    for(var i = 0; i < listFile.length; i++){
+                        var f = listFile[i];
+                        if (!f.isDirectory() && f.getName() == filename){
+                            try {
+                                load(f); 
+                            } catch (ex) {
+                                ex.printStackTrace(java.lang.System.out);
+                                break;
+                            }
+                        }
+                    }
+                }
             },
         }
     }
