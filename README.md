@@ -1,8 +1,7 @@
 # Scripts for the Minecraft [CustomNpcs](https://www.curseforge.com/minecraft/mc-mods/custom-npcs) Mod
 Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
-**LICENSE**: Permission to modify/redistribute scripts as a part of your map only.  
-If you can, please link this github page in your map credits.
+**[MIT LICENSE]** - Credit is _appreciated_ but not _required!_
 
 * Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
 
@@ -286,7 +285,7 @@ I know what you're thinking, isn't it a pain in the rear to write down the coord
 
 Setup:
 1. Load `PositionSaver.js` on a scripted item - <u>*or copy the code to a scripted item.*</u>
-* NPC positions & clone name as saved to your minecraft world directory. From there you can open the txt file and copy the mob positions to your mob spawner. Magic!
+* NPC positions & clone name are saved to your minecraft world directory. From there you can open the txt file and copy the mob positions to your mob spawner. Magic!
 
 <br />
 <div align="left">
