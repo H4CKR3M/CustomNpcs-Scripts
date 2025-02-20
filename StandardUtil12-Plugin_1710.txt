@@ -6,7 +6,7 @@
  */
 if (true){(function(){
     
-    Utilities._plugins.push("1.7.10-Support");
+    Utilities.InstallPlugin("1.7.10-Support");
     Utilities.show1710Warnings = true;
 
     /* Harms given entity with "fake-instant-damage"

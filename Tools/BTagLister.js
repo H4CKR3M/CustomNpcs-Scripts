@@ -492,10 +492,10 @@ var BTagLister = {
             }
         },
 
-        itemTypes: [ "TRINKET", "ORB", "LENS" ],
+        itemTypes: [ "TRINKET", "ORB", "LENS", "CONSUMABLE" ],
         groupIDs: [
-            // TRINKETS
-            "METALWEAPON", "MW", "ARCLENS", "TROPIC3", "ICE2", "MW5",
+            // TRINKETS / WEAPONS
+            "METALWEAPON", "ARCLENS", "TROPIC3", "ICE2", "MW", "MW5", "DGWS", "LITC", "SEAOFDIE",
 
             // ARMOR
             "ARMOR1",
@@ -504,7 +504,16 @@ var BTagLister = {
             "TELEPORTER", "MAINHAND1",
 
             // ORBS
-            "TROPICORB", "CROWORB", "ICEORB"
+            "TROPICORB", "CROWORB", "ICEORB",
+
+            // GADGETS
+            "MW5Gadget",
+
+            // DEPRECATED
+            "METALWEAPONO",
+
+            // Online-Related
+            "DAILY", "ACHIEVEMENT", "DLC"
         ],
 
         Message: function Message(API, player, msg){

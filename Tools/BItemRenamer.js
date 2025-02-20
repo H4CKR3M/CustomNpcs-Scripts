@@ -1,4 +1,4 @@
-/* v4.0.2 - Better Item Renamer | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar
+/* v4.1 - Better Item Renamer | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar
  * Requires: StandardUtil12, DigitalTrinkets12 [2.0+]
  *
  * Supports BItemRenamer config versions [1.4 -> 4.0+]
@@ -19,7 +19,7 @@ var BItemRenamer = (function(){
         /* (OPTIONAL) CUSTOM EVENT: OnAttack() <---- Name a function OnTargetFound and it will be called after BItemRename.attack */
 
         P: {
-            /* Set to "" if you don't want a custom theme */
+            /* Set to "" if you don't want a custom theme - Custom Themes are located at the bottom of this file */
             theme: "",
 
             /* MAP CONFIG */
@@ -32,7 +32,7 @@ var BItemRenamer = (function(){
             /* These should be consistant across all the maps you make (not just the current one) */
             validGroupIDs: [ 
                 // TRINKETS / WEAPONS
-                "METALWEAPON", "ARCLENS", "TROPIC3", "ICE2", "MW", "MW5", "DGWS", "LITC",
+                "METALWEAPON", "ARCLENS", "TROPIC3", "ICE2", "MW", "MW5", "DGWS", "LITC", "SEAOFDIE",
 
                 // ARMOR
                 "ARMOR1",
@@ -58,6 +58,7 @@ var BItemRenamer = (function(){
                 { TAG: "TRINKET", LORE: " §c[Trinket]" },
                 { TAG: "ORB", LORE: " §b[Orb]" },
                 { TAG: "LENS", LORE: " §e[Lens]" },
+                { TAG: "CONSUMABLE", LORE: " §e[Consumable]" },
             ],
 
 /* ---------------------------------------------------------------------------------------------------------------------------- */
@@ -94,7 +95,6 @@ var BItemRenamer = (function(){
                     else
                         this.config = config;
                 }
-                this.VerifyConfigIntegrity(this.config);
 
                 // HACK: We can't grab e.player from init
                 var world = e.API.getIWorlds()[0];
@@ -107,6 +107,8 @@ var BItemRenamer = (function(){
                     this.TryLoad("FUtil.js");
                     this.TryLoad("DigitalTrinkets12.js");
                 }
+
+                this.VerifyConfigIntegrity(this.config);
                 
                 // Did the load work?
                 libraries = typeof Utilities != 'undefined' && typeof DigitalTrinkets12 != 'undefined';
@@ -379,7 +381,7 @@ var BItemRenamer = (function(){
                 var itemTypeLore = "";
                 for(var i = 0; i < this.itemTypes.length; i++){
                     if (this.config.tagItemType == this.itemTypes[i].TAG){
-                        itemTypeLore = this.itemTypes[i].LORE;
+                        itemTypeLore = this.ThematicMan.GetItemTypeLore(this.itemTypes[i]);
                         break;
                     }
                 }
@@ -389,30 +391,26 @@ var BItemRenamer = (function(){
                     switch(this.config.rarity.toUpperCase()){
                         case 'C':
                             rarityTag = "COMMON";
-                            firstLineLore = "§a§o* Common" + itemTypeLore;
                             break;
                         case 'U':
                             rarityTag = "UNCOMMON";
-                            firstLineLore = "§2§o* Uncommon" + itemTypeLore;
                             break;
                         case 'R':
                             rarityTag = "RARE";
-                            firstLineLore = "§d§o* Rare" + itemTypeLore;
                             break;
                         case 'L':
                             rarityTag = "LEGENDARY";
-                            firstLineLore = "§6§l§o* Legendary" + itemTypeLore;
                             break
                         case 'E':
                             rarityTag = "EXOTIC";
-                            firstLineLore = "§4§l§o* §4§l§oEXOTIC" + itemTypeLore;
                             break;
                         default:
                             this.Error(e, "Invalid Rarity! Rarity must be C, U, R, L, or E\nGod, were you born yesterday? It's not that hard!");
                     }
+                    firstLineLore = this.ThematicMan.GetRarityLore(this.config.rarity.toUpperCase(), itemTypeLore);
                 }
                 else if (this.config.tagItemType != "") {
-                    this.Error(e, "Hey dumbass! \nYou cannot leave the Rarity blank if you're going to use the " + this.config.tagItemType + " item type.\n\nEither Change the Config.tagItemType to ' ' empty or add a rarity value. Rarity values must be either C, U, R, L, or E");
+                    this.Error(e, "Hey dumbass! \nYou can't leave the Rarity blank if you're using the " + this.config.tagItemType + " item type.\n\nEither Change the Config.tagItemType to ' ' empty or add a rarity value. Rarity values must be either C, U, R, L, or E");
                 }
             
                 var atLeastOneValid = false;
@@ -441,7 +439,8 @@ var BItemRenamer = (function(){
                 var newAttributesArray = [];
                 if (this.config.attributes.length > 0 && this.config.attributesEnabled){
                     for(var i = 0; i < this.config.attributes.length; i++){
-                        switch(this.config.attributes[i].Slot){
+                        var slot = this.config.attributes[i].Slot.toLowerCase();
+                        switch(slot){
                             case "offhand":
                             case "mainhand":
                             case "head":
@@ -468,7 +467,7 @@ var BItemRenamer = (function(){
                         // Add the generic keyword
                         var newAttribute = {
                             Amount: this.config.attributes[i].Amount,
-                            Slot: this.config.attributes[i].Slot,
+                            Slot: slot,
                             Name: "generic." + this.config.attributes[i].Name,
                         }
                         newAttributesArray.push(newAttribute);
@@ -524,22 +523,29 @@ var BItemRenamer = (function(){
                 var newLore = [];
                 if (firstLineLore != "") newLore.push(firstLineLore);
                 if (this.config.lore.length > 0 && (this.config.tagItemType != "" || rarityTag != ""))
-                    newLore.push("§7");
+                    var blankDescriptionLoreLine = this.ThematicMan.GetBlankDescriptionLoreLine();
+                    if (blankDescriptionLoreLine != null)
+                        newLore.push(blankDescriptionLoreLine);
                 for(var i = 0; i < this.config.lore.length; i++)
-                    newLore.push(this.config.lore[i].replaceAll('&', '§'));
+                    newLore.push(this.ThematicMan.GetDescriptionLore(this.config.lore[i].replaceAll('&', '§')));
                 
                 // Only add attributes if a slot was specified -- (or if the item is not scripted at all)
+                var useFakeAttributeLore = false;
                 if (hasSlotTag || !this.config.scripted){
-                    var useFakeAttributeLore = hideFlagsTag != 0 && this.config.attributesEnabled;
+                    useFakeAttributeLore = hideFlagsTag != 0 && this.config.attributesEnabled;
                     if (this.config.attributeLore.length > 0 || useFakeAttributeLore){
-                        newLore.push("§7");
-                        var attributeSlotLore = this.ThematicMan.GetSlotLore(this.config.slot);
+                        var blankAttributeLoreLine = this.ThematicMan.GetBlankAttributeLoreLine();
+                        if (blankAttributeLoreLine != null)
+                            newLore.push(blankAttributeLoreLine);
+                        var attributeSlotLore = this.ThematicMan.GetSlotLore(this.config.slot.toUpperCase());
                         if (attributeSlotLore != ""){
-                            newLore.push(this.ThematicMan.GetSlotLore(this.config.slot));
+                            newLore.push(this.ThematicMan.GetSlotLore(this.config.slot.toUpperCase()));
                         }
                     }
-                    for(var i = 0; i < this.config.attributeLore.length; i++)
-                        newLore.push(this.config.attributeLore[i].replaceAll('&', '§'));
+                    for(var i = 0; i < this.config.attributeLore.length; i++){
+                        var fakeAttributeLore = this.config.attributeLore[i].replaceAll('&', '§');
+                        newLore.push(this.ThematicMan.GetFakeAttributeLore(fakeAttributeLore));
+                    }
 
                     if (useFakeAttributeLore){
                         for(var i = 0; i < this.config.attributes.length; i++){
@@ -559,8 +565,14 @@ var BItemRenamer = (function(){
                     newLore.push(this.ThematicMan.GetUnbreakableLore());
                 }
 
-                this.MakeItemEntity(e, this.ThematicMan.GetName(this.config.name.replaceAll('&', '§')), newLore, this.config.ID, dmgValue, tagString, newAttributesArray);
-                this.Message(e, "c", "Taadaa!~ Item Created: " + this.config.name.replaceAll('&', '§'));
+                var lastLine = this.ThematicMan.GetLastLine(useFakeAttributeLore);
+                if (lastLine != null){
+                    newLore.push(lastLine);
+                }
+                var newName = this.ThematicMan.GetName(this.config.name.replaceAll('&', '§'))
+
+                this.MakeItemEntity(e, newName, newLore, this.config.ID, dmgValue, tagString, newAttributesArray);
+                this.Message(e, "c", "Taadaa!~ Item Created: " + newName);
             },
 
             MakeItemEntity: function MakeItemEntity(e, newName, newLore, itemID, dmgValue, tagString, attributeArray){
@@ -689,6 +701,18 @@ var BItemRenamer = (function(){
                     + "\n\nExample: Leave empty string ' ' to avoid using an override" +
                     "\nOR this parameter takes a digital trinket string (see: DigitalTrinkets12) and manufactures it using the \"Create From Digitized\" mode");
                 
+                // INVALID CHARACTERS
+                var invalidChars = ['\"'];
+                if (typeof DigitalTrinkets12 != 'undefined'){
+                    invalidChars.push(DigitalTrinkets12.GetDelimiter());
+                }
+                var loreStr = conf.lore.toString(); // HACK: required conversion
+                for(var i = 0; i < invalidChars.length; i++){
+                    if (loreStr.indexOf(invalidChars[i]) !== -1){
+                        this.GlobalError("config.lore contains an invalid character: §b" + invalidChars[i] + "§6\nPlease delete this character §b" + invalidChars[i] + " §6from the lore.");
+                    }
+                }
+                
                 // Requirements for CONFIG v4.0+
                 if (this.configVersion >= 4){
                     if (conf.enchantments == null)
@@ -761,9 +785,17 @@ var BItemRenamer = (function(){
             ThematicMan: {
 
                 GetName: function GetName(name) { return this.P.GetName(name); },
+                GetDescriptionLore: function GetDescriptionLore(loreLine) { return this.P.GetDescriptionLore(loreLine); },
+                GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine() { return this.P.GetBlankDescriptionLoreLine(); },
+                GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine() { return this.P.GetBlankAttributeLoreLine(); },
+                GetFakeAttributeLore: function GetFakeAttributeLore(loreLine) { return this.P.GetFakeAttributeLore(loreLine); },
                 GetAttributeLore: function GetAttributeLore(name, amount){ return this.P.GetAttribute(name, amount); },
                 GetUnbreakableLore: function GetUnbreakableLore(){ return this.P.GetUnbreakable(); },
+                GetLastLine: function GetLastLine(bHasAttributes){ return this.P.GetLastLine(bHasAttributes); },
+                GetItemTypeLore: function GetItemTypeLore(itemType) { return this.P.GetItemTypeLore(itemType); },
+                GetRarityLore: function GetRarityLore(rarity, itemTypeLore){ return this.P.GetRarityLore(rarity, itemTypeLore); },
                 GetSlotLore: function GetSlotLore(slot){ return this.P.GetSlot(slot); },
+                GetTheme: function GetTheme(themeID){ return this.P.GetTheme(themeID); },
                 
                 P: {
 
@@ -778,6 +810,58 @@ var BItemRenamer = (function(){
                             throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetName(name)\n\n" + ex);
                         }
                         return name.replaceAll('&', '§');
+                    },
+
+                    GetDescriptionLore: function GetDescriptionLore(loreLine){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetDescriptionLore')){
+                                return theme.GetDescriptionLore(loreLine);
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetDescriptionLore(loreLine)\n\n" + ex);
+                        }
+                        return loreLine.replaceAll('&', '§');
+                    },
+
+                    GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine(){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetBlankDescriptionLoreLine')){
+                                return theme.GetBlankDescriptionLoreLine();
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetBlankDescriptionLoreLine()\n\n" + ex);
+                        }
+                        return "§7";
+                    },
+
+                    GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine(){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetBlankAttributeLoreLine')){
+                                return theme.GetBlankAttributeLoreLine();
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetBlankAttributeLoreLine()\n\n" + ex);
+                        }
+                        return "§7";
+                    },
+
+                    GetFakeAttributeLore: function GetFakeAttributeLore(loreLine){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetFakeAttributeLore')){
+                                return theme.GetFakeAttributeLore(loreLine);
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetFakeAttributeLore(loreLine)\n\n" + ex);
+                        }
+                        return loreLine;
                     },
 
                     GetAttribute: function GetAttribute(attributeID, amount){
@@ -832,6 +916,60 @@ var BItemRenamer = (function(){
                             throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetUnbreakable()\n\n" + ex);
                         }
                         return BItemRenamer.P.config.slot != '' ? "§9Unbreakable" : "§9Unbreakable";
+                    },
+                    GetItemTypeLore: function GetItemTypeLore(itemType){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetItemTypeLore')){
+                                return theme.GetItemTypeLore(itemType.TAG);
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetItemTypeLore()\n\n" + ex);
+                        }
+                        return itemType.LORE;
+                    },
+                    GetLastLine: function GetLastLine(bHasAttributes){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetLastLine')){
+                                return theme.GetLastLine(bHasAttributes);
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetLastLine(bHasAttributes)\n\n" + ex);
+                        }
+                        return null;
+                    },
+                    GetRarityLore: function GetRarityLore(rarity, itemTypeLore){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetRarityLore')){
+                                return theme.GetRarityLore(rarity, itemTypeLore);
+                            }
+                        }
+                        catch(ex) {
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetRarityLore()\n\n" + ex);
+                        }
+                        var firstLineLore = "";
+                        switch(rarity){
+                            case 'C':
+                                firstLineLore = "§a§o* Common" + itemTypeLore;
+                                break;
+                            case 'U':
+                                firstLineLore = "§2§o* Uncommon" + itemTypeLore;
+                                break;
+                            case 'R':
+                                firstLineLore = "§d§o* Rare" + itemTypeLore;
+                                break;
+                            case 'L':
+                                firstLineLore = "§6§l§o* Legendary" + itemTypeLore;
+                                break
+                            case 'E':
+                                firstLineLore = "§4§l§o* §4§l§oEXOTIC" + itemTypeLore;
+                                break;
+                        }
+                        return firstLineLore;
                     },
                     GetSlot: function GetSlot(slot){
                         try{
@@ -968,6 +1106,224 @@ var BItemRenamer = (function(){
                         return name.length < 5 || name[4] == "█" || name[3] == "█" ? "§b§l" + name : "§b█ " + name + " §b█"
                     }
                 },
+            },
+            {
+                /* from 'Sea of Die' - a theme by Rimscar */
+                ID: "CARDISTRY",
+                maxDMG: 10,
+                maxHP: 20,
+                progressBarLength: 8,
+                colors: ['8','7','f'],
+                attributes: [
+                    {
+                        ID: "attackDamage",
+                        Get: function Get(num){
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var c1 = "§" + theme.colors[0];
+                            var c2 = "§" + theme.colors[1];
+                            return "§l " + c1 + "▌╚ " + c2 + "DMG" + c1 + " » " + theme.GetProgressBar(num, theme.maxDMG);
+                        },
+                    },
+                    {
+                        ID: "maxHealth",
+                        Get: function Get(num){
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var c1 = "§" + theme.colors[0];
+                            var c2 = "§" + theme.colors[1];
+                            return "§l " + c1 + "▌╚§l " + c2 + "VIT§l " + c1 + "» " + theme.GetProgressBar(num, theme.maxHP);
+                        }
+                    },
+                    {
+                        ID: "attackSpeed",
+                        Get: function Get(num){
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var c1 = "§" + theme.colors[0];
+                            var c2 = "§" + theme.colors[1];
+                            var spd;
+                            var maxSpeed = 5;
+                            if (num <= -3.5) spd = 0; // questionable life choices
+                            else if (num <= -3) spd = 1; // axe
+                            else if (num <= -2.4) spd = 2; // normal sword
+                            else if (num <= -1) spd = 3; // dagger
+                            else if (num <= 50) spd = 4; // almost no hit delay
+                            else spd = maxSpeed;
+                            return "§l " + c1 + "▌╚ " + c2 + "SPD " + c1 + "» " + theme.GetProgressBar(spd, maxSpeed-1);
+                        }
+                    },
+                    {
+                        ID: "movementSpeed",
+                        Get: function Get(num){
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var c1 = "§" + theme.colors[0];
+                            var c2 = "§" + theme.colors[1];
+                            var bar = "";
+                            if (num < 0){
+                                var minSpeed = -0.1
+                                num = Math.max(num, minSpeed);
+                                bar = theme.GetProgressBar(num, minSpeed, true);
+                            }
+                            else{
+                                
+                                var spd;
+                                var maxSpeed = 5;
+                                if (num < 0.02) spd = 0;
+                                else if (num <= 0.05) spd = 1; // (slight) speed buff
+                                else if (num <= 0.08) spd = 2; // Speed I
+                                else if (num <= 0.1) spd = 3.5; // very fast
+                                else if (num <= 0.13) spd = 4; // very very fast
+                                else if (num <= 0.15) spd = 4.5; // joke spd
+                                else spd = maxSpeed;
+                                bar = theme.GetProgressBar(spd, maxSpeed);
+                            }
+                            return "§l " + c1 + "▌╚ " + c2 + "MOV" + c1 + " » " + bar;
+                        },
+                    },
+                ],
+                GetUnbreakable: function GetUnbreakable(){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+                    return "§l " + c1 + "▌╚         ▐ »" + c2 + "UNB ︻╦╤─§l " + c1 + "▌";
+                },
+                GetSlot: function GetSlot(slot){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    if (slot == 'O')
+                            // return "§7§lOffhand";
+                            return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
+                        else
+                            return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
+                },
+                GetName: function GetName(name){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+                    var isProbablyWeapon = false;
+                    if (BItemRenamer.P.config.attributes.length > 0 && BItemRenamer.P.config.attributesEnabled){
+                        for(var i = 0; i < BItemRenamer.P.config.attributes.length; i++){
+                            if (BItemRenamer.P.config.attributes[i].Name == "attackDamage" && BItemRenamer.P.config.attributes[i].Amount > 1){
+                                isProbablyWeapon = true;
+                            }
+                        }
+                    }
+                    var prefix = "";
+                    if (isProbablyWeapon){
+                        prefix = " " + c2 + "[" + c1 + "§l⚔" + c2 + "]"
+                    }
+                    return c2 + "◘" + c1 + "◙" + c2 + "◘" + prefix + " " + c1 + "§l" + name + " " + c2 + "▼▼▼ »";
+                },
+                GetDescriptionLore: function GetDescriptionLore(loreLine){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+                    return "§l " + c1 + "▌ • " + c2 + loreLine;
+                },
+                GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine(){ // "&l &8▌&7 ",
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    return "§l " + c1 + "▌";
+                },
+                GetFakeAttributeLore: function GetFakeAttributeLore(loreLine){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+                    return "§l " + c1 + "▌ " + c2 + loreLine;
+                },
+                GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine(){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    return "§l  " + c1 + " • ═░░░═══  ▀  ▀  ▀";
+                },
+                GetLastLine: function GetLastLine(bHasAttributes){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+
+                    // Means it's likely a weapon
+                    if (bHasAttributes)
+                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
+                    else
+                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
+                },
+                GetItemTypeLore: function GetItemTypeLore(itemTypeTag){
+                    var itemTypeStr = "";
+                    switch(itemTypeTag){
+                        case "TRINKET":
+                            itemTypeStr = "TNKT";
+                            break;
+                        case "ORB":
+                            itemTypeStr = "ORB";
+                            break;
+                        case "LENS":
+                            itemTypeStr = "LENS";
+                            break;
+                        case "CONSUMABLE":
+                            itemTypeStr = "CNSB";
+                            break;
+                        default:
+                            throw("\nThe heck is this? ---> " + itemTypeTag + " ???\nSorry, but the item type '" + itemTypeTag + "' is not part of the CARDISTRY theme."
+                                + "\n 1. go to BItemRenamer.Themes\n 2. find the 'CARDISTRY' theme\n 3. and add the new item type '" + itemTypeTag + "' to the GetItemTypeLore() function.\n\n")
+                    }
+                    return itemTypeStr;
+                },
+                GetRarityLore: function GetRarityLore(rarity, itemTypeLore){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+
+                    var rarityLoreLine = "§l " + c1 + "▌ »»» " + c2 + "§n" + itemTypeLore + "" + c1 + " ○ ╚§n";
+                    switch(rarity){
+                        case 'C':
+                            rarityLoreLine += "COMN";
+                            break;
+                        case 'U':
+                            rarityLoreLine += "UCMN";
+                            break;
+                        case 'R':
+                            rarityLoreLine += "RARE";
+                            break;
+                        case 'L':
+                            rarityLoreLine += "LGND";
+                            break
+                        case 'E':
+                            rarityLoreLine += "EXTC";
+                            break;
+                    }
+                    return rarityLoreLine += c1 + "╝";
+                },
+                GetProgressBar: function GetProgressBar(num, maxValue, OPTIONAL_invertColors){
+                    if (OPTIONAL_invertColors == null) { OPTIONAL_invertColors = false; }
+
+                    num = Math.abs(num);
+                    maxValue = Math.abs(maxValue);
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+                    var c3 = "§" + theme.colors[2];
+
+                    if (OPTIONAL_invertColors){
+                        var tmp = c1;
+                        c1 = c2;
+                        c2 = tmp;
+                        c3 = tmp;
+                    }
+
+                    var numPercentage = (Math.min(num, maxValue)) / maxValue;
+                    var numNormalized = Math.ceil(numPercentage * this.progressBarLength);
+                    var recolorIndicator = Math.floor(numNormalized*(num >= maxValue ? 1 : 0.75));
+                    var progBar = c3;
+                    for(var i = 0; i < recolorIndicator; i++)
+                        progBar += "█";
+                    progBar += c2;
+                    var recolorIndicatorRemaining = numNormalized - recolorIndicator;
+                    for(var i = 0; i < recolorIndicatorRemaining; i++)
+                        progBar += "▓";
+                    progBar += c1;
+                    var numRemaining = this.progressBarLength-numNormalized;
+                    for(var i = 0; i < numRemaining; i++){
+                        progBar += "▒";
+                    }
+                    return c1 + "▐" + c2 + progBar + c1 + "▌";
+                }
             },
             {
                 /* A very boring theme */

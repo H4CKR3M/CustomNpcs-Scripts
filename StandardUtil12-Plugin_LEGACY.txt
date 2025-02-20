@@ -1,5 +1,4 @@
-
-/* v1.0 - Legacy Support-> StandardUtil12 Plugin | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v1.1 - Legacy Support-> StandardUtil12 Plugin | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Re-implements deprecated methods
  * Installation:
  * Paste this code at the bottom of the StandardUtil12.js script file
@@ -7,7 +6,7 @@
  */
 if (true){(function(){
 
-    Utilities._plugins.push("LegacySupport");
+    Utilities.InstallPlugin("LegacySupport");
 
     // Broadcast(world, msg) 
     var originalBroadcast = Utilities.Broadcast;
@@ -45,4 +44,3 @@ if (true){(function(){
     Utilities.Play2DAudioTargetPlayerAPI = function(e, soundName){ Utilities.Play(e.player, soundName); };
 
 })();}
- 

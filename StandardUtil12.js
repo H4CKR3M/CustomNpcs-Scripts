@@ -1,6 +1,6 @@
-/* v3.0 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v3.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
-var Utilities = (function(){
+var Utilities = (function(){ var Plugins = [];
     return {
 
         Broadcast: function Broadcast(msg){
@@ -259,13 +259,18 @@ var Utilities = (function(){
             }
         },
 
+        // Checks whether the included string contains a certain string/character
+        Includes: function Includes(strBase, strSearch){
+            return strBase.indexOf(strSearch) !== -1;
+        },
+
         Clamp: function Clamp(num, min, max){
             return Math.min(max, Math.max(min, num));
         },
 
         IndexOfNth: function IndexOfNth(str, char, index) {
             if (index <= 0){
-                throw("\n\mERROR: IndexOfNth(str, char, index) was given an n'th number less than 1."
+                throw("\n\nERROR: IndexOfNth(str, char, index) was given an n'th number less than 1."
                     + "\nExample: If you want the 2nd index, give 2\n\n");
             }
 
@@ -411,13 +416,15 @@ var Utilities = (function(){
         // EXTRA ------------------------------------------------------------------------------
 
         IsPluginInstalled: function IsPluginInstalled(pluginName){
-            for(var i = 0; i < this._plugins.length; i++){
-                if (this._plugins[i] == pluginName)
+            for(var i = 0; i < Plugins.length; i++){
+                if (Plugins[i] == pluginName)
                     return true;
             }
             return false;
         },
-        _plugins: []
+        InstallPlugin: function InstallPlugin(pluginName){
+            Plugins.push(pluginName);
+        }
     }
 }());
 
