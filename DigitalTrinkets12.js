@@ -1,4 +1,4 @@
-/* v2.2 - DigitalTrinkets12 | Loadable From Anywhere | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v2.3 - DigitalTrinkets12 | Loadable From Anywhere | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
  * Requires: StandardUtil12
  */
 
@@ -6,8 +6,9 @@ var DigitalTrinkets12 = (function(){
     return { 
 
         /* Converts trinket to string format, saves to tempdata & worlddata */
-        Digitize: function Digitize(itemStack){                                         return DigitalTrinkets12.P.Digitize(itemStack, "", false); },
-        DigitizeDebug: function DigitizeDebug(itemStack, key, bDebug){                  return DigitalTrinkets12.P.Digitize(itemStack, key, bDebug); },
+        Digitize: function Digitize(itemStack, OPTIONAL_bSaveItemCount){                if (OPTIONAL_bSaveItemCount == null) { OPTIONAL_bSaveItemCount = false; } 
+                                                                                        return DigitalTrinkets12.P.Digitize(itemStack, "", OPTIONAL_bSaveItemCount, false); },
+        DigitizeDebug: function DigitizeDebug(itemStack, key, bDebug){                  return DigitalTrinkets12.P.Digitize(itemStack, key, true, bDebug); },
 
         /* Gives the given digital trinket to given player */
         Give: function Give(player, digitizedString){                                   DigitalTrinkets12.P.Give(player, digitizedString); },
@@ -30,9 +31,8 @@ var DigitalTrinkets12 = (function(){
             delimiter: '@',
             delimiter2: "$",
             digitizeKey: "DIGITIZE",
-            saveCount: false,
 
-            Digitize: function Digitize(itemStack, dataKey, showDebugger){
+            Digitize: function Digitize(itemStack, dataKey, saveCount, showDebugger){
 
                 // Save Name []
                 var exportText = itemStack.getDisplayName();
@@ -163,7 +163,7 @@ var DigitalTrinkets12 = (function(){
                     exportText += this.delimiter + "A" + colorCode;
                 }
                 // Save count [B]
-                if (this.saveCount && itemStack.getStackSize() > 1){
+                if (saveCount && itemStack.getStackSize() > 1){
                     exportText += this.delimiter + "B" + itemStack.getStackSize();
                 }
 

@@ -1,4 +1,4 @@
-/* v4.1 - Better Item Renamer | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar
+/* v4.2 - Better Item Renamer | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar
  * Requires: StandardUtil12, DigitalTrinkets12 [2.0+]
  *
  * Supports BItemRenamer config versions [1.4 -> 4.0+]
@@ -20,7 +20,7 @@ var BItemRenamer = (function(){
 
         P: {
             /* Set to "" if you don't want a custom theme - Custom Themes are located at the bottom of this file */
-            theme: "",
+            theme: "CARDISTRY",
 
             /* MAP CONFIG */
             debugDigitizer: false,
@@ -491,9 +491,11 @@ var BItemRenamer = (function(){
                 if (this.config.hasOwnProperty('enchantments') && this.config.enchantments.hide){
                     hideFlagsTag += 1;
                 }
+
+                var nullCode = "NULL001596";
                 
                 // Apply Tags
-                tagString += this.config.tagItemType != "" ? tagString += this.config.tagItemType + ":1b" : "NULL";
+                tagString += this.config.tagItemType != "" ? tagString += this.config.tagItemType + ":1b" : nullCode;
                 if (rarityTag != "") tagString += "," + rarityTag + ":1b";
                 if (this.config.unbreakable) tagString += ",Unbreakable:1";
                 var tagGroupIDExtension = this.config.tagItemType == "ORB" && !this.convertLegacyItems ? "ORB" : ""; // [NOTE] Legacy Support
@@ -517,8 +519,8 @@ var BItemRenamer = (function(){
                 if (this.config.hasOwnProperty('enchantments') && this.config.enchantments.list.length > 0 && this.config.enchantments.enabled){
                     tagString += "," + DigitalTrinkets12.P.GetEnchantmentTag(this.config.enchantments.list);
                 }
-                tagString = tagString.replaceAll('NULL,','');
-                tagString = tagString.replaceAll('NULL','');
+                tagString = tagString.replaceAll(nullCode + ',','');
+                tagString = tagString.replaceAll(nullCode,'');
             
                 var newLore = [];
                 if (firstLineLore != "") newLore.push(firstLineLore);
@@ -1300,6 +1302,9 @@ var BItemRenamer = (function(){
                     var c2 = "§" + theme.colors[1];
                     var c3 = "§" + theme.colors[2];
 
+                    var c1Copy = c1;
+                    var c2Copy = c2;
+
                     if (OPTIONAL_invertColors){
                         var tmp = c1;
                         c1 = c2;
@@ -1322,7 +1327,7 @@ var BItemRenamer = (function(){
                     for(var i = 0; i < numRemaining; i++){
                         progBar += "▒";
                     }
-                    return c1 + "▐" + c2 + progBar + c1 + "▌";
+                    return c1Copy + "▐" + c2 + progBar + c1Copy + "▌";
                 }
             },
             {

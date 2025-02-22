@@ -1,4 +1,4 @@
-/* v3.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v3.2 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function(){ var Plugins = [];
     return {
@@ -243,15 +243,15 @@ var Utilities = (function(){ var Plugins = [];
         },
 
         // Sorts given array of numbers
-        SortNumeric: function SortNumeric(ar) {
+        SortNumeric: function SortNumeric(arr) {
             var i = 0, j;
-            while (i < ar.length) {
+            while (i < arr.length) {
                 j = i + 1;
-                while (j < ar.length) {
-                    if (ar[j] < ar[i]) {
-                        var temp = ar[i];
-                        ar[i] = ar[j];
-                        ar[j] = temp;
+                while (j < arr.length) {
+                    if (arr[j] < arr[i]) {
+                        var temp = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = temp;
                     }
                     j++;
                 }
@@ -260,8 +260,14 @@ var Utilities = (function(){ var Plugins = [];
         },
 
         // Checks whether the included string contains a certain string/character
-        Includes: function Includes(strBase, strSearch){
+        StringIncludes: function StringIncludes(strBase, strSearch){
             return strBase.indexOf(strSearch) !== -1;
+        },
+
+        // Removes provided substring from given base. Returns base string if it does not exist.
+        RemoveSubstring: function RemoveSubstring(strBase, strRemove){
+            return strBase.substring(0, strBase.indexOf(strRemove)) 
+                + strBase.substring(strBase.indexOf(strRemove)+strRemove.length, strBase.length);
         },
 
         Clamp: function Clamp(num, min, max){
