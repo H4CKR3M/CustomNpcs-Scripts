@@ -1,7 +1,7 @@
-/* v4.2 - Better Item Renamer | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar
+/* v6.0 - Better Item Renamer | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar
  * Requires: StandardUtil12, DigitalTrinkets12 [2.0+]
  *
- * Supports BItemRenamer config versions [1.4 -> 4.0+]
+ * Supports BItemRenamer config versions [1.4 -> 6.0+]
  * 
  * Right-Click Use, Left-Click Change Mode
  */
@@ -13,6 +13,7 @@ var BItemRenamer = (function(){
         Interact: function Interact(e){ BItemRenamer.P.Interact(e); },
         Attack: function Attack(e){ BItemRenamer.P.Attack(e); },
         GetGroupIDs: function GetGroupIDs(){ return this.P.validGroupIDs; },
+        GetConfigSlot: function GetConfigSlot() { return this.P.config.slot.toUpperCase(); },
 
         /* (OPTIONAL) CUSTOM EVENT: OnInit() <---- Name a function OnReset and it will be called after BItemRename.init */
         /* (OPTIONAL) CUSTOM EVENT: OnInteract() <---- Name a function OnTargetFound and it will be called after BItemRename.interact */
@@ -20,22 +21,19 @@ var BItemRenamer = (function(){
 
         P: {
             /* Set to "" if you don't want a custom theme - Custom Themes are located at the bottom of this file */
-            theme: "CARDISTRY",
+            theme: "ONGARDE", // MONOSPACE_ANALOG_2
 
             /* MAP CONFIG */
-            debugDigitizer: false,
             sayCreateCommandInChat: false,
+            debugDigitizer: false,
             hideWarnings: false,
-            hideAttackSpeedLore: false,
-            convertLegacyItems: false,
+            legacy_hideAttackSpeed: false,
+            legacy_convertOldItems: false,
 
             /* These should be consistant across all the maps you make (not just the current one) */
             validGroupIDs: [ 
                 // TRINKETS / WEAPONS
-                "METALWEAPON", "ARCLENS", "TROPIC3", "ICE2", "MW", "MW5", "DGWS", "LITC", "SEAOFDIE",
-
-                // ARMOR
-                "ARMOR1",
+                "METALWEAPON", "ARCLENS", "TROPIC3", "ICE2", "MW", "MW5", "DGWS", "LITC", "SEAOFDIE", "SEAOFDYE", "ONGARDE",
 
                 // OTHER
                 "TELEPORTER", "MAINHAND1",
@@ -47,7 +45,7 @@ var BItemRenamer = (function(){
                 "MW5Gadget",
 
                 // DEPRECATED
-                "METALWEAPONO",
+                "METALWEAPONO", "ARMOR1",
 
                 // Online-Related
                 "DAILY", "ACHIEVEMENT", "DLC"
@@ -59,6 +57,19 @@ var BItemRenamer = (function(){
                 { TAG: "ORB", LORE: " §b[Orb]" },
                 { TAG: "LENS", LORE: " §e[Lens]" },
                 { TAG: "CONSUMABLE", LORE: " §e[Consumable]" },
+                { TAG: "ARMOR", LORE: "" },
+                
+                { TAG: "OUTFIT", LORE: " §f[§5Outfit§f]" },
+                { TAG: "GIFT", LORE: " §f[§eGift§f]" },
+                { TAG: "CARD", LORE: " §8[§fCard§8]" },
+                { TAG: "LIGHTKNIFE", LORE: " §b[§fLight Knife§b]" },
+                { TAG: "KNIFE", LORE: " §f[§eKnife§f]" },
+                { TAG: "SWORD", LORE: " §f[§7Sword§f]" },
+                { TAG: "AXE", LORE: " §7[§8Axe§7]" },
+                { TAG: "GREATBLADE", LORE: " §7[§4Greatblade§7]" },
+                { TAG: "BOW", LORE: " §8[§2Bow§8]" },
+                { TAG: "LANCE", LORE: " §8[§3Lance§8]" },
+                { TAG: "WAND", LORE: " §d[§5Wand§d]" },
             ],
 
 /* ---------------------------------------------------------------------------------------------------------------------------- */
@@ -69,11 +80,11 @@ var BItemRenamer = (function(){
 
             config: null,
             libKey: "BIR_lib",
+            version: 6,
 
             /* The SCRIPTED and an (OFFHAND or MAINHAND) tag is REQUIRED for use with Better Trinkets */
             tagScripted: "SCRIPTED",
-            tagMainHand: "MAINHAND",
-            tagOffHand: "OFFHAND",
+            tagSlotNames: [ "MAINHAND", "OFFHAND", "FEET", "LEGS", "CHEST", "HEAD", "INVENTORY" ],
 
             Init: function Init(e, OPTIONAL_config){
                 e.item.setDurabilityShow(false);
@@ -254,7 +265,7 @@ var BItemRenamer = (function(){
                         e.item.setItemDamage(2261);
                         break;
                     case "cn":
-                        e.item.setCustomName("§b[§3§l" + this.configVersion + "§b] §6New Trinket Creator: " + this.config.name.replaceAll('&', '§'));
+                        e.item.setCustomName("§b[§3§l" + this.configVersion + "§b] §6New Trinket Creator [§7" + this.config.name.replaceAll('&', '§') + "§6]");
                         e.item.setTexture(2256, "minecraft:record_13");
                         e.item.setItemDamage(2256);
                         break;
@@ -380,7 +391,7 @@ var BItemRenamer = (function(){
                 var firstLineLore = "";
                 var itemTypeLore = "";
                 for(var i = 0; i < this.itemTypes.length; i++){
-                    if (this.config.tagItemType == this.itemTypes[i].TAG){
+                    if (this.config.tagItemType == this.itemTypes[i].TAG && this.itemTypes[i].LORE != ""){
                         itemTypeLore = this.ThematicMan.GetItemTypeLore(this.itemTypes[i]);
                         break;
                     }
@@ -409,8 +420,24 @@ var BItemRenamer = (function(){
                     }
                     firstLineLore = this.ThematicMan.GetRarityLore(this.config.rarity.toUpperCase(), itemTypeLore);
                 }
-                else if (this.config.tagItemType != "") {
+                else if (this.config.tagItemType != "" && this.config.tagItemType != "ARMOR") {
                     this.Error(e, "Hey dumbass! \nYou can't leave the Rarity blank if you're using the " + this.config.tagItemType + " item type.\n\nEither Change the Config.tagItemType to ' ' empty or add a rarity value. Rarity values must be either C, U, R, L, or E");
+                }
+
+                var atLeastOneItemType = false;
+                for(var i = 0; i < this.itemTypes.length; i++){
+                    if (this.config.tagItemType == this.itemTypes[i].TAG){
+                        atLeastOneItemType = true;
+                    }
+                }
+                if (!atLeastOneItemType && this.config.tagItemType != ""){
+                    var allItemTypes = "§7";
+                    for (var i = 0; i < this.itemTypes.length; i++) {
+                        allItemTypes += this.itemTypes[i].TAG + "§6, §7";
+                    }
+                    this.Error(e, "Alright, pal. What kind of tagItemType is '" + this.config.tagItemType + "'?\nSounds like you made it up! Either leave tagItemType blank or give me a real one."
+                        + "\nExamples include: " + allItemTypes + "§6\nOr... you know, you could always add some more - Open BItemRenamer.js and check the top of the config, I think it's called §7itemType§6? Can't miss it.")
+
                 }
             
                 var atLeastOneValid = false;
@@ -437,22 +464,34 @@ var BItemRenamer = (function(){
 
                 // Verification for User Error
                 var newAttributesArray = [];
-                if (this.config.attributes.length > 0 && this.config.attributesEnabled){
-                    for(var i = 0; i < this.config.attributes.length; i++){
-                        var slot = this.config.attributes[i].Slot.toLowerCase();
+                if (this.config.attributes.list.length > 0 && this.config.attributes.enabled){
+                    for(var i = 0; i < this.config.attributes.list.length; i++){
+                        var slot = this.config.attributes.list[i].Slot.toLowerCase();
+                        var slotID = 0;
                         switch(slot){
-                            case "offhand":
                             case "mainhand":
-                            case "head":
-                            case "chest":
-                            case "legs":
+                                slotID = 0;
+                                break;
+                            case "offhand":
+                                slotID = 1;
+                                break;
                             case "feet":
+                                slotID = 2;
+                                break;
+                            case "legs":
+                                slotID = 3;
+                                break;
+                            case "chest":
+                                slotID = 4;
+                                break;
+                            case "head":
+                                slotID = 5;
                                 break;
                             default:
-                                this.Error(e, "Bad Attribute slot! " + this.config.attributes[i].Slot + " is not a valid slot!");
+                                this.Error(e, "Bad Attribute slot! " + this.config.attributes.list[i].Slot + " is not a valid slot!");
                         }
             
-                        switch(this.config.attributes[i].Name){
+                        switch(this.config.attributes.list[i].Name){
                             case "maxHealth":
                             case "followRange":
                             case "knockbackResistance":
@@ -461,14 +500,14 @@ var BItemRenamer = (function(){
                             case "attackSpeed":
                                 break;
                             default:
-                                this.Error(e, "Bad Attribute name! " + this.config.attributes[i].Name + " is not a valid name!");
+                                this.Error(e, "Bad Attribute name! " + this.config.attributes.list[i].Name + " is not a valid name!");
                         }
             
                         // Add the generic keyword
                         var newAttribute = {
-                            Amount: this.config.attributes[i].Amount,
-                            Slot: slot,
-                            Name: "generic." + this.config.attributes[i].Name,
+                            Amount: this.config.attributes.list[i].Amount,
+                            Slot: slotID,
+                            Name: "generic." + this.config.attributes.list[i].Name,
                         }
                         newAttributesArray.push(newAttribute);
                     }
@@ -476,15 +515,36 @@ var BItemRenamer = (function(){
                     // Automatically Hide Attributes
                     hideFlagsTag += 2;
                 }
+                else if (this.config.tagItemType == "ARMOR"){ // If ARMOR, then always hide flags
+                    hideFlagsTag += 2;
+                }
+
                 var hasSlotTag = this.config.slot != '' && this.config.slot != ' ';
-                if (this.configVersion < 2 && !this.convertLegacyItems){
+                if (this.configVersion < 2 && !this.legacy_convertOldItems){
                     hasSlotTag = false;
                 }
                 var handTag = "";
                 if (hasSlotTag){
-                    if (this.config.slot.toUpperCase() == 'M') handTag = this.tagMainHand;
-                    else if (this.config.slot.toUpperCase() == 'O') handTag = this.tagOffHand;
-                    else this.Error(e, "Bad slot name, idiot! " + this.config.slot + " is not a valid slot name! Valid names include: O, M\n*hmph*... what WOULD you do without me...");
+                    var foundOneValidSlotName = false;
+                    var slotAbbrev = this.config.slot.toUpperCase();
+                    for(var i = 0; i < this.tagSlotNames.length; i++){
+                        if (slotAbbrev == this.tagSlotNames[i][0]){
+
+                            if ((slotAbbrev == 'F' || slotAbbrev == 'L' || slotAbbrev == 'C' || slotAbbrev == 'H') && this.config.tagItemType != "ARMOR"){
+                                this.Error(e, "Aren't you forgetting something?\nYou're looking for slot " + slotAbbrev + ", right? Then you need to set the tagItemType to ARMOR");
+                            }
+                            if ((slotAbbrev != 'F' && slotAbbrev != 'L' && slotAbbrev != 'C' && slotAbbrev != 'H') && this.config.tagItemType == "ARMOR"){
+                                this.Error(e, "Geez, what now?\nOh, your tagItemType is ARMOR, ok... that's fine.\nWhat isn't is the slot!\nIt has to be either F, L, C or H\n"
+                                    + "You know?\nAs in Feet, Legs, Chest, or Head? Understand?"
+                                );
+                            }
+                            foundOneValidSlotName = true;
+                            handTag = this.tagSlotNames[i];
+                            break;
+                        }
+                    }
+                    if (!foundOneValidSlotName)
+                        this.Error(e, "Bad slot name, idiot! " + this.config.slot + " is not a valid slot name! Valid names include: O, M\n*hmph*... what WOULD you do without me...");
                 }
                 if (this.config.unbreakable)
                     hideFlagsTag += 4;
@@ -498,11 +558,20 @@ var BItemRenamer = (function(){
                 tagString += this.config.tagItemType != "" ? tagString += this.config.tagItemType + ":1b" : nullCode;
                 if (rarityTag != "") tagString += "," + rarityTag + ":1b";
                 if (this.config.unbreakable) tagString += ",Unbreakable:1";
-                var tagGroupIDExtension = this.config.tagItemType == "ORB" && !this.convertLegacyItems ? "ORB" : ""; // [NOTE] Legacy Support
+                var tagGroupIDExtension = this.config.tagItemType == "ORB" && !this.legacy_convertOldItems ? "ORB" : ""; // [NOTE] Legacy Support
                 if (this.config.tagGroupID != "") tagString += "," + this.config.tagGroupID + tagGroupIDExtension + ":1b";
                 if (this.config.tag != "") tagString += "," + this.config.tag + ":1b";
-                for(var i = 0; i < this.config.tagsBonus.length; i++)
-                    tagString += "," + this.config.tagsBonus[i] + ":1b";
+                var isLeather = this.config.ID == "minecraft:leather_helmet" || this.config.ID == "minecraft:leather_chestplate" || this.config.ID == "minecraft:leather_leggings" || this.config.ID == "minecraft:leather_boots";
+                if (this.config.color != "" && isLeather) {
+                    var colorHex = this.config.color;
+                    if (this.config.color[0] == "#")
+                        colorHex = this.config.color.substring(1, this.config.color.length);
+                    tagString += ",display:{color:" + parseInt(colorHex, 16) + "}"
+                }
+                for(var i = 0; i < this.config.tagsBonus.length; i++){
+                    if (this.config.tagsBonus[i][this.config.tagsBonus[i].length-1] == "}") tagString += "," + this.config.tagsBonus[i]; // MC tags {} do not use :1b
+                    else tagString += "," + this.config.tagsBonus[i] + ":1b";
+                }
                 if (this.config.scripted) tagString += "," + this.tagScripted + ":1b";
                 if (hasSlotTag) tagString += "," + handTag + ":1b";
                 if (this.config.skull != "" && this.config.ID == "minecraft:skull"){
@@ -525,33 +594,60 @@ var BItemRenamer = (function(){
                 var newLore = [];
                 if (firstLineLore != "") newLore.push(firstLineLore);
                 if (this.config.lore.length > 0 && (this.config.tagItemType != "" || rarityTag != ""))
-                    var blankDescriptionLoreLine = this.ThematicMan.GetBlankDescriptionLoreLine();
-                    if (blankDescriptionLoreLine != null)
-                        newLore.push(blankDescriptionLoreLine);
+                    if (rarityTag != "" && this.config.lore.length > 0){
+                        var blankDescriptionLoreLine = this.ThematicMan.GetBlankDescriptionLoreLine();
+                        if (blankDescriptionLoreLine != null)
+                            newLore.push(blankDescriptionLoreLine);
+                    }
                 for(var i = 0; i < this.config.lore.length; i++)
                     newLore.push(this.ThematicMan.GetDescriptionLore(this.config.lore[i].replaceAll('&', '§')));
-                
-                // Only add attributes if a slot was specified -- (or if the item is not scripted at all)
-                var useFakeAttributeLore = false;
-                if (hasSlotTag || !this.config.scripted){
-                    useFakeAttributeLore = hideFlagsTag != 0 && this.config.attributesEnabled;
-                    if (this.config.attributeLore.length > 0 || useFakeAttributeLore){
-                        var blankAttributeLoreLine = this.ThematicMan.GetBlankAttributeLoreLine();
-                        if (blankAttributeLoreLine != null)
-                            newLore.push(blankAttributeLoreLine);
-                        var attributeSlotLore = this.ThematicMan.GetSlotLore(this.config.slot.toUpperCase());
-                        if (attributeSlotLore != ""){
-                            newLore.push(this.ThematicMan.GetSlotLore(this.config.slot.toUpperCase()));
+
+                for (var i = 0; i < newLore.length; i++) {
+                    if (Utilities.StringIncludes(newLore[i], ':'))
+                        this.Message(e, 'w', "Watch out, this item has a colon ':' in it's lore!\nThis will probably cause an error with BTManager.");
+                }
+
+                // OPTIONAL: "Effect" Lore
+                if (this.config.effectLore.length > 0){
+                    if (this.config.tagItemType != "" || rarityTag != "") {
+                        if (rarityTag != "" && this.config.effectLore.length > 0) {
+                            var blankEffectLoreLine = this.ThematicMan.GetBlankEffectLoreLine();
+                            if (blankEffectLoreLine != null) {
+                                newLore.push(blankEffectLoreLine);
+                            }
                         }
                     }
-                    for(var i = 0; i < this.config.attributeLore.length; i++){
-                        var fakeAttributeLore = this.config.attributeLore[i].replaceAll('&', '§');
+                    var effectSlotLore = this.ThematicMan.GetEffectSlotLore(this.config.slot.toUpperCase());
+                    if (effectSlotLore != "") {
+                        newLore.push(effectSlotLore);
+                    }
+                    for (var i = 0; i < this.config.effectLore.length; i++) {
+                        newLore.push(this.ThematicMan.GetEffectLore(this.config.effectLore[i].replaceAll('&', '§')));
+                    }
+                }
+
+                // Only add attributes if a slot was specified -- (or if the item is not scripted at all)
+                var useFakeAttributeLore = false;
+                var hasAnyAttributeText = this.config.attributes.lore.length > 0 || (this.config.attributes.enabled && this.config.attributes.list.length > 0 && !this.config.attributes.hide) || (this.config.unbreakable && !this.config.hideUnbreakable);
+                if (hasSlotTag || !this.config.scripted) {
+                    useFakeAttributeLore = hideFlagsTag != 0 && this.config.attributes.enabled && !this.config.attributes.hide;
+                    if (this.config.attributes.lore.length > 0 || useFakeAttributeLore){
+                        var blankAttributeLine = this.ThematicMan.GetBlankAttributeLoreLine();
+                        if (blankAttributeLine != null)
+                            newLore.push(blankAttributeLine);
+                        var attributeSlotLore = this.ThematicMan.GetAttributeSlotLore(this.config.slot.toUpperCase());
+                        if (attributeSlotLore != "" && hasAnyAttributeText){
+                            newLore.push(this.ThematicMan.GetAttributeSlotLore(this.config.slot.toUpperCase()));
+                        }
+                    }
+                    for(var i = 0; i < this.config.attributes.lore.length; i++){
+                        var fakeAttributeLore = this.config.attributes.lore[i].replaceAll('&', '§');
                         newLore.push(this.ThematicMan.GetFakeAttributeLore(fakeAttributeLore));
                     }
 
-                    if (useFakeAttributeLore){
-                        for(var i = 0; i < this.config.attributes.length; i++){
-                            var loreLine = this.ThematicMan.GetAttributeLore(this.config.attributes[i].Name, this.config.attributes[i].Amount);
+                    if (useFakeAttributeLore && !this.config.attributes.hide){
+                        for(var i = 0; i < this.config.attributes.list.length; i++){
+                            var loreLine = this.ThematicMan.GetAttributeLore(this.config.attributes.list[i].Name, this.config.attributes.list[i].Amount);
                             if (loreLine != ""){
                                 newLore.push(loreLine);
                             }
@@ -563,22 +659,22 @@ var BItemRenamer = (function(){
                      + "\n§7§oIf this was unintentional, please specify a slot \n§7§oEither §7'§bM§7'§o for §3Mainhand§7§o or §7'§bO§7'§o for §3Offhand"
                      + "\n§7§oI mean, it's not like I WANT to help you or anything...")
                 }
-                if (this.config.unbreakable){
+                if (this.config.unbreakable && !this.config.hideUnbreakable){
                     newLore.push(this.ThematicMan.GetUnbreakableLore());
                 }
-
-                var lastLine = this.ThematicMan.GetLastLine(useFakeAttributeLore);
+                var lastLine = this.ThematicMan.GetLastLine();
                 if (lastLine != null){
                     newLore.push(lastLine);
                 }
-                var newName = this.ThematicMan.GetName(this.config.name.replaceAll('&', '§'))
+                var newName = this.ThematicMan.GetName(this.config.name.replaceAll('&', '§'));
 
-                this.MakeItemEntity(e, newName, newLore, this.config.ID, dmgValue, tagString, newAttributesArray);
+                this.MakeItemEntity(e, newName, newLore, this.config.ID, dmgValue, tagString, newAttributesArray, this.config.hideFlagOverride);
                 this.Message(e, "c", "Taadaa!~ Item Created: " + newName);
             },
 
-            MakeItemEntity: function MakeItemEntity(e, newName, newLore, itemID, dmgValue, tagString, attributeArray){
-                // We cannot use createItem b/c it does not support custom tags
+            MakeItemEntity: function MakeItemEntity(e, newName, newLore, itemID, dmgValue, tagString, attributeArray, bHideflagsOverride){
+                // HACK #1: We cannot use createItem because it does not support custom tags
+                // HACK #2: Minecraft hideFlags tag (hiding all) breaks if used in replace item
                 var command = "/replaceitem entity " + e.player.getDisplayName() + " slot.hotbar.8 " + itemID + " 1 " + dmgValue + " {" + tagString + "}";
                 if (this.sayCreateCommandInChat)
                     e.player.world.broadcast("§7§o" + command)
@@ -634,7 +730,12 @@ var BItemRenamer = (function(){
             VerifyConfigIntegrity: function VerifyConfigIntegrity(conf){
                 this.configVersion = conf.version == null ? conf.itemName != null ? 1 : 2 : Math.max(conf.version, 4);
 
-                // LEGACY SUPPORT [Tested with config v1.4 and v1.8]
+                // UNSUPPORTED ERROR
+                if (this.configVersion >= (Math.floor(this.version)+1)) {
+                    this.GlobalError("Config version §4§l" + conf.version + "§6 is unsupported.\nBItemRenamer supports config files §2§l1§6-§2§l" + this.version);
+                }
+
+                // LEGACY SUPPORT [Tested with config v1.4 - v1.8] -> CONVERT TO v4.0
                 if (this.configVersion >= 1 && this.configVersion < 2){
                     conf.name = conf.itemName;
                     conf.ID = conf.itemID;
@@ -645,20 +746,44 @@ var BItemRenamer = (function(){
                     conf.tagGroupID = conf.tagID;
                     conf.tagsBonus == null ? [] : conf.tagsBonus;
                     conf.tagItemType = conf.primaryTag == null ? "TRINKET" : conf.primaryTag;
-                    conf.scripted = this.convertLegacyItems ? true : false;
+                    conf.scripted = this.legacy_convertOldItems ? true : false;
 
                     if (conf.dmgValue == null){
                         conf.dmgValue = 0;
                     }
                     this.debugDigitizer = conf.debugDigitizer;
-                    if (conf.validIDs != null && !this.convertLegacyItems){
+                    if (conf.validIDs != null && !this.legacy_convertOldItems){
                         for(var i = 0; i < conf.validIDs.length; i++){
                             this.validGroupIDs.push(conf.validIDs[i]);
                         }
                     }
                 }
 
-                // Requirements for CONFIG v2.0+
+                // LEGACY SUPPORT [Tested with config v4.0] -> CONVERT TO v5.0
+                if (this.configVersion < 5) {
+                    if (conf.attributes.lore != null)
+                        this.GlobalError("SOMETHING WENT WRONG! THIS IS NOT A VERSION §4§l" + conf.version + "§6 CONFIG!\nTry changing config.version to §2§l5");
+                    conf.enchantments = conf.enchantments != null ? conf.enchantments : { enabled: false, hide: true, list: [] };
+                    conf.hideFlagOverride = conf.hideFlagOverride != null ? conf.hideFlagOverride : -1;
+                    conf.hideUnbreakable = conf.hideUnbreakable != null ? conf.hideUnbreakable : false;
+                    conf.color = conf.color != null ? conf.color : "";
+                    var tmpAttributesList = conf.attributes;
+                    var tmpAttributesLore = conf.attributeLore;
+                    var tmpAttributesEnabled = conf.attributesEnabled;
+                    conf.attributes = {
+                        enabled: tmpAttributesEnabled,
+                        hide: false,
+                        list: tmpAttributesList,
+                        lore: tmpAttributesLore
+                    }
+                }
+
+                // LEGACY SUPPORT -> CONVERT TO v6.0
+                if (this.configVersion < 6){
+                    conf.effectLore = [];
+                }
+
+                // Latest Config Requirements
                 if (conf.name == null)
                     this.GlobalError("config.name was null - needs a name [string] parameter\n\nExample:\n &6My &2Cool &c&oSword");
                 if (conf.lore == null)
@@ -678,13 +803,16 @@ var BItemRenamer = (function(){
                 if (conf.slot == null)
                     this.GlobalError("config.slot was null - needs a slot [char] ID\n\nExample:\n 'M' for mainhand\n'O' for offhand" + 
                         "\nLeave empty string ' ' to have no slot");
-                if (conf.attributeLore == null)
-                    this.GlobalError("config.attributeLore was null - needs a attributeLore [list string] parameter\n\nExample:\n [\"+1 Super Attack DMG\"],[\"-2 &6Super Speed\"]"
-                    + "\nLeave empty string ' ' to have no attribute lore (like atk dmg, etc...)");
-                if (conf.attributesEnabled == null)
-                    this.GlobalError("config.attributesEnabled was null - needs a attributesEnabled [boolean] ID\n\nExample:\n false or true");
                 if (conf.attributes == null)
-                    this.GlobalError("config.attributes was null - needs a attributes [obj] ID\n\nExample:\n\n" + "attributes: [\n" + 
+                    this.GlobalError("config.attributes is missing - add this code to config.\n\nExample:\n\n"
+                        + "attributes: {\n    enabled: true, hide: true, list: [\n        { Slot: \"mainhand\", Amount: -2.4, Name: \"attackSpeed\" },\n        { Slot: \"mainhand\", Amount: 8, Name: \"attackDamage\" },\n    ], lore: [\n        \" &9+1 Style Point\"\n    ]\n},");
+                if (conf.attributes.lore == null)
+                    this.GlobalError("config.attributes.lore was null - needs a attributes.lore [list string] parameter\n\nExample:\n [\"+1 Super Attack DMG\", \"-2 &6Super Speed\"]"
+                        + "\nLeave empty string ' ' to have no attribute lore (like atk dmg, etc...)");
+                if (conf.attributes.enabled == null)
+                    this.GlobalError("config.attributes.enabled was null - needs a config.attributes.enabled [boolean] ID\n\nExample:\n false or true");
+                if (conf.attributes.list == null)
+                    this.GlobalError("config.attributes.list was null - needs a attribute.list [obj] ID\n\nExample:\n\n" + "attributes.list: [\n" + 
                     "{ Slot: \"mainhand\", Amount: -3, Name: \"attackSpeed\" },\n" + 
                     "{ Slot: \"mainhand\", Amount: 10, Name: \"attackDamage\" },\n" + 
                 "],");
@@ -698,10 +826,18 @@ var BItemRenamer = (function(){
                     this.GlobalError("config.scripted was null - needs a scripted [boolean] parameter\n\nExample:\n true");
                 if (conf.tagsBonus == null)
                     this.GlobalError("config.tagsBonus was null - needs a tagsBonus [string list] parameter\n\nExample:\n [ HEAVY, CURSED, ENCHANTED ]");
+                if (conf.color == null)
+                    this.GlobalError("config.color was null - needs a color [string HEX] parameter\n\nExample:\n \"FF0000\"");
                 if (conf.digitizedTrinketOverride == null)
                     this.GlobalError("config.digitizedTrinketOverride was null - needs a digitizedTrinketOverride [string] parameter\n" 
                     + "\n\nExample: Leave empty string ' ' to avoid using an override" +
                     "\nOR this parameter takes a digital trinket string (see: DigitalTrinkets12) and manufactures it using the \"Create From Digitized\" mode");
+                if (conf.enchantments == null)
+                    this.GlobalError("config.attributes was null - needs a attributes [obj] ID\n\nExample:\n\n" + "enchantments: { enabled: false, hide: true, list: [\n" +
+                        "{ ID: 10, Lvl: 1 }, \n" + "],");
+                if (conf.hideFlagOverride == null)
+                    this.GlobalError("config.hideFlagOverride was null - needs a hideFlagOverride [int] parameter\n\nExample:\n -1\nEntering -1 disables this override\n"
+                        + "using 62 for example overrides the automatic hideflags engine with 62... in case you want to set things manually");
                 
                 // INVALID CHARACTERS
                 var invalidChars = ['\"'];
@@ -713,16 +849,6 @@ var BItemRenamer = (function(){
                     if (loreStr.indexOf(invalidChars[i]) !== -1){
                         this.GlobalError("config.lore contains an invalid character: §b" + invalidChars[i] + "§6\nPlease delete this character §b" + invalidChars[i] + " §6from the lore.");
                     }
-                }
-                
-                // Requirements for CONFIG v4.0+
-                if (this.configVersion >= 4){
-                    if (conf.enchantments == null)
-                        this.GlobalError("config.attributes was null - needs a attributes [obj] ID\n\nExample:\n\n" + "enchantments: { enabled: false, hide: true, list: [\n" + 
-                        "{ ID: 10, Lvl: 1 }, \n" + "],");
-                    if (conf.hideFlagOverride == null)
-                        this.GlobalError("config.hideFlagOverride was null - needs a hideFlagOverride [int] parameter\n\nExample:\n -1\nEntering -1 disables this override\n"
-                        + "using 62 for example overrides the automatic hideflags engine with 62... in case you want to set things manually");
                 }
             },
 
@@ -788,16 +914,19 @@ var BItemRenamer = (function(){
 
                 GetName: function GetName(name) { return this.P.GetName(name); },
                 GetDescriptionLore: function GetDescriptionLore(loreLine) { return this.P.GetDescriptionLore(loreLine); },
+                GetEffectLore: function GetEffectLore(loreLine) { return this.P.GetEffectLore(loreLine); },
                 GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine() { return this.P.GetBlankDescriptionLoreLine(); },
+                GetBlankEffectLoreLine: function GetBlankEffectLoreLine() { return this.P.GetBlankEffectLoreLine(); },
                 GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine() { return this.P.GetBlankAttributeLoreLine(); },
                 GetFakeAttributeLore: function GetFakeAttributeLore(loreLine) { return this.P.GetFakeAttributeLore(loreLine); },
                 GetAttributeLore: function GetAttributeLore(name, amount){ return this.P.GetAttribute(name, amount); },
                 GetUnbreakableLore: function GetUnbreakableLore(){ return this.P.GetUnbreakable(); },
-                GetLastLine: function GetLastLine(bHasAttributes){ return this.P.GetLastLine(bHasAttributes); },
+                GetLastLine: function GetLastLine(){ return this.P.GetLastLine(); },
                 GetItemTypeLore: function GetItemTypeLore(itemType) { return this.P.GetItemTypeLore(itemType); },
                 GetRarityLore: function GetRarityLore(rarity, itemTypeLore){ return this.P.GetRarityLore(rarity, itemTypeLore); },
-                GetSlotLore: function GetSlotLore(slot){ return this.P.GetSlot(slot); },
-                GetTheme: function GetTheme(themeID){ return this.P.GetTheme(themeID); },
+                GetEffectSlotLore: function GetEffectSlotLore(slot){ return this.P.GetEffectSlot(slot); },
+                GetAttributeSlotLore: function GetAttributeSlotLore(slot){ return this.P.GetAttributeSlot(slot); },
+                GetTheme: function GetTheme(themeID) { return this.P.GetTheme(themeID); },
                 
                 P: {
 
@@ -827,6 +956,19 @@ var BItemRenamer = (function(){
                         return loreLine.replaceAll('&', '§');
                     },
 
+                    GetEffectLore: function GetEffectLore(loreLine){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetEffectLore')){
+                                return theme.GetEffectLore(loreLine);
+                            }
+                        }
+                        catch(ex) {
+                            throw ("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetEffectLore(loreLine)\n\n" + ex);
+                        }
+                        return " " + loreLine.replaceAll('&', '§');
+                    },
+
                     GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine(){
                         try{
                             var theme = this.GetTheme(BItemRenamer.P.theme);
@@ -836,6 +978,19 @@ var BItemRenamer = (function(){
                         }
                         catch(ex) {
                             throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetBlankDescriptionLoreLine()\n\n" + ex);
+                        }
+                        return "§7";
+                    },
+
+                    GetBlankEffectLoreLine: function GetBlankEffectLoreLine(){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null && theme.hasOwnProperty('GetBlankEffectLoreLine')){
+                                return theme.GetBlankEffectLoreLine();
+                            }
+                        }
+                        catch(ex) {
+                            throw ("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetBlankEffectLoreLine()\n\n" + ex);
                         }
                         return "§7";
                     },
@@ -902,7 +1057,7 @@ var BItemRenamer = (function(){
                             case "attackSpeed":
                                 // Looks bad (normal sword attack speed is -2.4) so this is disabled by default.
                                 // I recommend writing your own custom attack speed lore in the lore section, like +1 or +2
-                                if (this.hideAttackSpeedLore)
+                                if (this.legacy_hideAttackSpeed)
                                     return "";
                                 return prefix + amount + " Attack Speed";
                         }
@@ -931,15 +1086,15 @@ var BItemRenamer = (function(){
                         }
                         return itemType.LORE;
                     },
-                    GetLastLine: function GetLastLine(bHasAttributes){
+                    GetLastLine: function GetLastLine(){
                         try{
                             var theme = this.GetTheme(BItemRenamer.P.theme);
                             if (theme != null && theme.hasOwnProperty('GetLastLine')){
-                                return theme.GetLastLine(bHasAttributes);
+                                return theme.GetLastLine();
                             }
                         }
                         catch(ex) {
-                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetLastLine(bHasAttributes)\n\n" + ex);
+                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetLastLine()\n\n" + ex);
                         }
                         return null;
                     },
@@ -973,21 +1128,62 @@ var BItemRenamer = (function(){
                         }
                         return firstLineLore;
                     },
-                    GetSlot: function GetSlot(slot){
+                    GetEffectSlot: function GetEffectSlot(slot){
                         try{
                             var theme = this.GetTheme(BItemRenamer.P.theme);
-                            if (theme != null && theme.hasOwnProperty('GetSlot')){
-                                return theme.GetSlot(slot);
+                            if (theme != null && theme.hasOwnProperty('GetEffectSlot')){
+                                return theme.GetEffectSlot(slot);
                             }
                         }
                         catch(ex) {
-                            throw("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetSlot(slot)\n\n" + ex);
+                            throw ("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetEffectSlot(slot)\n\n" + ex);
                         }
                         
-                        if (slot == 'O')
-                            return "§7When in off hand:";
-                        else
-                            return "§7When in main hand:";
+                        switch(slot){
+                            case 'O':
+                                return "§7When in off hand:";
+                            case 'M':
+                                return "§7When in main hand:";
+                            case 'F':
+                                return "§7When on feet:";
+                            case 'L':
+                                return "§7When on legs:";
+                            case 'C':
+                                return "§7When on body:";
+                            case 'H':
+                                return "§7When on head:";
+                        }
+                        return "";  
+                    },
+                    GetAttributeSlot: function GetAttributeSlot(slot){
+                        try{
+                            var theme = this.GetTheme(BItemRenamer.P.theme);
+                            if (theme != null){
+                                if (theme.hasOwnProperty('GetSlot'))
+                                    return theme.GetSlot(slot);
+                                if (theme.hasOwnProperty('GetAttributeSlot'))
+                                    return theme.GetAttributeSlot(slot);
+                            }
+                        }
+                        catch(ex) {
+                            throw ("Theme Error in theme " + BItemRenamer.P.theme + "\nin theme.GetAttributeSlot(slot)\n\n" + ex);
+                        }
+                        
+                        switch(slot){
+                            case 'O':
+                                return "§7When in off hand:";
+                            case 'M':
+                                return "§7When in main hand:";
+                            case 'F':
+                                return "§7When on feet:";
+                            case 'L':
+                                return "§7When on legs:";
+                            case 'C':
+                                return "§7When on body:";
+                            case 'H':
+                                return "§7When on head:";
+                        }
+                        return "";  
                     },
 
                     GetTheme: function GetTheme(themeID){
@@ -1043,9 +1239,9 @@ var BItemRenamer = (function(){
                 },
                 GetName: function GetName(name){
                     var isProbablyWeapon = false;
-                    if (BItemRenamer.P.config.attributes.length > 0 && BItemRenamer.P.config.attributesEnabled){
-                        for(var i = 0; i < BItemRenamer.P.config.attributes.length; i++){
-                            if (BItemRenamer.P.config.attributes[i].Name == "attackDamage" && BItemRenamer.P.config.attributes[i].Amount > 1){
+                    if (BItemRenamer.P.config.attributes.list.length > 0 && BItemRenamer.P.config.attributes.enabled){
+                        for(var i = 0; i < BItemRenamer.P.config.attributes.list.length; i++){
+                            if (BItemRenamer.P.config.attributes.list[i].Name == "attackDamage" && BItemRenamer.P.config.attributes.list[i].Amount > 1){
                                 isProbablyWeapon = true;
                             }
                         }
@@ -1088,15 +1284,15 @@ var BItemRenamer = (function(){
                 },
                 GetSlot: function GetSlot(slot){
                     if (slot == 'O')
-                            return "§7§lOffhand";
-                        else
-                            return "§3 ═══════════»";
+                        return "§7§lOffhand";
+                    else
+                        return "§3 ═══════════»";
                 },
                 GetName: function GetName(name){
                     var isProbablyWeapon = false;
-                    if (BItemRenamer.P.config.attributes.length > 0 && BItemRenamer.P.config.attributesEnabled){
-                        for(var i = 0; i < BItemRenamer.P.config.attributes.length; i++){
-                            if (BItemRenamer.P.config.attributes[i].Name == "attackDamage" && BItemRenamer.P.config.attributes[i].Amount > 1){
+                    if (BItemRenamer.P.config.attributes.list.length > 0 && BItemRenamer.P.config.attributes.enabled){
+                        for(var i = 0; i < BItemRenamer.P.config.attributes.list.length; i++){
+                            if (BItemRenamer.P.config.attributes.list[i].Name == "attackDamage" && BItemRenamer.P.config.attributes.list[i].Amount > 1){
                                 isProbablyWeapon = true;
                             }
                         }
@@ -1110,8 +1306,114 @@ var BItemRenamer = (function(){
                 },
             },
             {
-                /* from 'Sea of Die' - a theme by Rimscar */
-                ID: "CARDISTRY",
+                /* A very good theme - by Rimscar */
+                ID: "NOT_GIANT_WHOOP",
+                attributes: [
+                    {
+                        ID: "attackDamage",
+                        Get: function Get(num) {
+                            return " §cATK§4  » §c§l" + num;
+                        }
+                    },
+                    {
+                        ID: "attackSpeed",
+                        Get: function Get(num) {
+                            var spd;
+                            if (num <= -3.5) spd = 0; // questionable life choices
+                            else if (num <= -3) spd = 1; // axe
+                            else if (num <= -2.4) spd = 2; // normal sword
+                            else if (num <= -1) spd = 3; // dagger
+                            else if (num <= 50) spd = 4; // almost no hit delay
+                            else spd = 5;
+                            return " §aSPD§2  » §a§l" + spd;
+                        }
+                    },
+                    {
+                        ID: "maxHealth",
+                        Get: function Get(num) {
+                            var spd;
+                            if (num <= -3.5) spd = 0; // questionable life choices
+                            else if (num <= -3) spd = 1; // axe
+                            else if (num <= -2.4) spd = 2; // normal sword
+                            else if (num <= -1) spd = 3; // dagger
+                            else if (num <= 50) spd = 4; // almost no hit delay
+                            else spd = 5;
+                            return " §dVIT§5§l  §5» §d§l" + spd;
+                        }
+                    },
+                ],
+                GetUnbreakable: function GetUnbreakable() {
+                    return "§8 §7Unbreakable";
+                },
+                GetSlot: function GetSlot(slot) {
+                    if (slot == 'O')
+                        return "§7§lOffhand";
+                    else
+                        return "§7- - - - - - - - -";
+                },
+                GetName: function GetName(name) {
+                    var isProbablyWeapon = false;
+                    if (BItemRenamer.P.config.attributes.list.length > 0 && BItemRenamer.P.config.attributes.enabled) {
+                        for (var i = 0; i < BItemRenamer.P.config.attributes.list.length; i++) {
+                            if (BItemRenamer.P.config.attributes.list[i].Name == "attackDamage" && BItemRenamer.P.config.attributes.list[i].Amount > 1) {
+                                isProbablyWeapon = true;
+                            }
+                        }
+                    }
+                    return isProbablyWeapon ? "§4⚔ §c§l" + name : "§6✆ §e§l" + name;
+                },
+                GetItemTypeLore: function GetItemTypeLore(itemTypeTag) {
+                    var itemTypeStr = "";
+                    switch (itemTypeTag) {
+                        case "TRINKET":
+                            itemTypeStr = "§4 [§c TALISMAN §4]";
+                            break;
+                        case "ORB":
+                            itemTypeStr = "§b [§9 ORB §b]";
+                            break;
+                        case "LENS":
+                            itemTypeStr = "§6 [§e LENS §6]";
+                            break;
+                        case "CONSUMABLE":
+                            itemTypeStr = "§6 [§e FOOD §6]";
+                            break;
+                        default:
+                            throw ("\nThe heck is this? ---> " + itemTypeTag + " ???\nSorry, but the item type '" + itemTypeTag + "' is not part of the NOT_GIANT_WHOOP theme."
+                                + "\n 1. go to BItemRenamer.Themes\n 2. find the 'NOT_GIANT_WHOOP' theme\n 3. and add the new item type '" + itemTypeTag + "' to the GetItemTypeLore() function.\n\n")
+                    }
+                    return itemTypeStr;
+                },
+                GetRarityLore: function GetRarityLore(rarity, itemTypeLore) {
+                    var rarityName = "";
+                    switch (rarity) {
+                        case 'C':
+                            rarityName = "§a§o * Surf"
+                            break;
+                        case 'U':
+                            rarityName = "§2§o * Peasant";
+                            break;
+                        case 'R':
+                            rarityName = "§d§o * Commoner";
+                            break;
+                        case 'L':
+                            rarityName = "§6§l§o * Noble";
+                            break
+                        case 'E':
+                            rarityName = "§4§l§o * Royal";
+                            break;
+                    }
+                    return rarityName + " " + itemTypeLore
+                },
+                GetDescriptionLore: function GetDescriptionLore(loreLine) {
+                    return "§l §e▼ §8" + loreLine;
+                },
+                GetFakeAttributeLore: function GetFakeAttributeLore(loreLine) {
+                    return "§l §e► §8" + loreLine;
+                },
+            },
+            {
+                /* An updated version of monospace, from 'Sea of Die' - a theme by Rimscar */
+                ID: "MONOSPACE_ANALOG_2",
                 maxDMG: 10,
                 maxHP: 20,
                 progressBarLength: 8,
@@ -1120,7 +1422,7 @@ var BItemRenamer = (function(){
                     {
                         ID: "attackDamage",
                         Get: function Get(num){
-                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                             var c1 = "§" + theme.colors[0];
                             var c2 = "§" + theme.colors[1];
                             return "§l " + c1 + "▌╚ " + c2 + "DMG" + c1 + " » " + theme.GetProgressBar(num, theme.maxDMG);
@@ -1129,7 +1431,7 @@ var BItemRenamer = (function(){
                     {
                         ID: "maxHealth",
                         Get: function Get(num){
-                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                             var c1 = "§" + theme.colors[0];
                             var c2 = "§" + theme.colors[1];
                             return "§l " + c1 + "▌╚§l " + c2 + "VIT§l " + c1 + "» " + theme.GetProgressBar(num, theme.maxHP);
@@ -1138,7 +1440,7 @@ var BItemRenamer = (function(){
                     {
                         ID: "attackSpeed",
                         Get: function Get(num){
-                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                             var c1 = "§" + theme.colors[0];
                             var c2 = "§" + theme.colors[1];
                             var spd;
@@ -1155,17 +1457,24 @@ var BItemRenamer = (function(){
                     {
                         ID: "movementSpeed",
                         Get: function Get(num){
-                            var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                            var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                             var c1 = "§" + theme.colors[0];
                             var c2 = "§" + theme.colors[1];
                             var bar = "";
                             if (num < 0){
-                                var minSpeed = -0.1
-                                num = Math.max(num, minSpeed);
-                                bar = theme.GetProgressBar(num, minSpeed, true);
+                                // NOTE: unable to move is -0.1
+                                var maxSpeedDebuff = 5;
+                                var spd;
+                                if (num > 0.005) spd = 0; // not noticable
+                                else if (num > -0.01) spd = 1; // barely perceptible
+                                else if (num > -0.015) spd = 1.5; // noticable
+                                else if (num > -0.02) spd = 3.5; // very noticeable debuff
+                                else if (num > -0.05) spd = 4; // SNAIL PACE
+                                else if (num > -0.08) spd = 4.5; // XD
+                                else spd = maxSpeedDebuff;
+                                bar = theme.GetProgressBar(spd, maxSpeedDebuff, true);
                             }
                             else{
-                                
                                 var spd;
                                 var maxSpeed = 5;
                                 if (num < 0.02) spd = 0;
@@ -1182,28 +1491,39 @@ var BItemRenamer = (function(){
                     },
                 ],
                 GetUnbreakable: function GetUnbreakable(){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     var c2 = "§" + theme.colors[1];
-                    return "§l " + c1 + "▌╚         ▐ »" + c2 + "UNB ︻╦╤─§l " + c1 + "▌";
+                    var hasAttributes = BItemRenamer.P.config.attributes.lore.length || (BItemRenamer.P.config.attributes.enabled && !BItemRenamer.P.config.attributes.hide && BItemRenamer.P.config.attributes.list.length > 0);
+                    if (BItemRenamer.P.config.tagItemType == "ARMOR" && !hasAttributes)
+                        return "§l " + c1 + "▌╚ ○ " + c2 + "UNB ︻╦╤─";
+                    else
+                        return "§l " + c1 + "▌╚         ▐ »" + c2 + "UNB ︻╦╤─§l " + c1 + "▌";
                 },
-                GetSlot: function GetSlot(slot){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                GetEffectSlot: function GetEffectSlot(slot){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     if (slot == 'O')
-                            // return "§7§lOffhand";
-                            return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
-                        else
-                            return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
+                        return theme.GetDescriptionLore("") + c1 + "§8[§7OFF▬HND§8]";
+                    else if (BItemRenamer.P.config.tagItemType == "CONSUMABLE"){
+                        return theme.GetDescriptionLore("") + c1 + "§8[§7RHT▬CLK§8]";
+                    }
+                    return "§l " + c1 + "▌";
+                },
+                GetAttributeSlot: function GetAttributeSlot(slot) {
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
+                    var c1 = "§" + theme.colors[0];
+                    return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
                 },
                 GetName: function GetName(name){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     var c2 = "§" + theme.colors[1];
                     var isProbablyWeapon = false;
-                    if (BItemRenamer.P.config.attributes.length > 0 && BItemRenamer.P.config.attributesEnabled){
-                        for(var i = 0; i < BItemRenamer.P.config.attributes.length; i++){
-                            if (BItemRenamer.P.config.attributes[i].Name == "attackDamage" && BItemRenamer.P.config.attributes[i].Amount > 1){
+                    var isArmor = BItemRenamer.P.config.tagItemType == "ARMOR";
+                    if (BItemRenamer.P.config.attributes.list.length > 0 && BItemRenamer.P.config.attributes.enabled){
+                        for(var i = 0; i < BItemRenamer.P.config.attributes.list.length; i++){
+                            if (BItemRenamer.P.config.attributes.list[i].Name == "attackDamage" && BItemRenamer.P.config.attributes.list[i].Amount > 1){
                                 isProbablyWeapon = true;
                             }
                         }
@@ -1212,37 +1532,65 @@ var BItemRenamer = (function(){
                     if (isProbablyWeapon){
                         prefix = " " + c2 + "[" + c1 + "§l⚔" + c2 + "]"
                     }
+                    else if (isArmor){
+                        prefix = " " + c2 + "[" + c1 + "§l✦" + c2 + "]" //❂
+                    }
                     return c2 + "◘" + c1 + "◙" + c2 + "◘" + prefix + " " + c1 + "§l" + name + " " + c2 + "▼▼▼ »";
                 },
                 GetDescriptionLore: function GetDescriptionLore(loreLine){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     var c2 = "§" + theme.colors[1];
                     return "§l " + c1 + "▌ • " + c2 + loreLine;
                 },
-                GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine(){ // "&l &8▌&7 ",
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                GetEffectLore: function GetEffectLore(loreLine){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
+                    var c1 = "§" + theme.colors[0];
+                    var c2 = "§" + theme.colors[1];
+
+                    var LoreLineNoColors = loreLine.replace(/§./g, '');
+                    if (loreLine.length == 0 || theme.IsLowerCase(LoreLineNoColors[0]))
+                        return theme.GetDescriptionLore("") + "§l  " + c2 + loreLine;
+                    else
+                        return theme.GetDescriptionLore("") + c2 + "» " + loreLine;
+                },
+                GetBlankDescriptionLoreLine: function GetBlankDescriptionLoreLine(){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     return "§l " + c1 + "▌";
                 },
-                GetFakeAttributeLore: function GetFakeAttributeLore(loreLine){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                GetBlankEffectLoreLine: function GetBlankEffectLoreLine(){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
+                    var c1 = "§" + theme.colors[0];
+                    return "§l " + c1 + "▌";
+                },
+                GetFakeAttributeLore: function GetFakeAttributeLore(loreLine) {
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     var c2 = "§" + theme.colors[1];
                     return "§l " + c1 + "▌ " + c2 + loreLine;
                 },
-                GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine(){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine() {
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
-                    return "§l  " + c1 + " • ═░░░═══  ▀  ▀  ▀";
+                    if (BItemRenamer.P.config.lore.length > 0)
+                        return "§l  " + c1 + " • ═░░░═══  ▀  ▀  ▀";
+                    else
+                        return "§l " + c1 + "▌";
                 },
-                GetLastLine: function GetLastLine(bHasAttributes){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                GetLastLine: function GetLastLine(){
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
 
-                    // Means it's likely a weapon
-                    if (bHasAttributes)
-                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
+                    var hasAttributes = BItemRenamer.P.config.attributes.list.length > 0 && BItemRenamer.P.config.attributes.enabled;
+                    if (BItemRenamer.P.config.tagItemType == "ARMOR")
+                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌"; //          armor
+                    else if (BItemRenamer.P.config.tagItemType == "CONSUMABLE")
+                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌"; //              consumable
+                    else if (BItemRenamer.GetConfigSlot() == 'O' && !hasAttributes)
+                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌"; //              offhand (trinket??)
+                    else if (hasAttributes)
+                        return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌"; //          weapon ??
                     else
                         return "§l " + c1 + "▌≡≡≡≡≡≡≡≡≡≡≡≡≡≡▌";
                 },
@@ -1262,13 +1610,13 @@ var BItemRenamer = (function(){
                             itemTypeStr = "CNSB";
                             break;
                         default:
-                            throw("\nThe heck is this? ---> " + itemTypeTag + " ???\nSorry, but the item type '" + itemTypeTag + "' is not part of the CARDISTRY theme."
-                                + "\n 1. go to BItemRenamer.Themes\n 2. find the 'CARDISTRY' theme\n 3. and add the new item type '" + itemTypeTag + "' to the GetItemTypeLore() function.\n\n")
+                            throw ("\nThe heck is this? ---> " + itemTypeTag + " ???\nSorry, but the item type '" + itemTypeTag + "' is not part of the MONOSPACE_ANALOG_2 theme."
+                                + "\n 1. go to BItemRenamer.Themes\n 2. find the 'MONOSPACE_ANALOG_2' theme\n 3. and add the new item type '" + itemTypeTag + "' to the GetItemTypeLore() function.\n\n")
                     }
                     return itemTypeStr;
                 },
                 GetRarityLore: function GetRarityLore(rarity, itemTypeLore){
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     var c2 = "§" + theme.colors[1];
 
@@ -1297,7 +1645,7 @@ var BItemRenamer = (function(){
 
                     num = Math.abs(num);
                     maxValue = Math.abs(maxValue);
-                    var theme = BItemRenamer.P.ThematicMan.GetTheme("CARDISTRY");
+                    var theme = BItemRenamer.P.ThematicMan.GetTheme("MONOSPACE_ANALOG_2");
                     var c1 = "§" + theme.colors[0];
                     var c2 = "§" + theme.colors[1];
                     var c3 = "§" + theme.colors[2];
@@ -1328,7 +1676,171 @@ var BItemRenamer = (function(){
                         progBar += "▒";
                     }
                     return c1Copy + "▐" + c2 + progBar + c1Copy + "▌";
-                }
+                },
+                IsLowerCase: function IsLowerCase(char) {
+                    return /^[a-z]$/.test(char);
+                },
+            },
+            {
+                /* Theme by Livinshadow - from "On Garde" */
+                ID: "ONGARDE",
+                attributes: [
+                    {
+                        ID: "attackDamage",
+                        Get: function Get(num) {
+                            return "§6 ┃ §8STR§6  » §8§l" + num; //✟
+                        }
+                    },
+                    {
+                        ID: "maxHealth",
+                        Get: function Get(num) {
+                            return "§6 ┃ §6VIT§6§l  §6» §6§l" + (num * .5); // in hearts
+                        }
+                    },
+                    {
+                        ID: "movementSpeed",
+                        Get: function Get(num) {
+                            return "§6 ┃ §8MOV§6  » §8§l" + (num * 10); // spd * 10 looks better
+                        }
+                    },
+                    {
+                        ID: "attackSpeed",
+                        Get: function Get(num) {
+                            var spd;
+                            if (num <= -3.5) spd = 0; // questionable life choices
+                            else if (num <= -3) spd = 1; // axe
+                            else if (num <= -2.4) spd = 2; // normal sword
+                            else if (num <= -1) spd = 3; // dagger
+                            else if (num <= 50) spd = 4; // almost no hit delay
+                            else spd = "∞"; // 5
+                            return "§6 ┃ §7SPD§6  » §7§l" + spd;
+                        }
+                    },
+                ],
+                GetUnbreakable: function GetUnbreakable() {
+                    // return "§6Unbreakable";
+                    return "§6 ┃ §4UNB";
+                },
+                GetName: function GetName(name) {
+                    var isProbablyWeapon = false;
+                    var isArmor = BItemRenamer.P.config.tagItemType == "ARMOR";
+                    var isTrinket = BItemRenamer.P.config.tagItemType == "TRINKET";
+
+                    if (BItemRenamer.P.config.attributes.length > 0 && BItemRenamer.P.config.attributesEnabled) {
+                        for (var i = 0; i < BItemRenamer.P.config.attributes.length; i++) {
+                            if (BItemRenamer.P.config.attributes[i].Name == "attackDamage" && BItemRenamer.P.config.attributes[i].Amount > 1) {
+                                isProbablyWeapon = true;
+                            }
+                        }
+                    } if (isProbablyWeapon) {
+                        return "§7✠ " + name + "§7 ✠";
+                    } else if (isArmor) {
+                        return "§7✠ " + name + "§7 ✠";
+                    } else if (isTrinket) {
+                        return "§6✝ §8§l" + name + "§6 ✝";
+                    } else {
+                        return "§6✞ §8§l" + name + "§6 ✞";
+                        // return name.length < 5 || name[4] == "§7✠" || name[3] == "§7✠" ? "§7" + name : "§7✠ " + name + " §7✠"
+                    }
+                },
+                GetRarityLore: function GetRarityLore(rarity, itemTypeLore) {
+                    var rarityName = "";
+                    switch (rarity) {
+                        case 'C':
+                            rarityName = "§2 ►§o Hayseed"
+                            break;
+                        case 'U':
+                            rarityName = "§b ►§o Garde";
+                            break;
+                        case 'R':
+                            rarityName = "§6 ►§o Royal";
+                            break;
+                        case 'L':
+                            rarityName = "§4 ►§l§o Heirloom";
+                            break
+                    }
+                    return rarityName + " " + itemTypeLore
+                },
+                GetItemTypeLore: function GetItemTypeLore(itemTypeTag) {
+                    var itemTypeStr = "";
+                    switch (itemTypeTag) {
+                        case "TRINKET":
+                            itemTypeStr = "§4 [§c TALISMAN §4]";
+                            break;
+                        case "CONSUMABLE":
+                            itemTypeStr = "§6 [§e FOOD §6]";
+                            break;
+                        case "OUTFIT":
+                            itemTypeStr = "§f [§5 Outfit §f]";
+                            break;
+                        case "GIFT":
+                            itemTypeStr = "§f [§e Gift §f]";
+                            break;
+                        case "CARD":
+                            itemTypeStr = "§8 [§f Card §8]";
+                            break;
+                        case "LIGHTKNIFE":
+                            itemTypeStr = "§6 [§e §b [§f Light Knife §b]";
+                            break;
+                        case "KNIFE":
+                            itemTypeStr = "§f [§e Knife §f]";
+                            break;
+                        case "SWORD":
+                            itemTypeStr = "§f [§8 Sword §f]";
+                            break;
+                        case "AXE":
+                            itemTypeStr = "§7 [§8 Axe §7]";
+                            break;
+                        case "GREATBLADE":
+                            itemTypeStr = "§7 [§4 Greatblade §7]";
+                            break;
+                        case "BOW":
+                            itemTypeStr = "§8 [§2 Bow §8]";
+                            break;
+                        case "LANCE":
+                            itemTypeStr = "§8 [§3 Lance §8]";
+                            break;
+                        case "WAND":
+                            itemTypeStr = "§d [§5 Wand §d]";
+                            break;
+                        default:
+                            throw ("\nThe heck is this? ---> " + itemTypeTag + " ???\nSorry, but the item type '" + itemTypeTag + "' is not part of the ONGARDE theme."
+                                + "\n 1. go to BItemRenamer.Themes\n 2. find the 'ONGARDE' theme\n 3. and add the new item type '" + itemTypeTag + "' to the GetItemTypeLore() function.\n\n")
+                    }
+                    return itemTypeStr;
+                },
+                GetDescriptionLore: function GetDescriptionLore(loreLine) {
+                    return "§7 " + loreLine;
+                },
+                GetEffectSlot: function GetEffectSlot(slot) {
+                    if (slot == 'O')
+                        return "§cWhen in off hand:";
+                    else if(slot == 'M')
+                        if (BItemRenamer.P.config.tagItemType == "CONSUMABLE")
+                            return "§4[§fRHT▬CLK§4]";
+                        else
+                            return "§cWhen in main hand:";
+                    return "";
+                },
+                GetEffectLore: function GetEffectLore(loreLine) {
+                    return "§6 ┃§8 " + loreLine;
+                },
+                GetBlankAttributeLoreLine: function GetBlankAttributeLoreLine() {
+                    if (BItemRenamer.P.config.lore.length > 0)
+                        return "";
+                    else
+                        return "§6 ┃";
+                },
+                GetAttributeSlot: function GetAttributeSlot(slot) {
+                    var hasAttributes = BItemRenamer.P.config.attributes.list.length > 0 && BItemRenamer.P.config.attributes.enabled;
+                    if (slot == 'M' && hasAttributes)
+                        return "§cWhen in main hand:";
+                    else
+                        return "§6 ┃§c ⫘⫘⫘⫘⫘⫘⫘⫘";
+                },
+                GetFakeAttributeLore: function GetFakeAttributeLore(loreLine) {
+                    return "§6 ┃§8 " + loreLine;
+                },
             },
             {
                 /* A very boring theme */
@@ -1361,7 +1873,51 @@ var BItemRenamer = (function(){
     }
 }());
 
-/* Auto-Load */
+/* This is an item script, automatically call hooks (this is not a SAL script!!!) */
 function init(e){ BItemRenamer.Init(e); } 
 function interact(e){ BItemRenamer.Interact(e); } 
 function attack(e){ BItemRenamer.Attack(e); }
+
+
+
+// Example Config Below, paste on a scripted-item in-game:
+
+// /* Better Item Renamer (v6)  -  Right-Click Use, Left-Click Change Mode */
+// var config = {
+//     name: "Bird Seed",
+//     lore: [
+//         "Main lore description here"
+//     ],
+
+//     /* Create New */
+//     ID: "minecraft:pumpkin_seeds", dmgValue: 0, unbreakable: false, hideUnbreakable: false,
+//     skull: "",
+//     rarity: 'c', /* C U R L E*/ slot: 'o',  /* M O F L C H */
+//     tag: "BIRDFOOD", tagGroupID: "SEAOFDIE", tagItemType: "TRINKET", scripted: true, tagsBonus: [],
+//     effectLore: [
+//         "Befriends Nearby Fowl,",
+//         "as a bird in the hand",
+//         "is useless if you have",
+//         "to blow your nose.",
+//         "",
+//         "&oAlso works on bats.",
+//     ],
+//     attributes: {
+//         enabled: false, hide: false, list: [
+//             { Slot: "mainhand", Amount: -2.4, Name: "attackSpeed" },
+//             { Slot: "mainhand", Amount: 8, Name: "attackDamage" },
+//         ],
+//         lore: [
+
+//         ]
+//     },
+//     enchantments: {
+//         enabled: false, hide: false, list: [
+//             { ID: 34, Lvl: 1 },
+//         ]
+//     }, hideFlagOverride: -1, color: "",
+
+//     /* CreateFromDigitized - Paste Digitized Trinket here to make it*/
+//     digitizedTrinketOverride: "",
+//     version: 6,
+// }

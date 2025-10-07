@@ -1,4 +1,4 @@
-/* v2.1 - Better Tag Lister | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v2.2 - Better Tag Lister | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
  * Right-Click to list tags of: ( nearby ground items + offhand item )
  */
 var BTagLister = {
@@ -131,12 +131,21 @@ var BTagLister = {
                     break;
                 case "MAINHAND":
                 case "OFFHAND":
+                case "ARMOR":
+                case "FEET":
+                case "LEGS":
+                case "CHEST":
+                case "HEAD":
                     color = "§e"
+                    break;
+                case "FOOD":
+                    color = "§2"
                     break;
                 case "DAILY":
                 case "ACHIEVEMENT":
                     color = "§6"
                     break;
+                case "CONSUMABLE":
                 case "TRINKET": // --- Rarity-Related
                     color = "§2"
                     break;
@@ -253,6 +262,11 @@ var BTagLister = {
                         break;
                     case "MAINHAND":
                     case "OFFHAND":
+                    case "FEET":
+                    case "LEGS":
+                    case "CHEST":
+                    case "HEAD":
+                    case "FOOD":
                         slots.push(tag);
                         break;
                     case "T0":

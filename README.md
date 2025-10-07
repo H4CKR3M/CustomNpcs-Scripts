@@ -629,6 +629,7 @@ FUtil.Decrypt(stringBase64);
 FUtil.UnzipDirectory(zipPath, destFolderPath);
 FUtil.Unzip(zipPath);
 FUtil.IsDedicatedServer();
+FUtil.TerminateJVM();
 ```
 **Resource Methods**  »  Images, mp4 files, etc... must be placed in `<world_name>/customnpcs/`
 ```js
@@ -694,6 +695,7 @@ Utilities.GetEntityForwardVector(entity); // 2D
 Utilities.GetDirectionTowardsTarget(source, target); // inputs can be either an ENTITY or VECTOR
 
 Utilities.FaceRotation(entity, vec);
+Utilities.SetPitch(player, pitch);
 Utilities.CanAnyoneSeeMe(npc, range); // [1.16 ONLY]
 Utilities.IsTargetWatchingMe(entity, target, viewAngle, maxDistance);
 Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
@@ -702,7 +704,10 @@ Utilities.IsTeleportPosSafe(world, v); // avoid walls
 Utilities.GetRandomRadius(min, max); // returns random positive/negative number
 Utilities.SortNumeric(array);
 Utilities.Clamp(num, min, max);
-Utilities.IndexOfNth(str, char, index)
+Utilities.IndexOfNth(str, char, index);
+Utilities.IntToRGB(colorInt);
+Utilities.RGBToInt(r, g, b);
+Utilities.HSVtoRGB(h, s, v);
 ```
 ### Item-Related
 ```js
@@ -712,6 +717,10 @@ Utilities.GetItemTags(itemStack); // returns a tagObj for use in HasTag()
 Utilities.HasTag(tagObj, tagName);
 Utilities.IsWearingFullSet(player, tag);
 Utilities.IsWearing(player, slot, tag); // Slot - 0:boots, 1:pants, 2:body, 3:head
+```
+### NPC-Related
+```js
+Utilities.Refresh(npc, OPTIONAL_bFullResetClearVariables); // Refresh Display: NPC overlay, player skin, eyes, etc...
 ```
 ### Audio-Related
 Does not use/require AudioJ2CK, but can be used in conjunction with it.
