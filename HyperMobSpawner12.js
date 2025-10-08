@@ -1,4 +1,4 @@
-/* v2.0 - HyperMobSpawner12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.0.1 - HyperMobSpawner12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Load This Script on all HMobSpawner Objects */
 
 var HyperMobSpawn = (function(){
@@ -133,7 +133,7 @@ var HyperMobSpawn = (function(){
             },
 
             HandleUserError: function HandleUserError(){
-                if (HyperMobSpawn.pos.x == 0 && HyperMobSpawn.pos.y == 0 && HyperMobSpawn.pos.z == z)
+                if (HyperMobSpawn.pos.x == 0 && HyperMobSpawn.pos.y == 0 && HyperMobSpawn.pos.z == 0)
                     throw ("\n\nHMobSpawner: pos x/y/z were all set to 0.\nDid you forget to write in the position of the mob spawner?\nFor example, you can write: "
                         + "HyperMobSpawn.pos = { x:e.block.x, y:e.block.y+2, z:e.block.z};\n\n");
                 if (HyperMobSpawn.ID == "")

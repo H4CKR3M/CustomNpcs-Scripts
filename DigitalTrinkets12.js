@@ -439,7 +439,7 @@ var DigitalTrinkets12 = (function(){
 
             Broadcast: function Broadcast(msg){
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-                API.getIWorld(e).broadcast(msg);
+                API.getIWorlds()[0].broadcast(msg);
             },
 
             /* Attribute Handler */
@@ -488,7 +488,7 @@ var DigitalTrinkets12 = (function(){
                     if (displayRegex != null){
                         var match = digitalStr.match(displayRegex);
                         if (match && match[1]) {
-                            return parseFloat(match[1], 10);
+                            return parseFloat(match[1]);
                         } 
                     }
                     return 0;

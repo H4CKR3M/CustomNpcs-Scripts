@@ -460,18 +460,18 @@ var BTagLister = {
                     lines.push(warningPrefix + "Tag §6" + hasTag + "§e found even though this\n§eis §lNOT§e a BTrinket (Better Trinket)\n§eDid you forget to add the §6SCRIPTED §etag?");
             }
             if (groupIDs.length > 1){
-                var tagStr = "";
+                var tagStr2 = "";
                 for(var i = 0; i < groupIDs.length; i++){
-                    tagStr += this.GetColorTag(groupIDs[i]) + " ";
+                    tagStr2 += this.GetColorTag(groupIDs[i]) + " ";
                 }
-                lines.push(errorPrefix + "Item has more than one groupID\n§cThis is  §lNOT§c allowed! " + tagStr);
+                lines.push(errorPrefix + "Item has more than one groupID\n§cThis is  §lNOT§c allowed! " + tagStr2);
             }
             if (itemTypes.length > 1){
-                var tagStr = "";
+                var tagStr3 = "";
                 for(var i = 0; i < itemTypes.length; i++){
-                    tagStr += this.GetColorTag(itemTypes[i]) + " ";
+                    tagStr3 += this.GetColorTag(itemTypes[i]) + " ";
                 }
-                lines.push(errorPrefix + "Item has more than one itemType\n§cThis is §lNOT§c allowed! " + tagStr);
+                lines.push(errorPrefix + "Item has more than one itemType\n§cThis is §lNOT§c allowed! " + tagStr3);
             }
             // END ---- ERROR CHECKS
 

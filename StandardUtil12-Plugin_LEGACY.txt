@@ -1,46 +1,52 @@
-/* v1.1 - Legacy Support-> StandardUtil12 Plugin | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v1.2 - Legacy Support-> StandardUtil12 Plugin | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Re-implements deprecated methods
  * Installation:
  * Paste this code at the bottom of the StandardUtil12.js script file
  * If "The 1.7.10 Support Plugin" is also installed, paste this ABOVE the 1.7.10 Plugin
  */
-if (true){(function(){
+if (true) {
+    (function () {
 
-    Utilities.InstallPlugin("LegacySupport");
+        Utilities.InstallPlugin("LegacySupport");
 
-    // Broadcast(world, msg) 
-    var originalBroadcast = Utilities.Broadcast;
-    Utilities.Broadcast = function(msg){
-        if (arguments.length > 1){ msg = arguments[1]; }
-        originalBroadcast(msg);
-    };
+        // Broadcast(world, msg) 
+        var originalBroadcast = Utilities.Broadcast;
+        Utilities.Broadcast = function (msg) {
+            if (arguments.length > 1) { msg = arguments[1]; }
+            originalBroadcast(msg);
+        };
 
-    // Message(e, msg)
-    var originalMessage = Utilities.Message;
-    Utilities.Message = function(player, msg){
-        if (arguments[0].player != null) { player = arguments[0].player; }
-        originalMessage(player, msg);
-    };
+        // Message(e, msg)
+        var originalMessage = Utilities.Message;
+        Utilities.Message = function (player, msg) {
+            if (arguments[0].player != null) { player = arguments[0].player; }
+            originalMessage(player, msg);
+        };
 
-    // IsWearingFullSet(e, tag)
-    var originalIsWearingFullSet = Utilities.IsWearingFullSet;
-    Utilities.IsWearingFullSet = function(player, msg){
-        if (arguments[0].player != null) { player = arguments[0].player; }
-        originalIsWearingFullSet(player, msg);
-    };
+        // IsWearingFullSet(e, tag)
+        var originalIsWearingFullSet = Utilities.IsWearingFullSet;
+        Utilities.IsWearingFullSet = function (player, tag) {
+            if (arguments[0].player != null) { player = arguments[0].player; }
+            return originalIsWearingFullSet(player, tag);
+        };
 
-    // IsWearing(e, slot, tag)
-    var originalIsWearing = Utilities.IsWearing;
-    Utilities.IsWearing = function(player, msg){
-        if (arguments[0].player != null) { player = arguments[0].player; }
-        originalIsWearing(player, msg);
-    };
-    
-    // Deprecated Sound Methods
-    Utilities.PlaySound = function(entity, soundName){ Utilities.Play(entity, soundName); };
-    Utilities.PlaySoundTarget = function(entityNPC, soundName, target){ Utilities.Play(target, soundName); };
-    Utilities.Play2DAudio = function(entityNPC, soundName){ Utilities.Play(entityNPC, soundName);};
-    Utilities.Play2DAudioTarget = function(entityNPC, soundName, target){ Utilities.Play(target, soundName); };
-    Utilities.Play2DAudioTargetPlayerAPI = function(e, soundName){ Utilities.Play(e.player, soundName); };
+        // IsWearing(e, slot, tag)
+        var originalIsWearing = Utilities.IsWearing;
+        Utilities.IsWearing = function (player, slot, tag) {
+            if (arguments[0].player != null) { player = arguments[0].player; }
+            return originalIsWearing(player, slot, tag);
+        };
 
-})();}
+        Utilities.PlaySound = function (entity, soundName) { Utilities.Play(entity, soundName); };
+        Utilities.PlaySoundTarget = function (entityNPC, soundName, target) { Utilities.Play(target, soundName); };
+        Utilities.Play2DAudio = function (entityNPC, soundName) { Utilities.Play(entityNPC, soundName); };
+        Utilities.Play2DAudioTarget = function (entityNPC, soundName, target) { Utilities.Play(target, soundName); };
+        Utilities.Play2DAudioTargetPlayerAPI = function (e, soundName) { Utilities.Play(e.player, soundName); };
+        Utilities.PlayAtEntity = function (entity, x, y, z, soundName) { Utilities.Play(entity, soundName); };
+
+        Utilities.GetEntityForwardVector = function (entity) { return Utilities.GetForward2D(entity); };
+        Utilities.SetPitch = function (player, pitch) { return Utilities.SetPlayerPitch(player, pitch); };
+        Utilities.FaceRotation = function (entity, vec) { return Utilities.EntityFaceDirection(entity, vec); };
+
+    })();
+}

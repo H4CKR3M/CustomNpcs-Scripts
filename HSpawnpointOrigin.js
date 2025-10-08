@@ -1,4 +1,4 @@
-/* v2.0 - HSpawnpointOrigin | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.0.1 - HSpawnpointOrigin | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Requires: HyperSpawnpoint12
  *
  * Add this block to the worldspawn */
@@ -23,7 +23,7 @@ var HSpawnpointOrigin = (function(){
                 if (world.getTempdata().has(HyperSpawn.databaseName))
                     return;
                 
-                if (HyperSpawn !== 'undefined'){
+                if (typeof HyperSpawn !== 'undefined'){
                     var ap = world.getAllPlayers();
                     for(var i = 0; i < ap.length; i++){
                         var player = ap[i];

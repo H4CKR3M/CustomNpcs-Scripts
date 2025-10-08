@@ -53,10 +53,9 @@ var FUtil = (function () {
                         var sourceFile = new java.io.File(source, f.getName());
                         var outputFile = new java.io.File(target, f.getName());
                         if (f.isDirectory()) {
-                            new FUtil.P.CopyDirectory(sourceFile,
-                                outputFile);
+                            this.CopyDirectory(sourceFile, outputFile);
                         } else {
-                            new FUtil.P.CopyFile(sourceFile, outputFile);
+                            this.CopyFile(sourceFile, outputFile);
                         }
                     }
                     return true;
@@ -203,6 +202,7 @@ var FUtil = (function () {
                         if (!entry.isDirectory()) {
                             var outputStream = new java.io.FileOutputStream(newFile);
                             var length;
+                            // @ts-ignore
                             var buffer = new Uint8Array(1024).toString().getBytes();
                             while ((length = inputStream.read(buffer)) > 0) {
                                 outputStream.write(buffer, 0, length);
@@ -321,7 +321,7 @@ var FUtil = (function () {
                     var listener = new java.awt.event.ActionListener()
                     {
                         // @ts-ignore
-                        actionPerformed: function actionPerformed() {
+                        function actionPerformed() {
                             frame.dispatchEvent(new java.awt.event.WindowEvent(frame, java.awt.event.WindowEvent.WINDOW_CLOSING));
                         }
                     };

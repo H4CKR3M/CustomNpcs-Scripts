@@ -187,15 +187,15 @@ function tick(e){
         counter++;
         return;
     }
-    else if (ACI.IsInstalled(e)){
+    else if (ACI.IsInstalled()){
         HSpawnpointOrigin.Tick(e);
         return;
     }
 
     if (counter >= waitTime){
         if (counter == waitTime){
-            ACI.Install(e);
-            if (!FUtil.IsDedicatedServer(e.API))
+            ACI.Install();
+            if (!FUtil.IsDedicatedServer())
                 needsRestart = true;
         }
     }
@@ -222,7 +222,7 @@ function tick(e){
         counter++;
         return;
     }
-    else if (ACI.IsInstalled(e)){
+    else if (ACI.IsInstalled()){
         HSpawnpointOrigin.Tick(e);
         return;
     }
@@ -231,8 +231,8 @@ function tick(e){
     if (e.block.world.getTempdata().has(loadCompleteKey) && e.block.world.getTempdata().get(loadCompleteKey) == true){
         if (counter >= waitTime){
             if (counter == waitTime){
-                ACI.Install(e);
-                if (!FUtil.IsDedicatedServer(e.API))
+                ACI.Install();
+                if (!FUtil.IsDedicatedServer())
                     needsRestart = true;
             }
         }
@@ -690,14 +690,19 @@ Utilities.GetDistance2D(source, target); // (x/z axis only)
 Utilities.RotateAboutX(v, degrees);
 Utilities.RotateAboutY(v, degrees);
 Utilities.RotateAboutZ(v, degrees);
-Utilities.GetForward(entity); // 3D
-Utilities.GetEntityForwardVector(entity); // 2D
+Utilities.GetForward(entity);
+Utilities.GetForward2D(entity);
 Utilities.GetDirectionTowardsTarget(source, target); // inputs can be either an ENTITY or VECTOR
 
-Utilities.FaceRotation(entity, vec);
-Utilities.SetPitch(player, pitch);
+Utilities.Refresh(npc, OPTIONAL_bResetAll); // Refreshes visual changes. Ie, eyes, texture-overlay, player skin, etc...
 Utilities.CanAnyoneSeeMe(npc, range); // [1.16 ONLY]
 Utilities.IsTargetWatchingMe(entity, target, viewAngle, maxDistance);
+Utilities.PlayerFaceTarget(player, target);
+Utilities.EntityFaceDirection(entity, vec);
+Utilities.SetPlayerPosition(player, x, y, z, yaw, pitch);
+Utilities.SetPlayerRotation(player, yaw, pitch);
+Utilities.SetPlayerPitch(player, pitch);
+
 Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
 Utilities.IsEnemyNearby(player, range);
 Utilities.IsTeleportPosSafe(world, v); // avoid walls

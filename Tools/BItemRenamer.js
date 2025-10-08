@@ -21,7 +21,7 @@ var BItemRenamer = (function(){
 
         P: {
             /* Set to "" if you don't want a custom theme - Custom Themes are located at the bottom of this file */
-            theme: "ONGARDE", // MONOSPACE_ANALOG_2
+            theme: "", // MONOSPACE_ANALOG_2
 
             /* MAP CONFIG */
             sayCreateCommandInChat: false,
@@ -146,7 +146,7 @@ var BItemRenamer = (function(){
                 this.OnSwapMode(e, mode);
 
                 if (typeof OnInit === "function"){
-                    OnInit(e);
+                    OnInit();
                 }
             },
 
@@ -196,7 +196,7 @@ var BItemRenamer = (function(){
                 } 
 
                 if (typeof OnInteract === "function"){
-                    OnInteract(e);
+                    OnInteract();
                 }
             },
 
@@ -238,7 +238,7 @@ var BItemRenamer = (function(){
                 this.OnSwapMode(e, newMode);
 
                 if (typeof OnAttack === "function"){
-                    OnAttack(e);
+                    OnAttack();
                 }
             },
 
@@ -1857,7 +1857,7 @@ var BItemRenamer = (function(){
                         ID: "attackDamage",
                         Get: function Get(amount){
                             var prefix = amount > 0 ? "§b +" : "§3 ";
-                            return prefix + atkAmount + " Attack Damage";
+                            return prefix + amount + " Attack Damage";
                         }
                     },
                     {

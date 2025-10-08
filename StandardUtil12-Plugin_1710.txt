@@ -1,285 +1,305 @@
-/* v2.1 - 1.7.10 Support-> StandardUtil12 Plugin | Verified 1.7.10, 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.1.1 - 1.7.10 Support-> StandardUtil12 Plugin | Verified 1.7.10, 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Allows StandardUtil12 to work in MC 1.7.10
  * Supports Traditional Hooks as well as CustomNpcs+ event scripts
  * Installation:
  * Paste this code at the very bottom of the StandardUtil12.js script file
  */
-if (true){(function(){
-    
-    Utilities.InstallPlugin("1.7.10-Support");
-    Utilities.show1710Warnings = true;
+if (true) {
+    (function () {
 
-    /* Harms given entity with "fake-instant-damage"
-     * Avoids Crash: Applying potion effect while an entity dies will throw a Concurrent Modification Exception */
-    Utilities.Harm = function(entity, potency){
-        var myNpc = Utilities.useOutdatedHooks ? npc : null;
-        var myID = Utilities.useOutdatedHooks ? npc.getFaction().getId() : -1;
+        Utilities.InstallPlugin("1.7.10-Support");
+        Utilities.show1710Warnings = true;
 
-        var dmg = 3 * Math.pow(2, potency+1);
-        if (entity.getType() == 2 && entity.getFaction().getId() != myID && entity != myNpc && entity.getHealth() > 0){
-            dmg *= 3;
-            if (entity.getMaxHealth() < 50 && entity.getShowBossBar() == 0)
-                entity.setHealth(entity.getHealth() - dmg);
-            else
-                entity.setHealth(Math.max(1, entity.getHealth() - dmg));
-        }
-        else if (entity.getType() == 1 && entity.getMode() != 1 && entity.getHealth() > 0){
-            var cmd = "effect " + entity.getName() + " 7 1 " + potency;
-            if (Utilities.useOutdatedHooks)
-                npc.executeCommand(cmd);
-            else
-                API.executeCommand(entity.getWorld(), cmd)
-        }
-    };
+        /* Harms given entity with "fake-instant-damage"
+         * Avoids Crash: Applying potion effect while an entity dies will throw a Concurrent Modification Exception */
+        Utilities.Harm = function (entity, potency) {
+            // @ts-ignore
+            var myNpc = Utilities.useOutdatedHooks ? npc : null;
+            // @ts-ignore
+            var myID = Utilities.useOutdatedHooks ? npc.getFaction().getId() : -1;
 
-    /* HACK: (Usually) Avoids a crash caused by applying a potion effect when an npc dies */
-    Utilities.Effect = function(entity, effect, duration, strength){
-        if (entity.getHealth() > entity.getMaxHealth() / 5)
-            entity.addPotionEffect(effect, duration, strength, false);
-    };
-
-    Utilities.IsVisible = function(OPTIONAL_npc){
-        if (arguments.length > 0)
-            return OPTIONAL_npc.getVisibleType() == 0;
-        else if (Utilities.useOutdatedHooks)
-            return npc.getVisibleType() == 0;
-        else
-            return false;
-    };
-
-    /* THESE METHOD OVERRIDES ARE PRIVATE, DO NOT BOTHER READING THEM -- PLEASE USE THE BASE StandardUtil12 METHODS INSTEAD!! */
-    Utilities.AutoExec = function(){
-
-        // Determines whether we are on 1.7.10 or newer release [1.12/1.16]
-        var apiClassExists = false;
-        try {
-            var NpcAPI = Java.type("noppes.npcs.api.NpcAPI");
-            if (NpcAPI) {
-                apiClassExists = true;
+            var dmg = 3 * Math.pow(2, potency + 1);
+            if (entity.getType() == 2 && entity.getFaction().getId() != myID && entity != myNpc && entity.getHealth() > 0) {
+                dmg *= 3;
+                if (entity.getMaxHealth() < 50 && entity.getShowBossBar() == 0)
+                    entity.setHealth(entity.getHealth() - dmg);
+                else
+                    entity.setHealth(Math.max(1, entity.getHealth() - dmg));
             }
-        } catch (e) {
-            if (e instanceof java.lang.ClassNotFoundException) {
-                apiClassExists = false;
-            } else {
-                throw e;
+            else if (entity.getType() == 1 && entity.getMode() != 1 && entity.getHealth() > 0) {
+                var cmd = "effect " + entity.getName() + " 7 1 " + potency;
+                if (Utilities.useOutdatedHooks)
+                    // @ts-ignore
+                    npc.executeCommand(cmd);
+                else
+                    // @ts-ignore
+                    API.executeCommand(entity.getWorld(), cmd)
             }
-        }
-        if (apiClassExists) {
-            return; // We're on 1.12 / 1.16+
-        } 
+        };
 
-        // Determine whether we are running the new-ish EVENT SCRIPTS from CustomNPCs+ or using outdated/normal CustomNPCs hooks
-        Utilities.useOutdatedHooks = typeof npc !== 'undefined';
+        /* HACK: (Usually) Avoids a crash caused by applying a potion effect when an npc dies */
+        Utilities.Effect = function (entity, effect, duration, strength) {
+            if (entity.getHealth() > entity.getMaxHealth() / 5)
+                entity.addPotionEffect(effect, duration, strength, false);
+        };
 
-        /* Overrides - methods so they work on 1.7.10 */
+        Utilities.IsVisible = function (OPTIONAL_npc) {
+            if (arguments.length > 0)
+                return OPTIONAL_npc.getVisibleType() == 0;
+            else if (Utilities.useOutdatedHooks)
+                // @ts-ignore
+                return npc.getVisibleType() == 0;
+            else
+                return false;
+        };
 
-        Utilities.Broadcast = function(msg){
-            var msgFormatted = msg.toString().replaceAll("&", "§");
-            if (Utilities.useOutdatedHooks)
-                npc.executeCommand("/say " + msgFormatted);
-            else{
-                var ap = API.getAllServerPlayers();
-                for(var i = 0; i < ap.length; i++){
-                    ap[i].sendMessage(msgFormatted);
+        /* THESE METHOD OVERRIDES ARE PRIVATE, DO NOT BOTHER READING THEM -- PLEASE USE THE BASE StandardUtil12 METHODS INSTEAD!! */
+        Utilities.AutoExec = function () {
+
+            // Determines whether we are on 1.7.10 or newer release [1.12/1.16]
+            var apiClassExists = false;
+            try {
+                var NpcAPI = Java.type("noppes.npcs.api.NpcAPI");
+                if (NpcAPI) {
+                    apiClassExists = true;
+                }
+            } catch (e) {
+                if (e instanceof java.lang.ClassNotFoundException) {
+                    apiClassExists = false;
+                } else {
+                    throw e;
                 }
             }
-        };
-        Utilities.Message = function(p, msg){
-            var cmd = "/tell " + p.getDisplayName() + " " +  msg.toString().replaceAll("&", "§");
-            if (Utilities.useOutdatedHooks)
-                npc.executeCommand(cmd);
-            else{
-                API.executeCommand(p.getWorld(), cmd);
+            if (apiClassExists) {
+                return; // We're on 1.12 / 1.16+
             }
-        };
-        Utilities.GetMCVersion = function(){
-            return "1.7.10";
-        };
-        Utilities.FaceRotation = function(entity, vec){
-            if (entity.getType() == 2 && Utilities.show1710Warnings){
-                Utilities.Broadcast("&2Utilities.FaceRotation(&f" + entity.getName() + "&2, &fvec&2) &e&lWARNING");
-                Utilities.Broadcast("&7--- FaceRotation only works when an NPC is");
-                Utilities.Broadcast("&7--- set to Manual Rotation in Movement Settings.");
-                Utilities.Broadcast("&7--- &7Hide &7Warnings: &6Utilities.show1710Warnings &6= &6false;");
-            }
-            entity.setRotation(this.Angle(entity.x-vec.x, entity.z-vec.z));
-        };
-        Utilities.CanAnyoneSeeMe = function(entity, range){
-            var np = entity.getSurroundingEntities(range, 1);
-            for(var i = 0; i < np.length; i++){
-                if (np[i].canSeeEntity(entity) == true)
-                    return true;
-            }
-            return false;
-        };
-        Utilities.IsTargetWatchingMe = function(me, target, viewAngle, maxDistance){
-            if (Utilities.useOutdatedHooks){
 
-                // NOTE: No ray traces in CustomNpcs 1.7.10d
-                if (Utilities.show1710Warnings){
-                    Utilities.Broadcast("&2Utilities.IsTargetWatchingMe() &c&lERROR");
-                    Utilities.Broadcast("&7--- &c&lNO &6&l1.7.10 &c&lSUPPORT!!!");
+            // Determine whether we are running the new-ish EVENT SCRIPTS from CustomNPCs+ or using outdated/normal CustomNPCs hooks
+            // @ts-ignore
+            Utilities.useOutdatedHooks = typeof npc !== 'undefined';
+
+            /* Overrides - methods so they work on 1.7.10 */
+
+            Utilities.Broadcast = function (msg) {
+                var msgFormatted = msg.toString().replaceAll("&", "§");
+                if (Utilities.useOutdatedHooks)
+                    // @ts-ignore
+                    npc.executeCommand("/say " + msgFormatted);
+                else {
+                    // @ts-ignore
+                    var ap = API.getAllServerPlayers();
+                    for (var i = 0; i < ap.length; i++) {
+                        ap[i].sendMessage(msgFormatted);
+                    }
+                }
+            };
+            Utilities.Message = function (p, msg) {
+                var cmd = "/tell " + p.getDisplayName() + " " + msg.toString().replaceAll("&", "§");
+                if (Utilities.useOutdatedHooks)
+                    // @ts-ignore
+                    npc.executeCommand(cmd);
+                else {
+                    // @ts-ignore
+                    API.executeCommand(p.getWorld(), cmd);
+                }
+            };
+            Utilities.GetMCVersion = function () {
+                return "1.7.10";
+            };
+            Utilities.FaceRotation = function (entity, vec) {
+                if (entity.getType() == 2 && Utilities.show1710Warnings) {
+                    Utilities.Broadcast("&2Utilities.FaceRotation(&f" + entity.getName() + "&2, &fvec&2) &e&lWARNING");
+                    Utilities.Broadcast("&7--- FaceRotation only works when an NPC is");
+                    Utilities.Broadcast("&7--- set to Manual Rotation in Movement Settings.");
+                    Utilities.Broadcast("&7--- &7Hide &7Warnings: &6Utilities.show1710Warnings &6= &6false;");
+                }
+                entity.setRotation(this.Angle(entity.x - vec.x, entity.z - vec.z));
+            };
+            Utilities.CanAnyoneSeeMe = function (entity, range) {
+                var np = entity.getSurroundingEntities(range, 1);
+                for (var i = 0; i < np.length; i++) {
+                    if (np[i].canSeeEntity(entity) == true)
+                        return true;
                 }
                 return false;
-            }
+            };
+            Utilities.IsTargetWatchingMe = function (me, target, viewAngle, maxDistance) {
+                if (Utilities.useOutdatedHooks) {
 
-            // NOTICE -- "viewAngle" is not used b/c we're using the built-in function
-
-            var entities = target.getLookingAtEntities(maxDistance, 0, 1);
-            for(var i = 0; i < entities.length; i++){
-                if(entities[i].getEntityId() == me.getEntityId()){
-                    return true;
-                }
-            }
-            return false;
-        };
-        Utilities.IsEnemyNearby = function(p, range){
-            var ne = p.getSurroundingEntities(range, 2);
-            for(var i = 0; i < ne.length; i++)
-                if (ne[i].getFaction().isAggressiveToPlayer(p))
-                    return true;
-            return false;
-        };
-        Utilities.IsTeleportPosSafe = function(myWorld, vec){
-            return (myWorld.getBlock(vec.x, vec.y, vec.z) == null && myWorld.getBlock(vec.x, vec.y + 1, vec.z) == null);
-        };
-        Utilities.RemoveItems = function(p, itemID, numToRemove){
-            var itemList = p.getInventory();
-            for(var i = 0; i < itemList.length; i++){
-                var item = itemList[i];
-                if (item != null){
-                    // Using modern item IDs (not numbers)
-                    if(isNaN(itemID)){
-                        if (item.getName() == itemID){
-                            p.removeItem(item, numToRemove);
-                            return;
-                        }
+                    // NOTE: No ray traces in CustomNpcs 1.7.10d
+                    if (Utilities.show1710Warnings) {
+                        Utilities.Broadcast("&2Utilities.IsTargetWatchingMe() &c&lERROR");
+                        Utilities.Broadcast("&7--- &c&lNO &6&l1.7.10 &c&lSUPPORT!!!");
                     }
-                    else{
-                        var validJSON = Utilities.GetValidJSON(item.getItemNbt().toJsonString());
-                        var obj = JSON.parse(validJSON);
-                        var itemStr = obj.id.toString();
-                        var ID = itemStr.substring(0, itemStr.length - 1);
-                        if (ID == itemID){
-                            p.removeItem(item, numToRemove);
-                            return;
-                        }
-                    }
-                }
-            }
-        };
-        Utilities.GetEntityTags = function(entityItem){
-            if (Utilities.useOutdatedHooks){
-
-                // NOTE: IEntityItem does not exist in 1.7.10d Customnpcs
-                if (Utilities.show1710Warnings){
-                    Utilities.Broadcast("&2Utilities.GetEntityTags(null) &c&lError");
-                    Utilities.Broadcast("&cFunction &centityItem &cdoes &cnot &cexist &con &c1.7.10");
-                    Utilities.Broadcast("&cUse &2Utilities.GetItemTags(itemStack) &cinstead!!!");
-                }
-
-                return null;
-            }
-
-            // Support for this was added in CustomNpcs+ Event Hooks system
-            return Utilities.GetItemTags(entityItem.getItem());
-        };
-        Utilities.GetItemTags = function(itemStack){
-            if (itemStack == null)
-                return null;
-            for(var i = 0; i < this._invalidItems.length; i++){
-                if (itemStack.getName() == this._invalidItems[i])
-                    return null;
-            }
-            return this.GetItemTagsUnsafe(itemStack);
-        };
-        Utilities._invalidItems = [ "customnpcs:npcScripter", "minecraft:writable_book", "minecraft:written_book", 
-            "minecraft:chest", "etfuturem:shulker_box" ],
-        Utilities.IsWearingFullSet = function(p, tag){
-            for(var i = 0; i < 4; i++){
-                if(!Utilities.IsWearing(p, i, tag)){
                     return false;
                 }
-            }
-            return true;
-        };
-        Utilities.IsWearing = function(p, slot, tag){
-            var itemToScan = p.getArmor(slot);
-            if (itemToScan != null){
-                var tagObj = Utilities.GetItemTags(itemToScan);
-                if (tagObj != null && Utilities.HasTag(tagObj, tag)){
+
+                // NOTICE -- "viewAngle" is not used b/c we're using the built-in function
+
+                var entities = target.getLookingAtEntities(maxDistance, 0, 1);
+                for (var i = 0; i < entities.length; i++) {
+                    if (entities[i].getEntityId() == me.getEntityId()) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+            Utilities.IsEnemyNearby = function (p, range) {
+                var ne = p.getSurroundingEntities(range, 2);
+                for (var i = 0; i < ne.length; i++)
+                    if (ne[i].getFaction().isAggressiveToPlayer(p))
+                        return true;
+                return false;
+            };
+            Utilities.IsTeleportPosSafe = function (myWorld, vec) {
+                return (myWorld.getBlock(vec.x, vec.y, vec.z) == null && myWorld.getBlock(vec.x, vec.y + 1, vec.z) == null);
+            };
+            Utilities.RemoveItems = function (p, itemID, numToRemove) {
+                var itemList = p.getInventory();
+                for (var i = 0; i < itemList.length; i++) {
+                    var item = itemList[i];
+                    if (item != null) {
+                        // Using modern item IDs (not numbers)
+                        if (isNaN(itemID)) {
+                            if (item.getName() == itemID) {
+                                p.removeItem(item, numToRemove);
+                                return;
+                            }
+                        }
+                        else {
+                            var validJSON = Utilities.GetValidJSON(item.getItemNbt().toJsonString());
+                            var obj = JSON.parse(validJSON);
+                            var itemStr = obj.id.toString();
+                            var ID = itemStr.substring(0, itemStr.length - 1);
+                            if (ID == itemID) {
+                                p.removeItem(item, numToRemove);
+                                return;
+                            }
+                        }
+                    }
+                }
+            };
+            Utilities.GetEntityTags = function (entityItem) {
+                if (Utilities.useOutdatedHooks) {
+
+                    // NOTE: IEntityItem does not exist in 1.7.10d Customnpcs
+                    if (Utilities.show1710Warnings) {
+                        Utilities.Broadcast("&2Utilities.GetEntityTags(null) &c&lError");
+                        Utilities.Broadcast("&cFunction &centityItem &cdoes &cnot &cexist &con &c1.7.10");
+                        Utilities.Broadcast("&cUse &2Utilities.GetItemTags(itemStack) &cinstead!!!");
+                    }
+
+                    return null;
+                }
+
+                // Support for this was added in CustomNpcs+ Event Hooks system
+                return Utilities.GetItemTags(entityItem.getItem());
+            };
+            Utilities.GetItemTags = function (itemStack) {
+                if (itemStack == null)
+                    return null;
+                for (var i = 0; i < this._invalidItems.length; i++) {
+                    if (itemStack.getName() == this._invalidItems[i])
+                        return null;
+                }
+                return this.GetItemTagsUnsafe(itemStack);
+            };
+            Utilities._invalidItems = ["customnpcs:npcScripter", "minecraft:writable_book", "minecraft:written_book",
+                "minecraft:chest", "etfuturem:shulker_box"],
+                Utilities.IsWearingFullSet = function (p, tag) {
+                    for (var i = 0; i < 4; i++) {
+                        if (!Utilities.IsWearing(p, i, tag)) {
+                            return false;
+                        }
+                    }
                     return true;
+                };
+            Utilities.IsWearing = function (p, slot, tag) {
+                var itemToScan = p.getArmor(slot);
+                if (itemToScan != null) {
+                    var tagObj = Utilities.GetItemTags(itemToScan);
+                    if (tagObj != null && Utilities.HasTag(tagObj, tag)) {
+                        return true;
+                    }
                 }
-            }
-            return false;
-        };
-        Utilities.PlayAt = function(x, y, z, soundName){
-            var volume = arguments.length >= 5 ? arguments[4] : 64;
-            var ap = null;
-            if (Utilities.useOutdatedHooks)
-                ap = world.getAllServerPlayers();
-            else
-                ap = API.getAllServerPlayers();
-            for(var i = 0; i < ap.length; i++){
-                if (Utilities.GetDistance(ap[i], { x:x, y:y, z:z }) < 100){
-                    if (Utilities.useOutdatedHooks)
-                        npc.executeCommand("playsound " + soundName + " " + ap[i].getName() + " " + x + " " + y + " " + z + " " + volume);
-                    else
-                        API.playSoundAtEntity(ap[i], soundName, volume, 1);
-                }
-            }
-        };
-        Utilities.Play = function(entity, soundName){
-            if (entity == null){ throw ("\n\nUtilities: null entity given to Play(entity, soundName)\n"); }
-
-            var volume = arguments.length >= 3 ? arguments[2] : 64;
-
-            if (entity.getType() == 2){
-                Utilities.PlayAt(entity.x, entity.y, entity.z, soundName, volume);
-            }
-            else if (entity.getType() == 1){
+                return false;
+            };
+            Utilities.PlayAt = function (x, y, z, soundName) {
+                var volume = arguments.length >= 5 ? arguments[4] : 64;
+                var ap = null;
                 if (Utilities.useOutdatedHooks)
-                    npc.executeCommand("playsound " + soundName + " " + entity.getName() + " ~ ~ ~ " + volume);
+                    // @ts-ignore
+                    ap = world.getAllServerPlayers();
                 else
-                    API.playSoundAtEntity(entity, soundName, volume, 1);
-            }
-            else
-                throw ("\n\nUtilities: the entity given to Play(entity, soundName) was neither a player, nor an NPC."
-                    + "\nPass in an NPC or player entity.\n");
-        };
-        Utilities.Stop = function(entity, soundName){
-            if (Utilities.useOutdatedHooks){
-
-                // NOTE: The /stopsound command does not exist
-                if (Utilities.show1710Warnings){
-                    Utilities.Broadcast("&2Utilities.Stop(&f" + soundName + "&2) &c&lERROR");
-                    Utilities.Broadcast("&7--- &c&lNO &6&l1.7.10 &c&lSUPPORT!!!");
+                    // @ts-ignore
+                    ap = API.getAllServerPlayers();
+                for (var i = 0; i < ap.length; i++) {
+                    if (Utilities.GetDistance(ap[i], { x: x, y: y, z: z }) < 100) {
+                        if (Utilities.useOutdatedHooks)
+                            // @ts-ignore
+                            npc.executeCommand("playsound " + soundName + " " + ap[i].getName() + " " + x + " " + y + " " + z + " " + volume);
+                        else
+                            // @ts-ignore
+                            API.playSoundAtEntity(ap[i], soundName, volume, 1);
+                    }
                 }
-                return;
-            }
+            };
+            Utilities.Play = function (entity, soundName) {
+                if (entity == null) { throw ("\n\nUtilities: null entity given to Play(entity, soundName)\n"); }
 
-            API.stopSounds();
+                var volume = arguments.length >= 3 ? arguments[2] : 64;
+
+                if (entity.getType() == 2) {
+                    Utilities.PlayAt(entity.x, entity.y, entity.z, soundName, volume);
+                }
+                else if (entity.getType() == 1) {
+                    if (Utilities.useOutdatedHooks)
+                        // @ts-ignore
+                        npc.executeCommand("playsound " + soundName + " " + entity.getName() + " ~ ~ ~ " + volume);
+                    else
+                        // @ts-ignore
+                        API.playSoundAtEntity(entity, soundName, volume, 1);
+                }
+                else
+                    throw ("\n\nUtilities: the entity given to Play(entity, soundName) was neither a player, nor an NPC."
+                        + "\nPass in an NPC or player entity.\n");
+            };
+            Utilities.Stop = function (entity, soundName) {
+                if (Utilities.useOutdatedHooks) {
+
+                    // NOTE: The /stopsound command does not exist
+                    if (Utilities.show1710Warnings) {
+                        Utilities.Broadcast("&2Utilities.Stop(&f" + soundName + "&2) &c&lERROR");
+                        Utilities.Broadcast("&7--- &c&lNO &6&l1.7.10 &c&lSUPPORT!!!");
+                    }
+                    return;
+                }
+
+                // @ts-ignore
+                API.stopSounds();
+            };
+
+            /* SUPER LEGACY SUPPORT */
+
+            Utilities.AddVectors = function (vec1, vec2) {
+                return Utilities.Add(vec1, vec2);
+            };
+            Utilities.PlaySound = function (soundName, target) {
+                if (typeof soundName === 'string') { // Yes this function was written both ways at some point.
+                    Utilities.Play(target, soundName);
+                }
+                else {
+                    Utilities.Play(soundName, target);
+                }
+            };
+
+            if (Utilities.useOutdatedHooks) {
+                // @ts-ignore
+                if (npc.getTempData("Utilities") == null)
+                    // @ts-ignore
+                    npc.setTempData("Utilities", Utilities);
+            }
         };
 
-        /* SUPER LEGACY SUPPORT */
-
-        Utilities.AddVectors = function(vec1, vec2){
-            return Utilities.Add(vec1, vec2);
-        };
-        Utilities.PlaySound = function(soundName, target){
-            if (typeof soundName === 'string'){ // Yes this function was written both ways at some point.
-                Utilities.Play(target, soundName);
-            }
-            else{
-                Utilities.Play(soundName, target);
-            }
-        };
-
-        if (Utilities.useOutdatedHooks){
-            if (npc.getTempData("Utilities") == null)
-                npc.setTempData("Utilities", Utilities);
-        }
-    };
-    
-})(); Utilities.AutoExec(); 
+    })(); Utilities.AutoExec();
 }
