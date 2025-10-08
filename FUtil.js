@@ -321,7 +321,7 @@ var FUtil = (function () {
                     var listener = new java.awt.event.ActionListener()
                     {
                         // @ts-ignore
-                        function actionPerformed() {
+                        actionPerformed: function actionPerformed() {
                             frame.dispatchEvent(new java.awt.event.WindowEvent(frame, java.awt.event.WindowEvent.WINDOW_CLOSING));
                         }
                     };
