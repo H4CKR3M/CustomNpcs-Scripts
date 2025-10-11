@@ -179,22 +179,22 @@ var tick = function (e) {
 
 
 
-/* v3.0 - HMobSpawner | ScriptedBlock
- * Requires: HyperMobSpawner12
- */
+// /* v3.0 - HMobSpawner | ScriptedBlock
+//  * Requires: HyperMobSpawner12
+//  */
 
-function init(e) {
-    e.block.setModel("minecraft:stonebrick");
-    e.block.setRotation(0, 270, 0);
+// function init(e) {
+//     e.block.setModel("minecraft:stonebrick");
+//     e.block.setRotation(0, 270, 0);
 
-    HyperMobSpawn.pos = { x: e.block.x, y: e.block.y + 2, z: e.block.z };
-    HyperMobSpawn.ID = "UniqueID";
-    HyperMobSpawn.range = 10;
+//     HyperMobSpawn.pos = { x: e.block.x, y: e.block.y + 2, z: e.block.z };
+//     HyperMobSpawn.ID = "UniqueID";
+//     HyperMobSpawn.range = 10;
 
-    HyperMobSpawn.clones = [
-        { x: 130.5, y: 75, z: 100.5, prefab: "clone1" },
-        { x: 140.5, y: 75, z: 100.5, prefab: "clone2" },
-        { x: 145.5, y: 77, z: 110.5, prefab: "cloneMiniboss" },
-        { x: 150.5, y: 75, z: 110.5, prefab: "cloneMiniboss2" },
-    ];
-}
+//     HyperMobSpawn.clones = [
+//         { x: 130.5, y: 75, z: 100.5, prefab: "clone1" },
+//         { x: 140.5, y: 75, z: 100.5, prefab: "clone2" },
+//         { x: 145.5, y: 77, z: 110.5, prefab: "cloneMiniboss" },
+//         { x: 150.5, y: 75, z: 110.5, prefab: "cloneMiniboss2" },
+//     ];
+// }
