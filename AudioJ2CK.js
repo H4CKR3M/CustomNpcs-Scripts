@@ -1,4 +1,4 @@
-/* v0.3 - AudioJ2CK | Loadable from Anywhere* / must also be Loaded in PlayerScript as well | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v0.3.1 - AudioJ2CK | Loadable from Anywhere* / must also be Loaded in PlayerScript as well | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
  * A better multi-Track audio player to satisfy your creativity!
  * 
@@ -190,8 +190,8 @@ var Audio = (function () { var _Audio = {};
     return _Audio;
 }());
 
-Audio.COPY_logout = (typeof logout === 'function' && !logout.hasOwnProperty(Audio.AutoHookID)) ? logout : function () { };
+Audio.COPY_logout = (typeof logout === 'function' && !logout.hasOwnProperty(Audio.AutoHookID) && (Date.now() - (logout.CreatedAt || Date.now())) < 200) ? logout : function () { };
 var logout = function (e) {
     Audio.COPY_logout(e);
     Audio.INTERNAL_Logout(e);
-}; logout[Audio.AutoHookID] = true;
+}; logout[Audio.AutoHookID] = true; logout.CreatedAt = Date.now();

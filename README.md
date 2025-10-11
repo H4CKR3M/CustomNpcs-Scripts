@@ -43,9 +43,8 @@ A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Pl
 
 ### Setup
 Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
-1. Load AudioJ2CK and JTunes in playerscript
-2. Call `JTunes.Login(e);` and `JTunes.Tick(e);` - in player login/tick respectively
-3. Edit Songs/Triggers in JTunes.js
+1. Load `AudioJ2CK.js` and `JTunes.js` in the playerscript.
+2. Open `JTunes.js` in a text editor and modify the songs/triggers.
 
 ### Boss Music
 
@@ -59,9 +58,8 @@ world.getTempdata().put("JBOSS", null);
 ### AudioJ2CK
 Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
-1. Load script anywhere (npc, block, or player)
-2. Call `Audio.Logout(e);` inside your playerscript logout event.  
-3. Call any of the below:  
+1. Load the script `AudioJ2CK.js` anywhere (npc, block, or player)
+2. Call any of the below:  
 
 ```js
 Audio.Play("wavFileName");
@@ -85,21 +83,9 @@ Requires:
 
 1. First we'll need to modify the playerscript. Open the playerscript (npc scripted right-click the air).
 2. Load `HyperSpawnpoint12.js` and `HSpawnpointPlayer.js` in the playerscript.
-3. Paste the following:
-```js
-// Requires: HSpawnpointPlayer, HyperSpawnpoint12
-
-function login(e){
-    HSpawnpointPlayer.Login(e);
-}
-
-function logout(e){
-    HSpawnpointPlayer.Logout(e);
-}
-```
-
-4. Next, Place a Scripted Block at the World Origin `/setworldspawn` I like to make this a black box that the player starts in. Don't forget to type `/gamerule spawnRadius 0` in-game.
-5. Load `HyperSpawnpoint12.js` and `HSpawnpointOrigin.js` on the block.
+3. Next, Place a Scripted Block at the World Origin `/setworldspawn`
+* *(I like to make this completely black room where the player spawns).* Don't forget to type `/gamerule spawnRadius 0` in-game.
+4. Load `HyperSpawnpoint12.js` and `HSpawnpointOrigin.js` on the block.
 6. Paste the following:
 ```js
 // Requires: HSpawnpointOrigin, HyperSpawnpoint12
@@ -255,7 +241,7 @@ Requires:
 3. Load `HyperMobSpawner12` on the block.
 4. Paste the following:
 ```js
-/* v2.0 - HMobSpawner | ScriptedBlock | Verified 1.12.2+ (1.12.2, 1.16.5)
+/* v3.0 - HMobSpawner | ScriptedBlock
  * Requires: HyperMobSpawner12
  */
 
@@ -268,10 +254,6 @@ function init(e){
         { x:130.5, y:75, z:100.5, prefab: "clone1" },
         { x:140.5, y:75, z:100.5, prefab: "clone2" },
         ];
-}
-
-function tick(e){
-    HyperMobSpawn.Tick(e);
 }
 ```
 

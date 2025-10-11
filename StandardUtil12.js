@@ -384,6 +384,16 @@ var Utilities = (function () {
         },
 
         /**
+         * Rotates an NPC entity to face a given target.
+         *
+         * @param {ICustomNpc} entity - The NPC entity to rotate.
+         * @param {IEntity} target - The target entity to look towards
+         */
+        EntityFaceTarget: function EntityFaceTarget(entity, target) {
+            entity.setRotation(90 + Utilities.Angle(entity.z - target.z, entity.x - target.x));
+        },
+
+        /**
          * Rotates an NPC entity to face a given direction vector.
          *
          * @param {ICustomNpc} entity - The NPC entity to rotate.
