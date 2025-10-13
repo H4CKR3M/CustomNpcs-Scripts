@@ -49,7 +49,7 @@ var Utilities = (function () {
          * Adds two vectors together
          * @param {IVector} v1 
          * @param {IVector} v2 
-         * @returns {IVector} A new vector representing the sum of 'v1' and 'v2'
+         * @returns {IVector} A new vector representing the sum of `v1` and `v2`
          */
         Add: function Add(v1, v2) {
             return { x: v1.x + v2.x, y: v1.y + v2.y, z: v1.z + v2.z, };
@@ -59,7 +59,7 @@ var Utilities = (function () {
          * Subtracts one vector from another.
          * @param {IVector} v1 - The vector to subtract from.
          * @param {IVector} v2 - The vector to subtract.
-         * @returns {IVector} A new vector representing the difference 'v1' - 'v2'
+         * @returns {IVector} A new vector representing the difference `v1` - `v2`
          */
         Diff: function Diff(v1, v2) {
             return { x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z, };
@@ -79,7 +79,7 @@ var Utilities = (function () {
          * Calculates the dot product of two vectors.
          * @param {IVector} v1 - The first vector.
          * @param {IVector} v2 - The second vector.
-         * @returns {number} The dot product of 'v1' and 'v2'
+         * @returns {number} The dot product of `v1` and `v2`
          */
         Dot: function Dot(v1, v2) {
             return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
@@ -89,7 +89,7 @@ var Utilities = (function () {
          * Calculates the cross product of two vectors.
          * @param {IVector} v1 - The first vector.
          * @param {IVector} v2 - The second vector.
-         * @returns {IVector} A new vector perpendicular to both 'v1' and 'v2'
+         * @returns {IVector} A new vector perpendicular to both `v1` and `v2`
          */
         Cross: function Cross(v1, v2) {
             return { x: v1.y * v2.z - v1.z * v2.y, y: v1.z * v2.x - v1.x * v2.z, z: v1.x * v2.y - v1.y * v2.x };
@@ -129,7 +129,7 @@ var Utilities = (function () {
          * @param {IVector} v - The vector to test.
          * @param {IVector} v1 - The first boundary vector.
          * @param {IVector} v2 - The second boundary vector.
-         * @returns {boolean} 'true' if vector 'v' lies between 'v1' and 'v2, otherwise 'false'
+         * @returns {boolean} `true` if vector `v` lies between `v1` and `v2`, otherwise `false`
          */
         IsBetween: function IsBetween(v, v1, v2) {
             return this.Dot(this.Cross(v1, v), this.Cross(v1, v2)) >= 0
@@ -146,7 +146,7 @@ var Utilities = (function () {
 
         /**
          * Returns a unit vector pointing upward along the Y axis.
-         * @returns {IVector} The up vector '{ x: 0, y: 1, z: 0 }'
+         * @returns {IVector} The up vector `{ x: 0, y: 1, z: 0 }`
          */
         Up: function Up() {
             return { x: 0, y: 1, z: 0 }
@@ -156,7 +156,7 @@ var Utilities = (function () {
          * Normalizes a vector to unit length or to a specified magnitude.
          * @param {IVector} v - The vector to normalize.
          * @param {number} [OPTIONAL_magnitude=1] - **Optional** : The magnitude to scale the normalized vector to. Defaults to 1.
-         * @returns {IVector} A new vector with the specified magnitude, pointing in the same direction as 'v'
+         * @returns {IVector} A new vector with the specified magnitude, pointing in the same direction as `v`
          */
         Normalize: function Normalize(v, OPTIONAL_magnitude) {
             if (OPTIONAL_magnitude == null) { OPTIONAL_magnitude = 1; }
@@ -180,7 +180,7 @@ var Utilities = (function () {
          * Calculates the 3D distance between two points or vectors.
          * @param {IVector} origin - The starting point.
          * @param {IVector} destination - The ending point.
-         * @returns {number} The straight-line distance between 'origin' and 'destination' in 3D space.
+         * @returns {number} The straight-line distance between `origin` and `destination` in 3D space.
          */
         GetDistance: function GetDistance(origin, destination) {
             return Math.sqrt(Math.pow(destination.x - origin.x, 2) + Math.pow(destination.y - origin.y, 2)
@@ -191,7 +191,7 @@ var Utilities = (function () {
          * Calculates the 2D distance between two points, ignoring the Y-axis.
          * @param {IVector} origin - The starting point.
          * @param {IVector} destination - The ending point.
-         * @returns {number} The distance between 'origin' and 'destination' projected onto the XZ plane.
+         * @returns {number} The distance between `origin` and `destination` projected onto the XZ plane.
          */
         GetDistance2D: function GetDistance2D(origin, destination) {
             return Math.sqrt(Math.pow(destination.x - origin.x, 2) + Math.pow(destination.z - origin.z, 2));
@@ -287,10 +287,10 @@ var Utilities = (function () {
         /**
          * Refreshes the visual aspects of an NPC; Allows changing eye color, texture overlay, player skins, etc...
          * @param {*} npc 
-         * @param {boolean} OPTIONAL_bFullResetClearVariables - **Optional** : If 'true', fully resets the npc and clears all scripted variables if there is code on the npc.
+         * @param {boolean} OPTIONAL_bFullResetClearVariables - **Optional** : If `true`, fully resets the npc and clears all scripted variables if there is code on the npc.
          * @remarks **Warning:** In some cases, it may be required to fully reset an npc for the visual
          * changes to take effect. If this is the case, be mindful that as a side effect, this will also
-         * reset all code and scripted variables that may also be on the NPC.
+         * reset all code and scripted variables that you wrote on the scripted NPC.
          */
         Refresh: function Refresh(npc, OPTIONAL_bFullResetClearVariables) {
 
@@ -309,7 +309,7 @@ var Utilities = (function () {
          * @param {number} range 
          * @returns {boolean} True if other players/entities/npcs can see the given entity; Returns False otherwise.
          * @warning
-         * The 'canSeeEntity' method does not work on 1.12
+         * The `canSeeEntity` method does not work on 1.12
          */
         CanAnyoneSeeMe: function CanAnyoneSeeMe(entity, range) {
             if (this.GetMCVersion() == "1.12.2"){
@@ -326,7 +326,7 @@ var Utilities = (function () {
         },
 
         /**
-         * Checks whether the given target 'player' is looking at me 'npc'
+         * Checks whether the given target `player` is looking at me `npc`
          * @param {ICustomNpc} me 
          * @param {IPlayer} target 
          * @param {number} viewAngle 
@@ -368,7 +368,7 @@ var Utilities = (function () {
          *
          * @remarks
          * This function calculates the direction from the player to the target and updates
-         * the player's yaw accordingly. If the target is 'null', the function broadcasts an error
+         * the player's yaw accordingly. If the target is `null`, the function broadcasts an error
          * message and exits early.
          *
          * @warning
@@ -400,7 +400,7 @@ var Utilities = (function () {
          * @param {IVector} vec - The vector direction to face toward.
          *
          * @remarks
-         * Uses the entity's internal 'lookAi' component to control facing direction.
+         * Uses the entity's internal `lookAi` component to control facing direction.
          */
         EntityFaceDirection: function EntityFaceDirection(entity, vec) {
             var lookAI = entity.getMCEntity().lookAi;
@@ -457,7 +457,7 @@ var Utilities = (function () {
          * @param {number} rMin - minimum distance from entity
          * @param {number} rMax  - maximum distance from entity
          * @returns {IVector} The vector coordinate for a safe location near the given entity, 
-         * at least 'rMin' from the entity and at most 'rMax' from the entity distance away.
+         * at least `rMin` from the entity and at most `rMax` from the entity distance away.
          */
         GetSafeLocationNearEntity: function GetSafeLocationNearEntity(entity, rMin, rMax) {
             var loc = { x: 0, y: entity.y, z: 0, };
@@ -497,7 +497,7 @@ var Utilities = (function () {
          * Returns whether the given position is air (safe) or in a wall (not-safe)
          * @param {IWorld} world - the desired world
          * @param {IVector} v - the given position vector
-         * @returns {boolean} 'true' if the given position is safe, 'false' if it is not safe
+         * @returns {boolean} `true` if the given position is safe, `false` if it is not safe
          */
         IsTeleportPosSafe: function IsTeleportPosSafe(world, v) {
             return (world.getBlock(v.x, v.y, v.z).getName() == "minecraft:air"
@@ -508,7 +508,7 @@ var Utilities = (function () {
          * Returns a random positive or negative number between two values.
          * @param {number} min - The minimum bound of the range.
          * @param {number} max - The maximum bound of the range.
-         * @returns {number} A random number between 'min' and 'max' which may be assigned a positive or a negative
+         * @returns {number} A random number between `min` and `max` which may be assigned a positive or a negative.
          */
         GetRandomRadius: function GetRandomRadius(min, max) {
             var rand = Math.random() * (max - min) + min;
@@ -540,7 +540,7 @@ var Utilities = (function () {
          * Checks whether a string contains a given substring or character.
          * @param {string} strBase - The base string to search within.
          * @param {string} substringSearch - The substring or character to search for.
-         * @returns {boolean} 'true' if 'strSearch' is found in 'strBase', otherwise 'false'
+         * @returns {boolean} `true` if `strSearch` is found in `strBase`, otherwise `false`
          */
         StringIncludes: function StringIncludes(strBase, substringSearch) {
             return strBase.indexOf(substringSearch) !== -1;
@@ -551,7 +551,7 @@ var Utilities = (function () {
          * If the substring does not exist, the original string is returned unchanged.
          * @param {string} strBase - The string to modify.
          * @param {string} substringRemove - The substring to remove.
-         * @returns {string} The modified string with 'strRemove' removed.
+         * @returns {string} The modified string with `strRemove` removed.
          */
         RemoveSubstring: function RemoveSubstring(strBase, substringRemove) {
             return strBase.substring(0, strBase.indexOf(substringRemove))
@@ -563,7 +563,7 @@ var Utilities = (function () {
          * @param {number} num - The number to clamp.
          * @param {number} min - The minimum allowable value.
          * @param {number} max - The maximum allowable value.
-         * @returns {number} The clamped value, guaranteed to be between 'min' and 'max'.
+         * @returns {number} The clamped value, guaranteed to be between `min` and `max`.
          */
         Clamp: function Clamp(num, min, max) {
             return Math.min(max, Math.max(min, num));
@@ -574,8 +574,8 @@ var Utilities = (function () {
          * @param {string} str - The string to search.
          * @param {string} char - The character to look for.
          * @param {number} index - The nth occurrence to locate (must be ≥ 1).
-         * @throws Will throw an error if 'index' is less than 1.
-         * @returns {number} The zero-based index of the nth occurrence, or '-1' if not found.
+         * @throws Will throw an error if `index` is less than 1.
+         * @returns {number} The zero-based index of the nth occurrence, or `-1` if not found.
          */
         IndexOfNth: function IndexOfNth(str, char, index) {
             if (index <= 0) {
@@ -653,7 +653,7 @@ var Utilities = (function () {
         // ITEM RELATED ----------------------------------------------------------------------
 
         /**
-         * Removes 'number' amount of items from the player's inventory of type 'itemID'
+         * Removes `number` amount of items from the player's inventory of type `itemID`
          * @param {IPlayer} player 
          * @param {string} itemID 
          * @param {number} numToRemove 
@@ -680,8 +680,8 @@ var Utilities = (function () {
         /**
          * Finds all item tags on the given entityItem, ignores items that may cause a script-error
          * @param {IEntityItem} entityItem 
-         * @returns {ITagObject | null} A tag object containing all tags on the given 'itemStack'
-         * or 'null' if an invalid 'itemStack' is provided.
+         * @returns {ITagObject | null} A tag object containing all tags on the given `itemStack`
+         * or `null` if an invalid `itemStack` is provided.
          */
         GetEntityTags: function GetEntityTags(entityItem) {
             return this.GetItemTags(entityItem.getItem());
@@ -690,8 +690,8 @@ var Utilities = (function () {
         /**
          * Finds all item tags on the given itemStack, ignores items that may cause a script-error
          * @param {IItemStack} itemStack 
-         * @returns {ITagObject | null} A tag object containing all tags on the given 'itemStack'
-         * or 'null' if an invalid 'itemStack' is provided.
+         * @returns {ITagObject | null} A tag object containing all tags on the given `itemStack`
+         * or `null` if an invalid `itemStack` is provided.
          */
         GetItemTags: function GetItemTags(itemStack) {
             for (var i = 0; i < this._invalidItems.length; i++) {
@@ -707,7 +707,7 @@ var Utilities = (function () {
         /**
          * Finds all item tags on the given itemStack.
          * @param {IItemStack} itemStack 
-         * @returns {ITagObject} A tag object containing all tags on the given 'itemStack'
+         * @returns {ITagObject} A tag object containing all tags on the given `itemStack`
          * @throws Will throw if an invalid Minecraft-JSON is provided
          * @remarks **Warning:** This function will scriptError if invalid JSON is given.
          */
@@ -722,7 +722,7 @@ var Utilities = (function () {
          * @param {string} MCJSONFormatFile - Minecraft JSON data
          * @returns {string} Valid-parsable JSON, which is not in the Minecraft format
          * @remarks **Warning:** This function performs a naive regex replacement and may fail to 
-         * produce valid JSON for unexpected input formats. In particular, invalid colon ':' placement.
+         * produce valid JSON for unexpected input formats. In particular, invalid colon `:` placement.
          */
         GetValidJSON: function GetValidJSON(MCJSONFormatFile) {
             return MCJSONFormatFile.replaceAll(": [ ]*([\\w@\\.-]+)", ": \"$1\"");
@@ -746,7 +746,7 @@ var Utilities = (function () {
          * Is the player wearing a full set of armor, each piece must have the given tag on them.
          * @param {IPlayer} player 
          * @param {string} tag
-         * @returns {boolean} True if player is wearing a full set of armor and each piece as the 'tag' on it; False otherwise.
+         * @returns {boolean} True if player is wearing a full set of armor and each piece as the `tag` on it; False otherwise.
          */
         IsWearingFullSet: function IsWearingFullSet(player, tag) {
             for (var i = 0; i < 4; i++) {
@@ -762,7 +762,7 @@ var Utilities = (function () {
          * @param {IPlayer} player 
          * @param {number} slot - 0:boots, 1:pants, 2:body, 3:head
          * @param {string} tag 
-         * @returns {boolean} True if player is wearing an item in the specified slot and it has the given 'tag' on the item; False otherwise.
+         * @returns {boolean} True if player is wearing an item in the specified slot and it has the given `tag` on the item; False otherwise.
          */
         IsWearing: function IsWearing(player, slot, tag) {
             var itemToScan = player.getArmor(slot);
@@ -782,8 +782,8 @@ var Utilities = (function () {
          * @param {number} y - The Y position where the sound should play.
          * @param {number} z - The Z position where the sound should play.
          * @param {string} soundName - The name of the sound; part of Minecraft or specified in sounds.json
-         * @param {number} [OPTIONAL_volume=64] - **Optional** : Playback volume for the sound. Defaults to '64'.
-         * @warning This function calls the '/playsound' commands in the game world and will fail silently  
+         * @param {number} [OPTIONAL_volume=64] - **Optional** : Playback volume for the sound. Defaults to `64`.
+         * @warning This function calls the `/playsound` commands in the game world and will fail silently  
          * if the given soundName doesn't exist.
          */
 
@@ -814,11 +814,11 @@ var Utilities = (function () {
          *
          * @param {IEntity} entity - The target entity (player or NPC).
          * @param {string} soundName - The name of the sound; part of Minecraft or specified in sounds.json
-         * @param {number} [OPTIONAL_volume=64] - **Optional** : Playback volume for the sound. Defaults to '64'.
+         * @param {number} [OPTIONAL_volume=64] - **Optional** : Playback volume for the sound. Defaults to `64`.
          *
-         * @throws Will throw if 'entity' is 'null' is not a player/NPC.
+         * @throws Will throw if `entity` is `null` is not a player/NPC.
          *
-         * @warning This function calls the '/playsound' commands in the game world and will fail silently  
+         * @warning This function calls the `/playsound` commands in the game world and will fail silently  
          * if the given soundName doesn't exist.
          */
         Play: function Play(entity, soundName, OPTIONAL_volume) {
@@ -853,7 +853,7 @@ var Utilities = (function () {
          * @param {IEntity} entity - The target entity (player or NPC).
          * @param {string} soundName - The name of the sound; part of Minecraft or specified in sounds.json
          *
-         * @throws Will throw if 'entity' is 'null' is not a player/NPC.
+         * @throws Will throw if `entity` is `null` is not a player/NPC.
          */
         Stop: function Stop(entity, soundName) {
             if (entity == null) { throw ("\n\nUtilities: null entity given to Stop(entity, soundName)\n"); }
@@ -889,7 +889,7 @@ var Utilities = (function () {
             return false;
         },
         /**
-         * Installs a StandardUtil plugin with the given 'pluginName'
+         * Installs a StandardUtil plugin with the given `pluginName`
          * @param {string} pluginName 
          */
         InstallPlugin: function InstallPlugin(pluginName) {
