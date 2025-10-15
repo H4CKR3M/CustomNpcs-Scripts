@@ -1,4 +1,4 @@
-/* v3.4 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v3.4.1 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function () {
     var Plugins = [];
@@ -43,6 +43,55 @@ var Utilities = (function () {
                 return "1.16.5";
             }
             return "1.12.2";
+        },
+
+        /**
+         * Gets the game / server difficulty.
+         * @returns {string} difficulty : PEACEFUL EASY NORMAL HARD
+         * 
+         * @remarks
+         * Only supports 1.12.2, will return `NORMAL` on other MC versions.
+         */
+        GetDifficulty: function GetDifficulty() {
+            if (this.GetMCVersion() == "1.12.2"){
+                var FMLCommonHandler = Java.type("net.minecraftforge.fml.common.FMLCommonHandler");
+                var server = FMLCommonHandler.instance().getMinecraftServerInstance();
+                var difficultyEnum = server.func_147135_j();
+                return difficultyEnum;
+            }
+            return "NORMAL";
+        },
+
+        /**
+         * Sets the in-game difficulty
+         * @param {string} stringDifficulty - a string representing the difficulty enum : PEACEFUL EASY NORMAL HARD
+         * 
+         * @remarks
+         * Only supports 1.12.2, does nothing on other MC versions.  
+         * Does nothing if run on a dedicated server, Singleplayer Only
+         */
+        SetDifficulty: function SetDifficulty(stringDifficulty) {
+            if (this.GetMCVersion() == "1.12.2") {
+                var FMLCommonHandler = Java.type("net.minecraftforge.fml.common.FMLCommonHandler");
+                var server = FMLCommonHandler.instance().getMinecraftServerInstance();
+                var EnumDifficulty = Java.type("net.minecraft.world.EnumDifficulty");
+                var enumDifficulty = null;
+                switch (stringDifficulty) {
+                    case "PEACEFUL":
+                        enumDifficulty = EnumDifficulty.PEACEFUL;
+                        break;
+                    case "EASY":
+                        enumDifficulty = EnumDifficulty.EASY;
+                        break;
+                    case "NORMAL":
+                        enumDifficulty = EnumDifficulty.NORMAL;
+                        break;
+                    case "HARD":
+                        enumDifficulty = EnumDifficulty.HARD;
+                        break;
+                }
+                server.func_147139_a(enumDifficulty);
+            }
         },
 
         /**
@@ -518,7 +567,6 @@ var Utilities = (function () {
         /**
          * Sorts the given numbers array in ascending order.
          * @param {number[]} arr - The array of numbers to sort. The array is modified in place.
-         * @returns {void}
          */
         SortNumeric: function SortNumeric(arr) {
             var i = 0, j;
@@ -721,6 +769,7 @@ var Utilities = (function () {
          * Converts MC/CustomNpcs-formatted JSON to readible JSON that can be parsed.
          * @param {string} MCJSONFormatFile - Minecraft JSON data
          * @returns {string} Valid-parsable JSON, which is not in the Minecraft format
+         * 
          * @remarks **Warning:** This function performs a naive regex replacement and may fail to 
          * produce valid JSON for unexpected input formats. In particular, invalid colon `:` placement.
          */
