@@ -1,4 +1,4 @@
-/* v1.2 - Legacy Support-> StandardUtil12 Plugin | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v1.3 - Legacy Support-> StandardUtil12 Plugin | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Re-implements deprecated methods
  * Installation:
  * Paste this code at the bottom of the StandardUtil12.js script file
@@ -47,6 +47,9 @@ if (true) {
         Utilities.GetEntityForwardVector = function (entity) { return Utilities.GetForward2D(entity); };
         Utilities.SetPitch = function (player, pitch) { return Utilities.SetPlayerPitch(player, pitch); };
         Utilities.FaceRotation = function (entity, vec) { return Utilities.EntityFaceDirection(entity, vec); };
+
+        Utilities.AngleToVector = function AngleToVector(yaw) { return Utilities.ToHeading(yaw); };
+        Utilities.GetVectorForward = function GetVectorForward(yaw) { return Utilities.ToHeading(yaw); };
 
     })();
 }

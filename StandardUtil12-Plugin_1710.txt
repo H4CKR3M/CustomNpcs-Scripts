@@ -1,4 +1,4 @@
-/* v2.1.1 - 1.7.10 Support-> StandardUtil12 Plugin | Verified 1.7.10, 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.1.2 - 1.7.10 Support-> StandardUtil12 Plugin | Verified 1.7.10, 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Allows StandardUtil12 to work in MC 1.7.10
  * Supports Traditional Hooks as well as CustomNpcs+ event scripts
  * Installation:
@@ -113,7 +113,7 @@ if (true) {
                     Utilities.Broadcast("&7--- set to Manual Rotation in Movement Settings.");
                     Utilities.Broadcast("&7--- &7Hide &7Warnings: &6Utilities.show1710Warnings &6= &6false;");
                 }
-                entity.setRotation(this.Angle(entity.x - vec.x, entity.z - vec.z));
+                entity.setRotation(Utilities.Angle(entity.x - vec.x, entity.z - vec.z));
             };
             Utilities.CanAnyoneSeeMe = function (entity, range) {
                 var np = entity.getSurroundingEntities(range, 1);
@@ -198,11 +198,11 @@ if (true) {
             Utilities.GetItemTags = function (itemStack) {
                 if (itemStack == null)
                     return null;
-                for (var i = 0; i < this._invalidItems.length; i++) {
-                    if (itemStack.getName() == this._invalidItems[i])
+                for (var i = 0; i < Utilities._invalidItems.length; i++) {
+                    if (itemStack.getName() == Utilities._invalidItems[i])
                         return null;
                 }
-                return this.GetItemTagsUnsafe(itemStack);
+                return Utilities.GetItemTagsUnsafe(itemStack);
             };
             Utilities._invalidItems = ["customnpcs:npcScripter", "minecraft:writable_book", "minecraft:written_book",
                 "minecraft:chest", "etfuturem:shulker_box"],
