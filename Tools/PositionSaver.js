@@ -1,37 +1,50 @@
-/* v2.2 - PositionSaver Tool | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
+/* v3.0 - PositionSaver Tool | ItemScript | Minecraft 1.12.2 (05Jul20) | Written by Rimscar 
  * Right-Click to save a json of nearby mob positions to world data
  * 
- * LOAD AUTOMATICALLY - Requires: FUtil, HyperMobSpawner12
+ * LOAD AUTOMATICALLY - Requires: HyperMobSpawner12
  */
 
 var Config = {
     bannedTitles: [ "persist" ],
     bannedTags: [],
     yConstraints: { min: 0, max: 255 },
-    range: 80,
+    range: 40,
     despawn: true,
 
-    // NOT RECOMMENDED
     removeSpaces: false, 
-    legacyMode: false
 }
 
 function init(e){
-    e.item.setCustomName("§6§lSave Nearby Mob Positions §e[§3§l2§e]");
+    e.item.setCustomName("§6Save Nearby Mob Positions §e[§3§l3§e]");
     e.item.setLore(GetLore(e));
     e.item.setTexture(293, "minecraft:diamond_hoe");
     e.item.setItemDamage(293);
     e.item.setDurabilityShow(false);
     e.item.setMaxStackSize(1);
 
-    // Auto-Load Libraries
-    if (typeof FUtil === 'undefined')
-        TryLoad(e, "FUtil.js");
-    if (Config.legacyMode)
+    // HyperMobSpawner 1.x Support
+    try {
+        var dummy_oldVersion = HyperMobSpawner.mobSpawner.summonID;
+        Config.legacyMode = true;
         if (typeof HyperMobSpawner === 'undefined')
-            TryLoad(e, "HyperMobSpawner12.js");
-    else if (typeof HyperMobSpawn === 'undefined')
-        TryLoad(e, "HyperMobSpawner12.js");
+            TryLoad("HyperMobSpawner12.js");
+    } 
+    catch (ex) {
+        if (typeof HyperMobSpawn === 'undefined') {
+            TryLoad("HyperMobSpawner12.js");
+            // @ts-ignore
+            HyperMobSpawn.INTERNAL_Tick = function () { }; // Erase the Auto-Hook
+
+            try {
+                // @ts-ignore
+                var dummy_newishVersionButStillOld = HyperMobSpawn.GetSummonID();
+            } catch (ex) {
+                // HyperMobSpawner 2.x Support
+                // @ts-ignore
+                HyperMobSpawn.GetSummonID = function () { return HyperMobSpawn.P.summonID; }
+            }
+        }
+    }
 }
 
 function interact(e){
@@ -110,21 +123,21 @@ function GetLore(e){
     return loreString;
 }
 
-function TryLoad(e, fileName){
-    var success = false;
-    var source = new java.io.File(e.API.getWorldDir() + "/scripts/ecmascript");
+function TryLoad(filename) {
+    var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+    var source = new java.io.File(API.getWorldDir() + "/scripts/ecmascript");
     if (!source.exists()) {
         source.mkdir();
         return false;
     }
     if (source.isDirectory()) {
         var listFile = source.listFiles();
-        for(var i = 0; i < listFile.length; i++){
+        for (var i = 0; i < listFile.length; i++) {
             var f = listFile[i];
-            if (!f.isDirectory() && f.getName() == fileName){
+            if (!f.isDirectory() && f.getName() == filename) {
                 try {
-                    load(f); 
-                    success = true;
+                    load(f);
+                    return true;
                 } catch (ex) {
                     ex.printStackTrace(java.lang.System.out);
                     break;
@@ -132,10 +145,7 @@ function TryLoad(e, fileName){
             }
         }
     }
-    if (!success){
-        e.API.getIWorlds()[0].broadcast("§4§lERROR §cCould not initialize §3SNMP-2");
-        e.API.getIWorlds()[0].broadcast("§7" + fileName + " not found in <world>/customnpcs/scripts/ecmascript/");
-    }
+    return false;
 }
 
 function GetStringWithoutSpaces(string){
@@ -148,7 +158,7 @@ function HasInvalidTag(npc){
             return true;
         }
     }
-    return npc.hasTag(Config.legacyMode ? HyperMobSpawner.mobSpawner.summonID : HyperMobSpawn.P.summonID);
+    return npc.hasTag(Config.legacyMode ? HyperMobSpawner.mobSpawner.summonID : HyperMobSpawn.GetSummonID());
 }
 
 function HasInvalidTitle(npc){
