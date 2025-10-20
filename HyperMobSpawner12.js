@@ -1,4 +1,4 @@
-/* v3.1 - HyperMobSpawner12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v3.1.1 - HyperMobSpawner12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Load This Script on all HMobSpawner Objects */
 
 var HyperMobSpawn = (function () { var _HyperMobSpawn = {};
@@ -16,7 +16,7 @@ var HyperMobSpawn = (function () { var _HyperMobSpawn = {};
     _HyperMobSpawn.world = null;
     _HyperMobSpawn.tab = 2;
 
-    _HyperMobSpawn.GetSummonID = function() { P.summonID; };
+    _HyperMobSpawn.GetSummonID = function() { return P.summonID; };
 
     var P = {
         debug: false,

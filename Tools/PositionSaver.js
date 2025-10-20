@@ -14,46 +14,53 @@ var Config = {
     removeSpaces: false, 
 }
 
+var spawnerVersion = 0;
+
 function init(e){
-    e.item.setCustomName("§6Save Nearby Mob Positions §e[§3§l3§e]");
+    e.item.setCustomName("§6Save Nearby Mob Positions §e[§4§l?§e]");
     e.item.setLore(GetLore(e));
     e.item.setTexture(293, "minecraft:diamond_hoe");
     e.item.setItemDamage(293);
     e.item.setDurabilityShow(false);
     e.item.setMaxStackSize(1);
 
-    // HyperMobSpawner 1.x Support
+    TryLoad("HyperMobSpawner12.js");
+
+    // Determine Mob Spawner Version
     try {
         var dummy_oldVersion = HyperMobSpawner.mobSpawner.summonID;
-        Config.legacyMode = true;
-        if (typeof HyperMobSpawner === 'undefined')
-            TryLoad("HyperMobSpawner12.js");
+        spawnerVersion = 1;
     } 
-    catch (ex) {
-        if (typeof HyperMobSpawn === 'undefined') {
-            TryLoad("HyperMobSpawner12.js");
+    catch (ex) {}
+    if (spawnerVersion == 0){
+        try {
             // @ts-ignore
-            HyperMobSpawn.INTERNAL_Tick = function () { }; // Erase the Auto-Hook
-
-            try {
-                // @ts-ignore
-                var dummy_newishVersionButStillOld = HyperMobSpawn.GetSummonID();
-            } catch (ex) {
-                // HyperMobSpawner 2.x Support
-                // @ts-ignore
-                HyperMobSpawn.GetSummonID = function () { return HyperMobSpawn.P.summonID; }
-            }
+            var dummy_newishVersionButStillOld = HyperMobSpawn.GetSummonID();
+            spawnerVersion = 3;
+        } catch (ex) {
+            spawnerVersion = 2;
         }
     }
+
+    // Adjust Settings based on mob spawner version
+    switch(spawnerVersion){
+        case 1:
+            Config.legacyMode = true;
+            HyperMobSpawn.GetSummonID = function () { return HyperMobSpawner.mobSpawner.summonID; }
+            break;
+        case 2:
+            HyperMobSpawn.GetSummonID = function () { return HyperMobSpawn.P.summonID; }
+            break;
+        case 3:
+            // @ts-ignore
+            HyperMobSpawn.INTERNAL_Tick = function () { }; // <--- Erase the Auto-Hook
+            break;
+    }
+
+    e.item.setCustomName("§6Save Nearby Mob Positions §e[§3§l" + spawnerVersion + "§e]");
 }
 
 function interact(e){
-
-    if (!Config.legacyMode && typeof HyperMobSpawn === 'undefined' && typeof HyperMobSpawner !== 'undefined'){
-        e.API.getIWorlds()[0].broadcast("§4§lERROR §cLEGACY MODE was disabled, but you are clearly using an old version of HyperMobSpawner!!!!");
-        e.API.getIWorlds()[0].broadcast("§7Recommended: Please enable §3Config.legacyMode§7 on this tool");
-        return;
-    }
 
     var ne = e.player.world.getNearbyEntities(e.player.getPos(), Config.range, 2);
     if (ne.length > 0){
@@ -158,7 +165,7 @@ function HasInvalidTag(npc){
             return true;
         }
     }
-    return npc.hasTag(Config.legacyMode ? HyperMobSpawner.mobSpawner.summonID : HyperMobSpawn.GetSummonID());
+    return npc.hasTag(HyperMobSpawn.GetSummonID());
 }
 
 function HasInvalidTitle(npc){
