@@ -5,7 +5,7 @@ var Utilities = (function () {
     return {
         /**
          * Sends a message in chat for all players.
-         * @param {string} msg - chat message
+         * @param {*} msg - chat message
          */
         Broadcast: function Broadcast(msg) {
             if (msg == null) return;
@@ -18,7 +18,7 @@ var Utilities = (function () {
         /**
          * Sends a unique message to given player
          * @param {IPlayer} player - player who receives the message
-         * @param {string} msg - chat message
+         * @param {*} msg - chat message
          */
         Message: function Message(player, msg) {
             if (msg == null) return;
