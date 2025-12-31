@@ -1,7 +1,7 @@
 # Scripts for the Minecraft [CustomNpcs](https://www.curseforge.com/minecraft/mc-mods/custom-npcs) Mod
 Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
-**[MIT LICENSE]** - Credit is _appreciated_ but not _required!_
+**[MIT LICENSE]** - Credit, _while appreciated_, is not _required!_
 
 * Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
 

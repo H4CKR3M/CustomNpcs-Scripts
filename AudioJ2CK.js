@@ -1,4 +1,4 @@
-/* v0.3.1 - AudioJ2CK | Loadable from Anywhere* / must also be Loaded in PlayerScript as well | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v1.0 - AudioJ2CK | Loadable from Anywhere* - but must also be Loaded in PlayerScript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  *
  * A better multi-Track audio player to satisfy your creativity!
  * 
@@ -27,19 +27,32 @@ var Audio = (function () { var _Audio = {};
     var P = {
         debugThrowErrors: true,
         world: null,
-        keyPrefix: "J2CK_",
-        keyA: "J2CKA",
+        keyPrefix: "__J2CK_",
+        keyA: "__J2CKA",
         path: "/customnpcs/assets/customnpcs/sounds/audiojack/",
         extension: ".wav",
 
-        AutoExec: function AutoExec() {
-            this.world = Java.type("noppes.npcs.api.NpcAPI").Instance().getIWorlds()[0];
+        GetClip: function GetClip(filename) { 
+            var System = Java.type("java.lang.System");
+            var key = this.keyPrefix + filename;
+            return System.getProperties().get(key);
         },
-
-        GetClip: function GetClip(filename) { return this.world.getTempdata().get(this.keyPrefix + filename); },
-        SetClip: function SetClip(filename, clip) { this.world.getTempdata().put(this.keyPrefix + filename, clip); },
-        GetAllFileNames: function GetAllFileNames() { return this.world.getTempdata().has(this.keyA) ? this.world.getTempdata().get(this.keyA) : []; },
-        SetAllFileNames: function SetAllFileNames(fNames) { this.world.getTempdata().put(this.keyA, fNames); },
+        SetClip: function SetClip(filename, clip) { 
+            var System = Java.type("java.lang.System");
+            var key = this.keyPrefix + filename;
+            if (clip == null)
+                System.getProperties().remove(key);
+            else
+                System.getProperties().put(key, clip);
+        },
+        GetAllFileNames: function GetAllFileNames() { 
+            var System = Java.type("java.lang.System");
+            return System.getProperties().get(this.keyA) != null ? System.getProperties().get(this.keyA) : [];
+        },
+        SetAllFileNames: function SetAllFileNames(fNames) { 
+            var System = Java.type("java.lang.System");
+            System.getProperties().put(this.keyA, fNames);
+        },
 
         StartClip: function StartClip(filename, loop, gain) {
             var AudioSystem = Java.type('javax.sound.sampled.AudioSystem');
@@ -180,9 +193,10 @@ var Audio = (function () { var _Audio = {};
         },
 
         Say: function Say(message) {
-            this.world.broadcast("§3[§b§lJ2CK§3]: §7" + message);
+            var world = Java.type("noppes.npcs.api.NpcAPI").Instance().getIWorlds()[0];
+            world.broadcast("§3[§b§lJ2CK§3]: §7" + message);
         }
-    }; P.AutoExec();
+    };
 
     /* [AUTO-HOOK] ---- TREAT AS PRIVATE */
     _Audio.AutoHookID = "AudioJ2CK";

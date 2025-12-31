@@ -1,4 +1,4 @@
-/* v2.0 - Jack's Tunes | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
+/* v2.1 - Jack's Tunes | Playerscript | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar 
  * Requires: AudioJ2CK, [OPTIONAL: DLoad, FUtil]
  *
  * Plays WAV files from .minecraft/customnpcs/assets/customnpcs/sounds/audiojack
@@ -9,7 +9,7 @@
 
 var JTunes = (function () { var _JTunes = {};
 
-    /* [Auto-Hook] : tick, login */
+    /* [Auto-Hook] : init, tick, login */
 
     _JTunes.StopMusic = function () { P.StopBackgroundMusic(); };
 
@@ -66,6 +66,17 @@ var JTunes = (function () { var _JTunes = {};
         songKey: "JTUNE",
         bossKey: "JBOSS",
         bossKeyBackup: "JBOSSB",
+
+        Init: function Init(e) {
+            var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+            var world = API.getIWorlds()[0];
+            if (!world.getTempdata().has(this.scriptReloadKey)) {
+                if (typeof Audio === 'undefined') { throw ("\n\nJTunes: You forgot to load the script AudioJ2CK\n\n"); }
+
+                Audio.StopAll();
+                world.getTempdata().put(this.scriptReloadKey, 1);
+            }
+        },
 
         Login: function Login(e) {
 
@@ -203,10 +214,17 @@ var JTunes = (function () { var _JTunes = {};
 
     /* [AUTO-HOOK] ---- TREAT AS PRIVATE */
     _JTunes.AutoHookID = "JTunes";
+    _JTunes.INTERNAL_Init = function (e) { P.Init(e); };
     _JTunes.INTERNAL_Tick = function (e) { P.Tick(e); };
     _JTunes.INTERNAL_Login = function (e) { P.Login(e); };
     return _JTunes;
 }());
+
+JTunes.COPY_init = (typeof init === 'function' && !init.hasOwnProperty(JTunes.AutoHookID) && (Date.now() - (init.CreatedAt || Date.now())) < 200) ? init : function () { };
+var init = function (e) {
+    JTunes.init(e);
+    JTunes.INTERNAL_Init(e);
+}; init[JTunes.AutoHookID] = true; init.CreatedAt = Date.now();
 
 JTunes.COPY_tick = (typeof tick === 'function' && !tick.hasOwnProperty(JTunes.AutoHookID) && (Date.now() - (tick.CreatedAt || Date.now())) < 200) ? tick : function () { };
 var tick = function (e) {
