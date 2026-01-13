@@ -16,7 +16,7 @@ var Utilities = (function () {
         },
 
         /**
-         * Sends a unique message to given player
+         * Sends a unique message to given player.
          * @param {IPlayer} player - player who receives the message
          * @param {*} msg - chat message
          */
@@ -30,7 +30,7 @@ var Utilities = (function () {
         },
 
         /**
-         * Gets estimated Minecraft version
+         * Gets estimated Minecraft version.
          * (No 1.7.10 Support by default: requires 1.7.10 Plugin)
          * @returns {string} A string representing the MC version. For example: "1.12.2"
          */
@@ -63,12 +63,12 @@ var Utilities = (function () {
         },
 
         /**
-         * Sets the in-game difficulty
+         * Sets the in-game difficulty.
          * @param {string} stringDifficulty - a string representing the difficulty enum : PEACEFUL EASY NORMAL HARD
          * 
          * @remarks
          * Only supports 1.12.2, does nothing on other MC versions.  
-         * Does nothing if run on a dedicated server, Singleplayer Only
+         * Does nothing if run on a dedicated server. This only sets difficulty on Singleplayer.
          */
         SetDifficulty: function SetDifficulty(stringDifficulty) {
             if (Utilities.GetMCVersion() == "1.12.2") {
@@ -95,7 +95,7 @@ var Utilities = (function () {
         },
 
         /**
-         * Adds two vectors together
+         * Adds two vectors together.
          * @param {IVector} v1 
          * @param {IVector} v2 
          * @returns {IVector} A new vector representing the sum of 'v1' and 'v2'
@@ -108,7 +108,7 @@ var Utilities = (function () {
          * Subtracts one vector from another.
          * @param {IVector} v1 - The vector to subtract from.
          * @param {IVector} v2 - The vector to subtract.
-         * @returns {IVector} A new vector representing the difference 'v1' - 'v2'
+         * @returns {IVector} A new vector representing the difference 'v1' minus 'v2'
          */
         Diff: function Diff(v1, v2) {
             return { x: v1.x - v2.x, y: v1.y - v2.y, z: v1.z - v2.z, };
@@ -187,7 +187,7 @@ var Utilities = (function () {
 
         /**
          * Returns a zero vector.
-         * @returns {IVector} A vector with all components set to 0.
+         * @returns {IVector} A 3D vector with all parameters set to zero.
          */
         Zero: function Zero() {
             return { x: 0, y: 0, z: 0 }
