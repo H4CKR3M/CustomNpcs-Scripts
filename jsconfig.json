@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        // "target": "ES5",
+        "target": "ES2021",
+        "lib": [
+            "ES2021"
+        ],
+        "checkJs": true
+    },
+    "include": [
+        "globals.d.ts",
+        "**/*.js"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/node_modules/*"
+    ]
+}
