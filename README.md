@@ -5,6 +5,8 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
 * Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
 
+<br/><br/>
+
 ## Table of Contents
 1. [Guide](#user-content-guide-how-to-load-scripts): How to Load Scripts?
 ### Audio
@@ -23,6 +25,8 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 11. [**StandardUtil12**](#user-content-standardutil12) - Vector Math at Your Fingertips
 12. [Legacy 1.7.10 Ports](#user-content-documentation-1710)
 
+<br/><br/>
+
 ## Guide: How to Load Scripts?
 1. Place all scripts you want to use in the `<world>/customnpcs/scripts/ecmascript/` folder.
 2. In Minecraft, Right-Click NPC/Block with the npcScripter
@@ -37,8 +41,9 @@ function init(e){
 }
 ```
 
+<br/><br/>
+
 ## JTunes
-### JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
 
 ### Setup
@@ -54,8 +59,9 @@ world.getTempdata().put("JBOSS", "my_song_name");
 world.getTempdata().put("JBOSS", null);
 ```
 
+<br/><br/>
+
 ## AudioJ2CK
-### AudioJ2CK
 Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
 
 1. Load the script `AudioJ2CK.js` anywhere (npc, block, or player)
@@ -70,6 +76,9 @@ Audio.Stop("wavFileName");
 Audio.StopAll();
 Audio.IsPlaying("wavFileName");
 ```
+
+<br/><br/>
+
 ## HyperSpawnpoint12
 ### HyperSpawnpoint12
 Location-Based Spawnpoints with an optional Spectator Mechanic (for Singleplayer or Multiplayer)
@@ -227,9 +236,10 @@ function tick(e){
 }
 ```
 
+<br/><br/>
+
 ## HyperMobSpawner12
-### HyperMobSpawner12
-An easy to use despawning/respawning system for enemies! Here's how it works, if the player dies, all enemies are despawned/respawned **lag-free**!
+An advanced despawning/respawning system for mobs: creates a "spawner" block that respawns all enemies whenever the player dies.
 
 Requires:
 * [**HyperMobSpawner12.js**](https://github.com/H4CKR3M/CustomNpcs-Scripts/blob/main/HyperMobSpawner12.js)
@@ -281,8 +291,9 @@ Setup:
   <img src="img/SNMP.png" alt="Logo" width="920" height="512">
 </div>
 
-## DigitalTrinkets12
+<br/><br/>
 
+## DigitalTrinkets12
 Library for converting items to *digital strings* and vice-versa.
 
 Requires: `StandardUtil12`
@@ -322,6 +333,8 @@ function init(e){
 ### How does the format work?
 
 The digital trinkets format is an intermediary format for storing items in convenient strings, for use spawning them-in later. How the items are stored isn't too important. Suffice it to say, Digital Trinkets uses a list delimited by the `@` symbol and a code character following it *(EX: `@0` is code for MC ID)*. Rather than create or edit items in this format, it is recommended to make an item normally using `/give` commands or using the `BItemRenamer`, then use the `BItemRenamer` to "*Digitize*" the item into the digital trinkets format.
+
+<br/><br/>
 
 ## BItemRenamer
 Advanced Multi-tool for item-editing entirely in-game.
@@ -497,6 +510,8 @@ function init(e){ BItemRenamer.Init(e, config); } function interact(e){ BItemRen
 
 This mode creates an identical item from the `clipboard`. Remember: to save items to the clipboard, use the **<span style="color:#00AAAA">Digitizer</span>** mode.
 
+<br/><br/>
+
 ## BTagLister
 The BTagLister is a tool for viewing NBT tags on items, custom or otherwise.
 
@@ -545,6 +560,8 @@ BTagLister.printAllJson = true;
   <img src="img/taglister3.jpg" alt="Logo" width="1271" height="426"></img>
 </div>
 <br />
+
+<br/><br/>
 
 ## ACInstaller
 All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically copied to the global folder <.minecraft>/customnpcs/
@@ -596,8 +613,9 @@ function tick(e){
 }
 ```
 
+<br/><br/>
+
 ## FUtil
-### FUtil
 ```js
 FUtil.CopyDirectory(sourcePath, destPath);
 FUtil.CopyFile(sourcePath, destPath);
@@ -642,29 +660,32 @@ function init(e){
 }
 ```
 
+<br/><br/>
+
 ## StandardUtil12
-### StandardUtil12
-A set of useful library functions for use in 1.12/1.16. Many of my scripts require this file to be loaded. To use simply write `Utilities.` from anywhere npc/player/block/etc. A vector `v` can be anything with the following data structure: `{ x:0, y:0, z:0 }`. That includes custom data structures as well as literally just passing in npc, player, entity, etc.
+The Standard Utility library contains a set of functions for use in 1.12+ *(Tested on 1.12.2, 1.16.5, and 1.20.1-Unofficial).* Many of my scripts require this file to be loaded. To use it, simply write `Utilities.*` from anywhere *- including npc/player/block/etc... scripts.* The vector `v` parameter, can be anything with the following data structure: `{ x:0, y:0, z:0 }`. That includes custom data structures as well as literally just passing in an npc, player, entity, etc.
 ### Generic
 ```js
 Utilities.Broadcast(msg);
 Utilities.Message(player, msg);
-Utilities.GetMCVersion(); // returns a string -> 1.7.10 / 1.12.2 / 1.16.5
-Utilities.IsPluginInstalled(pluginName);
+Utilities.GetMCVersion(); // Returns a string -> 1.7.10 / 1.12.2 / 1.16.5
+Utilities.GetDifficulty();
+Utilities.SetDifficulty(stringDifficulty); // Sets the in-game difficulty - given a string : PEACEFUL EASY NORMAL HARD
 ```
 
 ### Vector Math
 ```js
 Utilities.Add(v1, v2);
 Utilities.Diff(v1, v2);
+Utilities.Mult(v, integer);
 Utilities.Dot(v1, v2);
 Utilities.Cross(v1, v2);
-Utilities.Mult(v, integer);
 Utilities.Angle(z, x);
 Utilities.ToDegrees(angle);
 Utilities.ToRadians(degrees);
 Utilities.IsBetween(v, v1, v2);
 Utilities.Zero();
+Utilities.Up();
 Utilities.Normalize(v);
 Utilities.Magnitude(v);
 Utilities.GetDistance(source, target); // inputs can be an ENTITY or a VECTOR
@@ -679,17 +700,21 @@ Utilities.GetDirectionTowardsTarget(source, target); // inputs can be either an 
 Utilities.Refresh(npc, OPTIONAL_bResetAll); // Refreshes visual changes. Ie, eyes, texture-overlay, player skin, etc...
 Utilities.CanAnyoneSeeMe(npc, range); // [1.16 ONLY]
 Utilities.IsTargetWatchingMe(entity, target, viewAngle, maxDistance);
-Utilities.PlayerFaceTarget(player, target);
-Utilities.EntityFaceDirection(entity, vec);
+Utilities.PlayerFaceTarget(player, target); // for Players
+Utilities.EntityFaceTarget(entity, target); // for NPCs
+Utilities.EntityFaceDirection(entity, vec); // for NPCs
 Utilities.SetPlayerPosition(player, x, y, z, yaw, pitch);
 Utilities.SetPlayerRotation(player, yaw, pitch);
 Utilities.SetPlayerPitch(player, pitch);
+Utilities.ToHeading(yaw); //  Yaw to Y-Axis Heading Vector - EX: EAST is [1,0,0] and NORTH is [0,0,-1] 
 
 Utilities.GetSafeLocationNearEntity(entity, rMin, rMax);
 Utilities.IsEnemyNearby(player, range);
 Utilities.IsTeleportPosSafe(world, v); // avoid walls
 Utilities.GetRandomRadius(min, max); // returns random positive/negative number
 Utilities.SortNumeric(array);
+Utilities.StringIncludes(strBase, substringSearch);
+Utilities.RemoveSubstring(strBase, substringRemove);
 Utilities.Clamp(num, min, max);
 Utilities.IndexOfNth(str, char, index);
 Utilities.IntToRGB(colorInt);
@@ -717,6 +742,10 @@ Utilities.Play(entity, soundName); // can be an NPC (will play nearby) or a play
 Utilities.Stop(entity, soundName);
 ```
 ### Plugins
+```js
+Utilities.IsPluginInstalled(pluginName);
+Utilities.InstallPlugin(pluginName);
+```
 To extend the functionality of StandardUtil12, you can install plugins to either add your own methods or even add support for 1.7.10. 
 1. To install a plugin, open a plugin file *(in this case `StandardUtil12-Plugin_1710.txt`)* and copy all of the code. 
 2. Then paste the code at the bottom of your `StandardUtil12.js` file. 
@@ -730,6 +759,8 @@ var hasPluginLegacy = Utilities.IsPluginInstalled("LegacySupport");
 Utilities.Broadcast("The 1.7.10 Plugin is installed? " + hasPlugin1710);
 Utilities.Broadcast("The LEGACY Plugin is installed? " + hasPluginLegacy);
 ```
+
+<br/><br/>
 
 ## DOCUMENTATION 1.7.10
 ### DOCUMENTATION 1.7.10

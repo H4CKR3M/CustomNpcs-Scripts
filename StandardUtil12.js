@@ -1,4 +1,4 @@
-/* v3.4.2 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v3.4.3 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function () {
     var Plugins = [];
@@ -410,20 +410,6 @@ var Utilities = (function () {
         },
 
         /**
-         * Yaw to Y-Axis Heading Vector - EX: EAST is [1,0,0] and NORTH is [0,0,-1] 
-         * @param {number} yaw 
-         * @returns {IVector} direction vector for the given yaw
-         */
-        ToHeading: function ToHeading(yaw) {
-            var dir = {
-                x: Math.cos(Utilities.ToRadians(yaw)),
-                y: 0,
-                z: Math.sin(Utilities.ToRadians(yaw)),
-            };
-            return Utilities.RotateAboutY(dir, -90);
-        },
-
-        /**
          * Rotates a player to face a given target position.
          *
          * @param {IPlayer} player - The player whose rotation will be changed.
@@ -511,6 +497,20 @@ var Utilities = (function () {
             // HACK: setPitch() is non-functional, so just use MC built-in <TP> command
             API.executeCommand(player.world, "/tp " + player.getDisplayName() + " "
                 + player.x + " " + player.y + " " + player.z + " " + player.getRotation() + " " + pitch);
+        },
+
+        /**
+         * Yaw to Y-Axis Heading Vector - EX: EAST is [1,0,0] and NORTH is [0,0,-1] 
+         * @param {number} yaw 
+         * @returns {IVector} direction vector for the given yaw
+         */
+        ToHeading: function ToHeading(yaw) {
+            var dir = {
+                x: Math.cos(Utilities.ToRadians(yaw)),
+                y: 0,
+                z: Math.sin(Utilities.ToRadians(yaw)),
+            };
+            return Utilities.RotateAboutY(dir, -90);
         },
 
         /**
@@ -866,13 +866,6 @@ var Utilities = (function () {
                 API.executeCommand(np[i].world, "/" + prefix + "playsound " + soundName + " voice " + np[i].getName()
                     + " " + x + " " + y + " " + z + " " + OPTIONAL_volume);
             }
-        },
-
-        GetRotationTowardsTarget: function GetRotationTowardsTarget(source, target) {
-            var direction = Utilities.GetDirectionTowardsTarget(source, target);
-            var rot = Math.atan2(direction.z, direction.x) * (180 / Math.PI) - 90;
-            rot = (rot % 360 + 360) % 360;
-            return rot;
         },
 
         /**
