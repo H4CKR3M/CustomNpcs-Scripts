@@ -564,12 +564,34 @@ BTagLister.printAllJson = true;
 <br/><br/>
 
 ## ACInstaller
-All files stored in <world>/customnpcs/CONTENT/customnpcs will be automatically copied to the global folder <.minecraft>/customnpcs/
+All files stored in `<world>/customnpcs/CONTENT/customnpcs` will be automatically copied to the global folder `<.minecraft>/customnpcs/`
 
 Example:
-1. Add skins/sounds/etc... to your <.minecraft>/customnpcs/etc... folder
-2. Copy <.minecraft>/customnpcs to your <world>/customnpcs/CONTENT folder (make the CONTENT folder if it does not exist)
-3. Run `ACI.Install()` when a player joins your world
+
+1. Add `ACInstaller.js` to your `<world>/customnpcs/scripts/ecmascript` folder.
+2. Edit the `ACInstaller.js` file with notepad and adjust the following parameters:
+```js
+mapNickname: "§b§lMy Awesome Map", // The name of your map, stylized, if you prefer
+mapFolderNickname: "My Awesome Map", // The folder name of your map
+verificationCode: "MYAWESOMEMAP", // A CODE WORD for your map, with no spaces
+```
+* Skins are normally located in your `<.minecraft>/customnpcs/` folder.
+* For this guide, I recommend putting all of the skins and sounds in here first, and then copying them as per these instructions:
+3. Make a new folder named `CONTENT` inside of your `<world>/customnpcs` folder.
+4. Copy your full skins folder `<.minecraft>/customnpcs` and put the copy inside of `<world>/customnpcs/CONTENT`
+* At this point, the following folder structure should exist: `<world>/customnpcs/CONTENT/customnpcs/assets/customnpcs/textures/entity`
+5. Make a new file named `VERIFY.acinstaller` inside of the `<world>/customnpcs/CONTENT/customnpcs` folder
+* Ensure the file is named `VERIFY.acinstaller` and not `VERIFY.acinstaller.txt` The *txt* extension has to be removed!!
+6. Edit the new file `VERIFY.acinstaller` with notepad and on the first line, write the `verificationCode` from step 2.
+* In this example, the `verificationCode` is `MYAWESOMEMAP`
+7. Load the `ACInstaller.js` script on a scripted block and add the following code when a player joins your world:
+```js
+function init(e){
+    ACI.Install();
+}
+```
+
+The *Auto-Content-Installer* has three available methods:
 
 ```js
 ACI.Install();
@@ -577,7 +599,7 @@ ACI.IsInstalled();
 ACI.Say(msg);
 ```
 
-Example: Locks out players until they fully restarted Minecraft [required for sounds])
+Example: Instead of simply calling ACI.Install() whenever the player logs in, here is a better example that **Locks out players until they fully restarted Minecraft** [required for sounds])
 ```js
 // Requires: FUtil, ACInstaller
 // Place this in a ScriptedBlock at spawn
