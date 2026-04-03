@@ -1,4 +1,4 @@
-/* v2.0 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v2.0.1 - FileUtilities | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var FUtil = (function () { var _FUtil = {};
 
@@ -13,7 +13,7 @@ var FUtil = (function () { var _FUtil = {};
      * This function performs a recursive copy of all subdirectories and files under `sourcePath`.  
      * Depending on implementation, existing files in the destination may be overwritten.
      */
-    _FUtil.CopyDirectory = function (sourcePath, destPath) { return P.FUtil.P.CopyDir_Helper(sourcePath, destPath); };
+    _FUtil.CopyDirectory = function (sourcePath, destPath) { return P.CopyDir_Helper(sourcePath, destPath); };
 
     /**
      * Copies a single file from one location to another.
