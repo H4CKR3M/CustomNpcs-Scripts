@@ -5,7 +5,7 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
 * Want to see all of these scripts in action? Check out [METAL WEAPON: RE:COIL](https://www.planetminecraft.com/project/metal-weapon-3-re-coil/)
 
-<br/><br/>
+<br><br>
 
 ## Table of Contents
 1. [Guide](#user-content-how-to-load-scripts): How to Load Scripts?
@@ -26,7 +26,7 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 11. [**StandardUtil12**](#user-content-standardutil12) - Vector Math at Your Fingertips
 12. [Legacy 1.7.10 Ports](#user-content-documentation-1710)
 
-<br/><br/>
+<br><br>
 
 ## Setup-Guide
 
@@ -46,7 +46,7 @@ function init(e){
 ```
 
 ### (Optional) Intellisense Setup
-1. Download [VSCode v1.114](https://update.code.visualstudio.com/1.111.0/win32-x64-user/stable) or older *(NOT compatible with 1.112 or later)*
+1. Download [VSCode v1.111](https://update.code.visualstudio.com/1.111.0/win32-x64-user/stable) or older *(NOT compatible with 1.112 or later)*
 2. Drag `globals.d.ts` and `jsconfig.json` into your working project directory. For most this is the `<world>/customnpcs/scripts/ecmascript` folder.
 3. Any scripts or temporary files in this directory will have full access to the customnpcs documentation / intellisense.
 
@@ -54,15 +54,11 @@ function init(e){
 <div align="left">
   <img src="img/intellisense1.png" alt="Intellisense-Example-1" width="807" height="180"></img>
 </div>
-<br/>
-
-<br>
 <div align="left">
   <img src="img/intellisense2.png" alt="Intellisense-Example-2" width="817" height="157"></img>
 </div>
-<br/>
 
-<br/><br/>
+<br><br>
 
 ## JTunes
 A fully fleshed out audio system utilizing the power of AudioJ2CK for 1.12.2+ Play seamless background/boss music, *anytime, anywhere!*
@@ -80,7 +76,7 @@ world.getTempdata().put("JBOSS", "my_song_name");
 world.getTempdata().put("JBOSS", null);
 ```
 
-<br/><br/>
+<br><br>
 
 ## AudioJ2CK
 Place WAV files in `<.minecraft or SERVER_Root>/customnpcs/assets/customnpcs/sounds/audiojack`
@@ -98,7 +94,7 @@ Audio.StopAll();
 Audio.IsPlaying("wavFileName");
 ```
 
-<br/><br/>
+<br><br>
 
 ## HyperSpawnpoint12
 ### HyperSpawnpoint12
@@ -257,7 +253,7 @@ function tick(e){
 }
 ```
 
-<br/><br/>
+<br><br>
 
 ## HyperMobSpawner12
 An advanced despawning/respawning system for mobs: creates a "spawner" block that respawns all enemies whenever the player dies.
@@ -307,12 +303,12 @@ Setup:
 1. Load `PositionSaver.js` on a scripted item - <u>*or copy the code to a scripted item.*</u>
 * NPC positions & clone name are saved to your minecraft world directory. From there you can open the txt file and copy the mob positions to your mob spawner. Magic!
 
-<br />
+<br>
 <div align="left">
   <img src="img/SNMP.png" alt="Logo" width="920" height="512">
 </div>
 
-<br/><br/>
+<br><br>
 
 ## DigitalTrinkets12
 Library for converting items to *digital strings* and vice-versa.
@@ -355,7 +351,7 @@ function init(e){
 
 The digital trinkets format is an intermediary format for storing items in convenient strings, for use spawning them-in later. How the items are stored isn't too important. Suffice it to say, Digital Trinkets uses a list delimited by the `@` symbol and a code character following it *(EX: `@0` is code for MC ID)*. Rather than create or edit items in this format, it is recommended to make an item normally using `/give` commands or using the `BItemRenamer`, then use the `BItemRenamer` to "*Digitize*" the item into the digital trinkets format.
 
-<br/><br/>
+<br><br>
 
 ## BItemRenamer
 Advanced Multi-tool for item-editing entirely in-game.
@@ -475,7 +471,7 @@ Create a brand new item from the values saved in the scripteditem BItemRenamer c
 <div align="left">
   <img src="img/itemrenamer1.jpg" alt="Logo" width="932" height="563"></img>
 </div>
-<br />
+<br>
 
 ```js
 /* v2.2 - Better Item Renamer  -  Right-Click Use, Left-Click Change Mode */
@@ -531,7 +527,7 @@ function init(e){ BItemRenamer.Init(e, config); } function interact(e){ BItemRen
 
 This mode creates an identical item from the `clipboard`. Remember: to save items to the clipboard, use the **<span style="color:#00AAAA">Digitizer</span>** mode.
 
-<br/><br/>
+<br><br>
 
 ## BTagLister
 The BTagLister is a tool for viewing NBT tags on items, custom or otherwise.
@@ -563,14 +559,14 @@ function interact(e){
 <div align="left">
   <img src="img/taglister1.jpg" alt="Logo" width="1271" height="426"></img>
 </div>
-<br/>
+<br>
 
 1. *NOTE: The Better Tag Lister will automatically highlight important tags and hide irrelevant ones.*
 <br>
 <div align="left">
   <img src="img/taglister2.jpg" alt="Logo" width="1271" height="426"></img>
 </div>
-<br />
+<br>
 
 *NOTE: You can also view an item's full NBT structure by setting `printAllJson` to `true`.*
 ```js
@@ -580,9 +576,9 @@ BTagLister.printAllJson = true;
 <div align="left">
   <img src="img/taglister3.jpg" alt="Logo" width="1271" height="426"></img>
 </div>
-<br />
+<br>
 
-<br/><br/>
+<br><br>
 
 ## ACInstaller
 All files stored in `<world>/customnpcs/CONTENT/customnpcs` will be automatically copied to the global folder `<.minecraft>/customnpcs/`
@@ -656,7 +652,7 @@ function tick(e){
 }
 ```
 
-<br/><br/>
+<br><br>
 
 ## FUtil
 ```js
@@ -703,7 +699,7 @@ function init(e){
 }
 ```
 
-<br/><br/>
+<br><br>
 
 ## StandardUtil12
 The Standard Utility library contains a set of functions for use in 1.12+ *(Tested on 1.12.2, 1.16.5, and 1.20.1-Unofficial).* Many of my scripts require this file to be loaded. To use it, simply write `Utilities.*` from anywhere *- including npc/player/block/etc... scripts.* The vector `v` parameter, can be anything with the following data structure: `{ x:0, y:0, z:0 }`. That includes custom data structures as well as literally just passing in an npc, player, entity, etc.
@@ -803,7 +799,7 @@ Utilities.Broadcast("The 1.7.10 Plugin is installed? " + hasPlugin1710);
 Utilities.Broadcast("The LEGACY Plugin is installed? " + hasPluginLegacy);
 ```
 
-<br/><br/>
+<br><br>
 
 ## DOCUMENTATION 1.7.10
 ### DOCUMENTATION 1.7.10
