@@ -8,7 +8,8 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 <br/><br/>
 
 ## Table of Contents
-1. [Guide](#user-content-guide-how-to-load-scripts): How to Load Scripts?
+1. [Guide](#user-content-how-to-load-scripts): How to Load Scripts?
+2. [Guide](#user-content-optional-intellisense-setup): Intellisense Setup
 ### Audio
 2. [**JTunes**](#user-content-jtunes) - Fully Fledged Background music using AudioJ2CK
 3. [**AudioJ2CK**](#user-content-audioj2ck) - 2D Audio / No Input Lag
@@ -27,7 +28,10 @@ Advanced Scripts for Audio / Utilities / Trinkets / CombatCircle &amp; more
 
 <br/><br/>
 
-## Guide: How to Load Scripts?
+## Setup-Guide
+
+### How to Load Scripts?
+
 1. Place all scripts you want to use in the `<world>/customnpcs/scripts/ecmascript/` folder.
 2. In Minecraft, Right-Click NPC/Block with the npcScripter
 3. Select the "Load Scripts" button.
@@ -40,6 +44,23 @@ function init(e){
   Utilities.Broadcast("&4I loaded my first script!");
 }
 ```
+
+### (Optional) Intellisense Setup
+1. Download [VSCode v1.114](https://update.code.visualstudio.com/1.111.0/win32-x64-user/stable) or older *(NOT compatible with 1.112 or later)*
+2. Drag `globals.d.ts` and `jsconfig.json` into your working project directory. For most this is the `<world>/customnpcs/scripts/ecmascript` folder.
+3. Any scripts or temporary files in this directory will have full access to the customnpcs documentation / intellisense.
+
+<br>
+<div align="left">
+  <img src="img/intellisense1.png" alt="Intellisense-Example-1" width="807" height="180"></img>
+</div>
+<br/>
+
+<br>
+<div align="left">
+  <img src="img/intellisense2.png" alt="Intellisense-Example-2" width="817" height="157"></img>
+</div>
+<br/>
 
 <br/><br/>
 
