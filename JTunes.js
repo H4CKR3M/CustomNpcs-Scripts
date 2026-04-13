@@ -222,7 +222,7 @@ var JTunes = (function () { var _JTunes = {};
 
 JTunes.COPY_init = (typeof init === 'function' && !init.hasOwnProperty(JTunes.AutoHookID) && (Date.now() - (init.CreatedAt || Date.now())) < 200) ? init : function () { };
 var init = function (e) {
-    JTunes.init(e);
+    JTunes.COPY_init(e);
     JTunes.INTERNAL_Init(e);
 }; init[JTunes.AutoHookID] = true; init.CreatedAt = Date.now();
 
