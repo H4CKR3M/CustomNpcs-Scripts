@@ -1,4 +1,4 @@
-/* v3.4.3 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
+/* v3.4.4 - StandardUtil12 | Loadable From Anywhere | Verified 1.12.2+ (1.12.2, 1.16.5) | Written by Rimscar */
 
 var Utilities = (function () {
     var Plugins = [];
@@ -846,27 +846,37 @@ var Utilities = (function () {
          * @param {number} z - The Z position where the sound should play.
          * @param {string} soundName - The name of the sound; part of Minecraft or specified in sounds.json
          * @param {number} [OPTIONAL_volume=64] - **Optional** : Playback volume for the sound. Defaults to '64'.
+         * @param {number} [OPTIONAL_pitch=1] - **Optional** : Playback pitch for the sound. Defaults to '1'.
          * @warning This function calls the '/playsound' commands in the game world and will fail silently  
          * if the given soundName doesn't exist.
          */
 
-        PlayAt: function PlayAt(x, y, z, soundName, OPTIONAL_volume) {
+        PlayAt: function PlayAt(x, y, z, soundName, OPTIONAL_volume, OPTIONAL_pitch) {
             if (OPTIONAL_volume == null) { OPTIONAL_volume = 64; }
+            if (OPTIONAL_pitch == null) { OPTIONAL_pitch = 1; }
 
             var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
             var np = API.getIWorlds()[0].getNearbyEntities(x, y, z, 32, 1);
             for (var i = 0; i < np.length; i++) {
 
-                // HACK: avoid "The sound is too far away to be heard" warning msg on 1.16.X
-                var prefix = "";
-                if (Utilities.GetMCVersion() != "1.12.2") {
-                    prefix = "execute at " + np[i].getName() + " run "
+                // HACK: play via customnpcs api : can NEVER be stopped, but creates less lag
+                if (soundName.indexOf("voice") == -1 && Utilities._fastAudio){
+                    var ipos = API.getIPos(x, y, z);
+                    np[i].world.playSoundAt(ipos, soundName, OPTIONAL_volume, OPTIONAL_pitch)
                 }
-
-                API.executeCommand(np[i].world, "/" + prefix + "playsound " + soundName + " voice " + np[i].getName()
-                    + " " + x + " " + y + " " + z + " " + OPTIONAL_volume);
+                else {
+                    // HACK: avoid "The sound is too far away to be heard" warning msg on 1.16.X
+                    var prefix = "";
+                    if (Utilities.GetMCVersion() != "1.12.2") {
+                        prefix = "execute at " + np[i].getName() + " run "
+                    }
+                    
+                    API.executeCommand(np[i].world, "/" + prefix + "playsound " + soundName + " voice " + np[i].getName()
+                        + " " + x + " " + y + " " + z + " " + OPTIONAL_volume);
+                }
             }
         },
+        _fastAudio: false,
 
         /**
          * Plays a sound either to the given player or to all players near a given NPC,
@@ -878,28 +888,45 @@ var Utilities = (function () {
          * @param {IEntity} entity - The target entity (player or NPC).
          * @param {string} soundName - The name of the sound; part of Minecraft or specified in sounds.json
          * @param {number} [OPTIONAL_volume=64] - **Optional** : Playback volume for the sound. Defaults to '64'.
+         * @param {number} [OPTIONAL_pitch=1] - **Optional** : Playback pitch for the sound. Defaults to '1'.
          *
          * @throws Will throw if 'entity' is 'null' is not a player/NPC.
          *
          * @warning This function calls the '/playsound' commands in the game world and will fail silently  
          * if the given soundName doesn't exist.
          */
-        Play: function Play(entity, soundName, OPTIONAL_volume) {
+        Play: function Play(entity, soundName, OPTIONAL_volume, OPTIONAL_pitch) {
             if (OPTIONAL_volume == null) { OPTIONAL_volume = 64; }
+            if (OPTIONAL_pitch == null) { OPTIONAL_pitch = 1; }
             if (entity == null) { throw ("\n\nUtilities: null entity given to Play(entity, soundName)\n"); }
 
             if (entity.getType() == 2) {
                 var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
                 var np = entity.world.getNearbyEntities(entity.x, entity.y, entity.z, 32, 1);
                 for (var i = 0; i < np.length; i++) {
-                    API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " "
-                        + entity.x + " " + entity.y + " " + entity.z + " " + OPTIONAL_volume);
+                    // HACK: play via customnpcs api : can NEVER be stopped, but creates less lag
+                    if (soundName.indexOf("voice") == -1 && Utilities._fastAudio){
+                        var player = /** @type {IPlayer} */ (np[i]);
+                        player.playSound(soundName, OPTIONAL_volume, OPTIONAL_pitch);
+                    }
+                    else {
+                        API.executeCommand(np[i].world, "/playsound " + soundName + " voice " + np[i].getName() + " "
+                            + entity.x + " " + entity.y + " " + entity.z + " " + OPTIONAL_volume);      
+                    }
                 }
             }
             else if (entity.getType() == 1) {
-                var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
-                API.executeCommand(entity.world, "/playsound " + soundName + " voice " + entity.getName() + " "
-                    + entity.x + " " + entity.y + " " + entity.z + " " + OPTIONAL_volume);
+                var player = /** @type {IPlayer} */ (entity);
+                
+                // HACK: play via customnpcs api : can NEVER be stopped, but creates less lag
+                if (soundName.indexOf("voice") == -1 && Utilities._fastAudio){
+                    player.playSound(soundName, OPTIONAL_volume, OPTIONAL_pitch);
+                }
+                else {
+                    var API = Java.type("noppes.npcs.api.NpcAPI").Instance();
+                    API.executeCommand(player.world, "/playsound " + soundName + " voice " + player.getName() + " "
+                        + player.x + " " + player.y + " " + player.z + " " + OPTIONAL_volume);       
+                }
             }
             else
                 throw ("\n\nUtilities: the entity given to Play(entity, soundName) was neither a player, nor an NPC."
