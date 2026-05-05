@@ -67,6 +67,8 @@ declare function ModBaseRate(player: IPlayer, baseRate: number): number;
 declare function OnTargetFound(): void;
 declare function OnTarget(): void;
 declare function OnReset(): void;
+declare function OnTick(): void;
+declare function OnTimer(): void;
 declare function OnInit(): void;
 declare function OnInteract(): void;
 declare function OnAttack(): void;
