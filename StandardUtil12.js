@@ -50,7 +50,7 @@ var Utilities = (function () {
          * @returns {string} difficulty : PEACEFUL EASY NORMAL HARD
          * 
          * @remarks
-         * Only supports 1.12.2, will return `NORMAL` on other MC versions.
+         * Only supports 1.12.2, will return 'NORMAL' on other MC versions.
          */
         GetDifficulty: function GetDifficulty() {
             if (Utilities.GetMCVersion() == "1.12.2"){
