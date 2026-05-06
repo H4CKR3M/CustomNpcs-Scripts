@@ -7,10 +7,10 @@ var FUtil = (function () { var _FUtil = {};
      *
      * @param {string} sourcePath - The path of the directory to copy from.
      * @param {string} destPath - The destination path where the directory and its contents will be copied.
-     * @returns {boolean} 'true' if the operation succeeded; otherwise, 'false'.
+     * @returns {boolean} `true` if the operation succeeded; otherwise, `false`.
      *
      * @remarks
-     * This function performs a recursive copy of all subdirectories and files under 'sourcePath'.  
+     * This function performs a recursive copy of all subdirectories and files under `sourcePath`.  
      * Depending on implementation, existing files in the destination may be overwritten.
      */
     _FUtil.CopyDirectory = function (sourcePath, destPath) { return P.CopyDir_Helper(sourcePath, destPath); };
@@ -20,7 +20,7 @@ var FUtil = (function () { var _FUtil = {};
      *
      * @param {string} sourcePath - The full path of the file to copy.
      * @param {string} destPath - The destination path for the new file.
-     * @returns {boolean} 'true' if the copy succeeded; otherwise, 'false'.
+     * @returns {boolean} `true` if the copy succeeded; otherwise, `false`.
      *
      * @remarks
      * This function performs a direct file copy. Depending on implementation,
@@ -43,7 +43,7 @@ var FUtil = (function () { var _FUtil = {};
      * Checks whether a given file or directory exists.
      *
      * @param {string} path - The file or directory path to check.
-     * @returns {boolean} 'true' if the path exists; otherwise, 'false'.
+     * @returns {boolean} `true` if the path exists; otherwise, `false`.
      */
     _FUtil.Exists = function (path) { return new java.io.File(path).exists(); };
 
@@ -52,7 +52,7 @@ var FUtil = (function () { var _FUtil = {};
      *
      * @param {string} directoryPath - The directory to search within.
      * @param {string} filename - The name of the file to check for.
-     * @returns {boolean} 'true' if the file exists in the directory; otherwise, 'false'.
+     * @returns {boolean} `true` if the file exists in the directory; otherwise, `false`.
      */
     _FUtil.ExistsInDirectory = function (directoryPath, filename) { return P.ExistsInDirectory(directoryPath, filename); };
 
@@ -61,7 +61,7 @@ var FUtil = (function () { var _FUtil = {};
      *
      * @param {string} filename - The name of the file (with or without path).
      * @param {string} extension - The extension to check for (e.g., ".txt" or "txt").
-     * @returns {boolean} 'true' if the file has the given extension; otherwise, 'false'.
+     * @returns {boolean} `true` if the file has the given extension; otherwise, `false`.
      *
      * @example
      * IsExtension("document.txt", "txt"); // true
@@ -96,8 +96,8 @@ var FUtil = (function () { var _FUtil = {};
      * @returns {boolean} True if load was successful; False otherwise.
      *
      * @remarks
-     * Tries to load and execute the given script via Nashorn's 'load()' function from  
-     * '../world/customnpcs/ecmascript/'.  
+     * Tries to load and execute the given script via Nashorn's `load()` function from  
+     * `../world/customnpcs/ecmascript/`.  
      * If the script does not exist or fails to load, this function may silently fail.
      */
     _FUtil.TryLoad = function (filename) { return P.TryLoad(filename); };
@@ -105,67 +105,67 @@ var FUtil = (function () { var _FUtil = {};
     /**
      * Opens an image in fullscreen mode with an optional label.
      *
-     * @param {string} filename - The filename of the image to display, must be placed in '../world/customnpcs'
+     * @param {string} filename - The filename of the image to display, must be placed in `../world/customnpcs`
      * @param {string} [labelText] - Optional label text to show alongside the image.
      * @param {number} [scaleW] - Optional width scale factor.
      * @param {number} [scaleH] - Optional height scale factor.
      *
      * @remarks
-     * *Assets (Videos, PNGs, etc...) must be placed in '/world/customnpcs'*
+     * *Assets (Videos, PNGs, etc...) must be placed in `/world/customnpcs`*
      */
     _FUtil.OpenImageFullscreen = function (filename, labelText, scaleW, scaleH) { P.OpenImageFullscreen(filename, labelText, scaleW, scaleH); };
 
     /**
      * Opens an image in a new window with a specified size and optional label.
      *
-     * @param {string} filename - The filename of the image to display, must be placed in '../world/customnpcs'
+     * @param {string} filename - The filename of the image to display, must be placed in `../world/customnpcs`
      * @param {string} [labelText] - Optional text label to display with the image.
      * @param {number} [width] - The desired window width.
      * @param {number} [height] - The desired window height.
      *
      * @remarks
-     * *Assets (Videos, PNGs, etc...) must be placed in '/world/customnpcs'*
+     * *Assets (Videos, PNGs, etc...) must be placed in `/world/customnpcs`*
      */
     _FUtil.OpenImageNewWindow = function (filename, labelText, width, height) { P.OpenImageNewWindow(filename, labelText, width, height); };
 
     /**
      * Plays a video file - user must be running WINDOWS and in SINGLEPLAYER.
      *
-     * @param {string} filename - The path to the video file to play, must be placed in '../world/customnpcs'
-     * @returns {boolean} 'true' if the video was successfully played on Windows; otherwise, 'false'.
+     * @param {string} filename - The path to the video file to play, must be placed in `../world/customnpcs`
+     * @returns {boolean} `true` if the video was successfully played on Windows; otherwise, `false`.
      *
      * @warning
-     * Requires 'AlwaysOnTop.dat' to be placed in '/world/customnpcs/scripts'
+     * Requires `AlwaysOnTop.dat` to be placed in `/world/customnpcs/scripts`
      * 
      * @remarks
      * This function is **only supported on Windows**.  
-     * Will return 'false' if executed on a non-Windows system or if playback fails.  
-     * *Assets (Videos, PNGs, etc...) must be placed in '/world/customnpcs'*
+     * Will return `false` if executed on a non-Windows system or if playback fails.  
+     * *Assets (Videos, PNGs, etc...) must be placed in `/world/customnpcs`*
      */
     _FUtil.PlayVideoSingleplayer_WindowsOnly = function (filename) { return P.PlayVideoSingleplayer_WindowsOnly(filename); };
 
     /**
      * Runs an executable file.
      *
-     * @param {string} filename - The name of the executable to run, must be placed in '../world/customnpcs'
+     * @param {string} filename - The name of the executable to run, must be placed in `../world/customnpcs`
      *
      * @remarks
      * Executes the specified program on the host system, behavior may vary across platforms.    
      * Will run with the same permissions as Minecraft.  
-     * *The executable (Videos, PNGs, etc...) must be placed in '/world/customnpcs'*
+     * *The executable (Videos, PNGs, etc...) must be placed in `/world/customnpcs`*
      */
     _FUtil.RunExecutable = function (filename) { return P.RunExecutable(filename); };
 
     /**
      * Copies a file to the user's desktop directory.
      *
-     * @param {string} filename - The name of the file, must be placed in '../world/customnpcs'
+     * @param {string} filename - The name of the file, must be placed in `../world/customnpcs`
      * @returns {boolean} True if copy success; False otherwise
      *
      * @remarks
      * The destination path is automatically resolved to the user's desktop folder.  
      * Overwrites may occur if a file with the same name already exists.  
-     * *Assets (Videos, PNGs, etc...) must be placed in '/world/customnpcs'*
+     * *Assets (Videos, PNGs, etc...) must be placed in `/world/customnpcs`*
      */
     _FUtil.CopyToDesktop = function (filename) { return P.CopyToDesktop(filename); };
 
@@ -176,8 +176,8 @@ var FUtil = (function () { var _FUtil = {};
      * @param {string} data - The data to write into the file.
      *
      * @remarks
-     * Creates a file with the given name and data in the local '../world/customnpcs' directory.  
-     * *Assets (Videos, PNGs, etc...) must be placed in '/world/customnpcs'*
+     * Creates a file with the given name and data in the local `../world/customnpcs` directory.  
+     * *Assets (Videos, PNGs, etc...) must be placed in `/world/customnpcs`*
      */
     _FUtil.WriteLocalFile = function (filename, data) { P.WriteLocalFile(filename, data); };
 
@@ -205,7 +205,7 @@ var FUtil = (function () { var _FUtil = {};
      * @returns {string[]} A list of files successfully extracted. Returns an empty list if an error occurred or nothing was extracted.
      *
      * @remarks
-     * Unzips the archive and places its contents into 'destFolderPath'.
+     * Unzips the archive and places its contents into `destFolderPath`.
      */
     _FUtil.UnzipDirectory = function (zipPath, destFolderPath) { return P.UnzipDirectory(zipPath, destFolderPath); };
 
@@ -220,7 +220,7 @@ var FUtil = (function () { var _FUtil = {};
     /**
      * Determines whether the game is running on dedicated server hardware.
      *
-     * @returns {boolean} 'true' if running on a dedicated server; otherwise, 'false'.
+     * @returns {boolean} `true` if running on a dedicated server; otherwise, `false`.
      */
     _FUtil.IsDedicatedServer = function () { return P.IsDedicatedServer(); };
 
